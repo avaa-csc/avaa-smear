@@ -1,0 +1,165 @@
+<?xml version="1.0"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" default-destroy-method="destroy" default-init-method="afterPropertiesSet" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+	<bean id="fi.csc.smear.db.service.Hyde_eddy233LocalService" class="fi.csc.smear.db.service.impl.Hyde_eddy233LocalServiceImpl" />
+	<bean id="fi.csc.smear.db.service.Hyde_eddy233Service" class="fi.csc.smear.db.service.impl.Hyde_eddy233ServiceImpl" />
+	<bean id="fi.csc.smear.db.service.persistence.Hyde_eddy233Persistence" class="fi.csc.smear.db.service.persistence.Hyde_eddy233PersistenceImpl" parent="basePersistence">
+		<property name="dataSource" ref="smear" />
+		<property name="sessionFactory" ref="smearSessionFactory" />
+	</bean>
+	<bean id="fi.csc.smear.db.service.Hyde_eddytowLocalService" class="fi.csc.smear.db.service.impl.Hyde_eddytowLocalServiceImpl" />
+	<bean id="fi.csc.smear.db.service.Hyde_eddytowService" class="fi.csc.smear.db.service.impl.Hyde_eddytowServiceImpl" />
+	<bean id="fi.csc.smear.db.service.persistence.Hyde_eddytowPersistence" class="fi.csc.smear.db.service.persistence.Hyde_eddytowPersistenceImpl" parent="basePersistence">
+		<property name="dataSource" ref="smear" />
+		<property name="sessionFactory" ref="smearSessionFactory" />
+	</bean>
+	<bean id="fi.csc.smear.db.service.HydemetaLocalService" class="fi.csc.smear.db.service.impl.HydemetaLocalServiceImpl" />
+	<bean id="fi.csc.smear.db.service.HydemetaService" class="fi.csc.smear.db.service.impl.HydemetaServiceImpl" />
+	<bean id="fi.csc.smear.db.service.persistence.HydemetaPersistence" class="fi.csc.smear.db.service.persistence.HydemetaPersistenceImpl" parent="basePersistence">
+		<property name="dataSource" ref="smear" />
+		<property name="sessionFactory" ref="smearSessionFactory" />
+	</bean>
+	<bean id="fi.csc.smear.db.service.Hyy_eddysubLocalService" class="fi.csc.smear.db.service.impl.Hyy_eddysubLocalServiceImpl" />
+	<bean id="fi.csc.smear.db.service.Hyy_eddysubService" class="fi.csc.smear.db.service.impl.Hyy_eddysubServiceImpl" />
+	<bean id="fi.csc.smear.db.service.persistence.Hyy_eddysubPersistence" class="fi.csc.smear.db.service.persistence.Hyy_eddysubPersistenceImpl" parent="basePersistence">
+		<property name="dataSource" ref="smear" />
+		<property name="sessionFactory" ref="smearSessionFactory" />
+	</bean>
+	<bean id="fi.csc.smear.db.service.HyyAeroLocalService" class="fi.csc.smear.db.service.impl.HyyAeroLocalServiceImpl" />
+	<bean id="fi.csc.smear.db.service.HyyAeroService" class="fi.csc.smear.db.service.impl.HyyAeroServiceImpl" />
+	<bean id="fi.csc.smear.db.service.persistence.HyyAeroPersistence" class="fi.csc.smear.db.service.persistence.HyyAeroPersistenceImpl" parent="basePersistence">
+		<property name="dataSource" ref="smear" />
+		<property name="sessionFactory" ref="smearSessionFactory" />
+	</bean>
+	<bean id="fi.csc.smear.db.service.HyyDMPSLocalService" class="fi.csc.smear.db.service.impl.HyyDMPSLocalServiceImpl" />
+	<bean id="fi.csc.smear.db.service.HyyDMPSService" class="fi.csc.smear.db.service.impl.HyyDMPSServiceImpl" />
+	<bean id="fi.csc.smear.db.service.persistence.HyyDMPSPersistence" class="fi.csc.smear.db.service.persistence.HyyDMPSPersistenceImpl" parent="basePersistence">
+		<property name="dataSource" ref="smear" />
+		<property name="sessionFactory" ref="smearSessionFactory" />
+	</bean>
+	<bean id="fi.csc.smear.db.service.Kumpula_eddyLocalService" class="fi.csc.smear.db.service.impl.Kumpula_eddyLocalServiceImpl" />
+	<bean id="fi.csc.smear.db.service.Kumpula_eddyService" class="fi.csc.smear.db.service.impl.Kumpula_eddyServiceImpl" />
+	<bean id="fi.csc.smear.db.service.persistence.Kumpula_eddyPersistence" class="fi.csc.smear.db.service.persistence.Kumpula_eddyPersistenceImpl" parent="basePersistence">
+		<property name="dataSource" ref="smear" />
+		<property name="sessionFactory" ref="smearSessionFactory" />
+	</bean>
+	<bean id="fi.csc.smear.db.service.KumpulaDMPSLocalService" class="fi.csc.smear.db.service.impl.KumpulaDMPSLocalServiceImpl" />
+	<bean id="fi.csc.smear.db.service.KumpulaDMPSService" class="fi.csc.smear.db.service.impl.KumpulaDMPSServiceImpl" />
+	<bean id="fi.csc.smear.db.service.persistence.KumpulaDMPSPersistence" class="fi.csc.smear.db.service.persistence.KumpulaDMPSPersistenceImpl" parent="basePersistence">
+		<property name="dataSource" ref="smear" />
+		<property name="sessionFactory" ref="smearSessionFactory" />
+	</bean>
+	<bean id="fi.csc.smear.db.service.KumpulametaLocalService" class="fi.csc.smear.db.service.impl.KumpulametaLocalServiceImpl" />
+	<bean id="fi.csc.smear.db.service.KumpulametaService" class="fi.csc.smear.db.service.impl.KumpulametaServiceImpl" />
+	<bean id="fi.csc.smear.db.service.persistence.KumpulametaPersistence" class="fi.csc.smear.db.service.persistence.KumpulametaPersistenceImpl" parent="basePersistence">
+		<property name="dataSource" ref="smear" />
+		<property name="sessionFactory" ref="smearSessionFactory" />
+	</bean>
+	<bean id="fi.csc.smear.db.service.kvjEddyLocalService" class="fi.csc.smear.db.service.impl.kvjEddyLocalServiceImpl" />
+	<bean id="fi.csc.smear.db.service.kvjEddyService" class="fi.csc.smear.db.service.impl.kvjEddyServiceImpl" />
+	<bean id="fi.csc.smear.db.service.persistence.kvjEddyPersistence" class="fi.csc.smear.db.service.persistence.kvjEddyPersistenceImpl" parent="basePersistence">
+		<property name="dataSource" ref="smear" />
+		<property name="sessionFactory" ref="smearSessionFactory" />
+	</bean>
+	<bean id="fi.csc.smear.db.service.Sii1eddyLocalService" class="fi.csc.smear.db.service.impl.Sii1eddyLocalServiceImpl" />
+	<bean id="fi.csc.smear.db.service.Sii1eddyService" class="fi.csc.smear.db.service.impl.Sii1eddyServiceImpl" />
+	<bean id="fi.csc.smear.db.service.persistence.Sii1eddyPersistence" class="fi.csc.smear.db.service.persistence.Sii1eddyPersistenceImpl" parent="basePersistence">
+		<property name="dataSource" ref="smear" />
+		<property name="sessionFactory" ref="smearSessionFactory" />
+	</bean>
+	<bean id="fi.csc.smear.db.service.Sii1metaLocalService" class="fi.csc.smear.db.service.impl.Sii1metaLocalServiceImpl" />
+	<bean id="fi.csc.smear.db.service.Sii1metaService" class="fi.csc.smear.db.service.impl.Sii1metaServiceImpl" />
+	<bean id="fi.csc.smear.db.service.persistence.Sii1metaPersistence" class="fi.csc.smear.db.service.persistence.Sii1metaPersistenceImpl" parent="basePersistence">
+		<property name="dataSource" ref="smear" />
+		<property name="sessionFactory" ref="smearSessionFactory" />
+	</bean>
+	<bean id="fi.csc.smear.db.service.Sii2eddyLocalService" class="fi.csc.smear.db.service.impl.Sii2eddyLocalServiceImpl" />
+	<bean id="fi.csc.smear.db.service.Sii2eddyService" class="fi.csc.smear.db.service.impl.Sii2eddyServiceImpl" />
+	<bean id="fi.csc.smear.db.service.persistence.Sii2eddyPersistence" class="fi.csc.smear.db.service.persistence.Sii2eddyPersistenceImpl" parent="basePersistence">
+		<property name="dataSource" ref="smear" />
+		<property name="sessionFactory" ref="smearSessionFactory" />
+	</bean>
+	<bean id="fi.csc.smear.db.service.Sii2metaLocalService" class="fi.csc.smear.db.service.impl.Sii2metaLocalServiceImpl" />
+	<bean id="fi.csc.smear.db.service.Sii2metaService" class="fi.csc.smear.db.service.impl.Sii2metaServiceImpl" />
+	<bean id="fi.csc.smear.db.service.persistence.Sii2metaPersistence" class="fi.csc.smear.db.service.persistence.Sii2metaPersistenceImpl" parent="basePersistence">
+		<property name="dataSource" ref="smear" />
+		<property name="sessionFactory" ref="smearSessionFactory" />
+	</bean>
+	<bean id="fi.csc.smear.db.service.SmearEventsLocalService" class="fi.csc.smear.db.service.impl.SmearEventsLocalServiceImpl" />
+	<bean id="fi.csc.smear.db.service.SmearEventsService" class="fi.csc.smear.db.service.impl.SmearEventsServiceImpl" />
+	<bean id="fi.csc.smear.db.service.persistence.SmearEventsPersistence" class="fi.csc.smear.db.service.persistence.SmearEventsPersistenceImpl" parent="basePersistence">
+		<property name="dataSource" ref="smear" />
+		<property name="sessionFactory" ref="smearSessionFactory" />
+	</bean>
+	<bean id="fi.csc.smear.db.service.SmearmetadataLocalService" class="fi.csc.smear.db.service.impl.SmearmetadataLocalServiceImpl" />
+	<bean id="fi.csc.smear.db.service.SmearmetadataService" class="fi.csc.smear.db.service.impl.SmearmetadataServiceImpl" />
+	<bean id="fi.csc.smear.db.service.persistence.SmearmetadataPersistence" class="fi.csc.smear.db.service.persistence.SmearmetadataPersistenceImpl" parent="basePersistence">
+		<property name="dataSource" ref="smear" />
+		<property name="sessionFactory" ref="smearSessionFactory" />
+	</bean>
+	<bean id="fi.csc.smear.db.service.SmearstationLocalService" class="fi.csc.smear.db.service.impl.SmearstationLocalServiceImpl" />
+	<bean id="fi.csc.smear.db.service.SmearstationService" class="fi.csc.smear.db.service.impl.SmearstationServiceImpl" />
+	<bean id="fi.csc.smear.db.service.persistence.SmearstationPersistence" class="fi.csc.smear.db.service.persistence.SmearstationPersistenceImpl" parent="basePersistence">
+		<property name="dataSource" ref="smear" />
+		<property name="sessionFactory" ref="smearSessionFactory" />
+	</bean>
+	<bean id="fi.csc.smear.db.service.SmearTableMetadataLocalService" class="fi.csc.smear.db.service.impl.SmearTableMetadataLocalServiceImpl" />
+	<bean id="fi.csc.smear.db.service.SmearTableMetadataService" class="fi.csc.smear.db.service.impl.SmearTableMetadataServiceImpl" />
+	<bean id="fi.csc.smear.db.service.persistence.SmearTableMetadataPersistence" class="fi.csc.smear.db.service.persistence.SmearTableMetadataPersistenceImpl" parent="basePersistence">
+		<property name="dataSource" ref="smear" />
+		<property name="sessionFactory" ref="smearSessionFactory" />
+	</bean>
+	<bean id="fi.csc.smear.db.service.SmearTagsLocalService" class="fi.csc.smear.db.service.impl.SmearTagsLocalServiceImpl" />
+	<bean id="fi.csc.smear.db.service.SmearTagsService" class="fi.csc.smear.db.service.impl.SmearTagsServiceImpl" />
+	<bean id="fi.csc.smear.db.service.persistence.SmearTagsPersistence" class="fi.csc.smear.db.service.persistence.SmearTagsPersistenceImpl" parent="basePersistence">
+		<property name="dataSource" ref="smear" />
+		<property name="sessionFactory" ref="smearSessionFactory" />
+	</bean>
+	<bean id="fi.csc.smear.db.service.SmearvariableEventLocalService" class="fi.csc.smear.db.service.impl.SmearvariableEventLocalServiceImpl" />
+	<bean id="fi.csc.smear.db.service.persistence.SmearvariableEventPersistence" class="fi.csc.smear.db.service.persistence.SmearvariableEventPersistenceImpl" parent="basePersistence">
+		<property name="dataSource" ref="smear" />
+		<property name="sessionFactory" ref="smearSessionFactory" />
+	</bean>
+	<bean id="fi.csc.smear.db.service.SmearVariableMetadataLocalService" class="fi.csc.smear.db.service.impl.SmearVariableMetadataLocalServiceImpl" />
+	<bean id="fi.csc.smear.db.service.SmearVariableMetadataService" class="fi.csc.smear.db.service.impl.SmearVariableMetadataServiceImpl" />
+	<bean id="fi.csc.smear.db.service.persistence.SmearVariableMetadataPersistence" class="fi.csc.smear.db.service.persistence.SmearVariableMetadataPersistenceImpl" parent="basePersistence">
+		<property name="dataSource" ref="smear" />
+		<property name="sessionFactory" ref="smearSessionFactory" />
+	</bean>
+	<bean id="fi.csc.smear.db.service.SmearvariableTagsLocalService" class="fi.csc.smear.db.service.impl.SmearvariableTagsLocalServiceImpl" />
+	<bean id="fi.csc.smear.db.service.SmearvariableTagsService" class="fi.csc.smear.db.service.impl.SmearvariableTagsServiceImpl" />
+	<bean id="fi.csc.smear.db.service.persistence.SmearvariableTagsPersistence" class="fi.csc.smear.db.service.persistence.SmearvariableTagsPersistenceImpl" parent="basePersistence">
+		<property name="dataSource" ref="smear" />
+		<property name="sessionFactory" ref="smearSessionFactory" />
+	</bean>
+	<bean id="fi.csc.smear.db.service.TowermetaLocalService" class="fi.csc.smear.db.service.impl.TowermetaLocalServiceImpl" />
+	<bean id="fi.csc.smear.db.service.TowermetaService" class="fi.csc.smear.db.service.impl.TowermetaServiceImpl" />
+	<bean id="fi.csc.smear.db.service.persistence.TowermetaPersistence" class="fi.csc.smear.db.service.persistence.TowermetaPersistenceImpl" parent="basePersistence">
+		<property name="dataSource" ref="smear" />
+		<property name="sessionFactory" ref="smearSessionFactory" />
+	</bean>
+	<bean id="fi.csc.smear.db.service.VarDMPSLocalService" class="fi.csc.smear.db.service.impl.VarDMPSLocalServiceImpl" />
+	<bean id="fi.csc.smear.db.service.VarDMPSService" class="fi.csc.smear.db.service.impl.VarDMPSServiceImpl" />
+	<bean id="fi.csc.smear.db.service.persistence.VarDMPSPersistence" class="fi.csc.smear.db.service.persistence.VarDMPSPersistenceImpl" parent="basePersistence">
+		<property name="dataSource" ref="smear" />
+		<property name="sessionFactory" ref="smearSessionFactory" />
+	</bean>
+	<bean id="fi.csc.smear.db.service.VareddyLocalService" class="fi.csc.smear.db.service.impl.VareddyLocalServiceImpl" />
+	<bean id="fi.csc.smear.db.service.VareddyService" class="fi.csc.smear.db.service.impl.VareddyServiceImpl" />
+	<bean id="fi.csc.smear.db.service.persistence.VareddyPersistence" class="fi.csc.smear.db.service.persistence.VareddyPersistenceImpl" parent="basePersistence">
+		<property name="dataSource" ref="smear" />
+		<property name="sessionFactory" ref="smearSessionFactory" />
+	</bean>
+	<bean id="fi.csc.smear.db.service.Varrio_treeLocalService" class="fi.csc.smear.db.service.impl.Varrio_treeLocalServiceImpl" />
+	<bean id="fi.csc.smear.db.service.Varrio_treeService" class="fi.csc.smear.db.service.impl.Varrio_treeServiceImpl" />
+	<bean id="fi.csc.smear.db.service.persistence.Varrio_treePersistence" class="fi.csc.smear.db.service.persistence.Varrio_treePersistenceImpl" parent="basePersistence">
+		<property name="dataSource" ref="smear" />
+		<property name="sessionFactory" ref="smearSessionFactory" />
+	</bean>
+	<bean id="fi.csc.smear.db.service.VarriometaLocalService" class="fi.csc.smear.db.service.impl.VarriometaLocalServiceImpl" />
+	<bean id="fi.csc.smear.db.service.VarriometaService" class="fi.csc.smear.db.service.impl.VarriometaServiceImpl" />
+	<bean id="fi.csc.smear.db.service.persistence.VarriometaPersistence" class="fi.csc.smear.db.service.persistence.VarriometaPersistenceImpl" parent="basePersistence">
+		<property name="dataSource" ref="smear" />
+		<property name="sessionFactory" ref="smearSessionFactory" />
+	</bean>
+</beans>

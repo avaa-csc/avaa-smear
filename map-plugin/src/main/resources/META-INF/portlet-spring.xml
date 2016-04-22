@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" default-destroy-method="destroy" default-init-method="afterPropertiesSet" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+	<bean id="fi.csc.avaa.smear.db.service.HyyCoordLocalService" class="fi.csc.avaa.smear.db.service.impl.HyyCoordLocalServiceImpl" />
+	<bean id="fi.csc.avaa.smear.db.service.HyyCoordService" class="fi.csc.avaa.smear.db.service.impl.HyyCoordServiceImpl" />
+	<bean id="fi.csc.avaa.smear.db.service.persistence.HyyCoordPersistence" class="fi.csc.avaa.smear.db.service.persistence.HyyCoordPersistenceImpl" parent="basePersistence">
+		<property name="dataSource" ref="trajektori" />
+		<property name="sessionFactory" ref="trajektoriSessionFactory" />
+	</bean>
+</beans>

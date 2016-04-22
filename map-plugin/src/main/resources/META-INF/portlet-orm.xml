@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+
+<entity-mappings xmlns="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_1_0.xsd">
+	<persistence-unit-metadata>
+		<xml-mapping-metadata-complete/>
+		<persistence-unit-defaults>
+			<access>PROPERTY</access>
+		</persistence-unit-defaults>
+	</persistence-unit-metadata>
+	<mapped-superclass class="fi.csc.avaa.smear.db.model.impl.HyyCoordModelImpl">
+		<attributes>
+			<id name="arrTimeID" />
+			<basic name="arrTime">
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="matTime" />
+			<basic name="year" />
+			<basic name="month" />
+			<basic name="day" />
+			<basic name="hour" />
+			<basic name="doy" />
+			<basic name="backTime" />
+			<basic name="lat100" />
+			<basic name="lon100" />
+			<basic name="alt100" />
+			<basic name="azim100" />
+			<basic name="lat250" />
+			<basic name="lon250" />
+			<basic name="alt250" />
+			<basic name="azim250" />
+			<basic name="lat500" />
+			<basic name="lon500" />
+			<basic name="alt500" />
+			<basic name="azim500" />
+			<transient name="modelAttributes" />
+			<transient name="primaryKey" />
+			<transient name="primaryKeyObj" />
+		</attributes>
+	</mapped-superclass>
+	<entity class="fi.csc.avaa.smear.db.model.impl.HyyCoordImpl" name="HyyCoord">
+		<table name="coord_hyy" />
+		<attributes />
+	</entity>
+</entity-mappings>

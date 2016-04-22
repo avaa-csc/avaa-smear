@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>fi.csc.avaa.smear.smartsmear</groupId>
+	<artifactId>smart-smear-portlet</artifactId>
+	<packaging>war</packaging>
+	<version>0.7</version>
+	<name>SmartSMEAR UI</name>
+
+	<parent>
+		<artifactId>vaadin-liferay-portlet-maven-parent</artifactId>
+		<groupId>fi.csc.avaa</groupId>
+		<version>1.0</version>
+		<relativePath>../avaa-common/vaadin_liferay_portlet_parent_pom.xml</relativePath>
+	</parent>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+		  	<artifactId>gson</artifactId>
+		  	<version>2.2.4</version>
+		</dependency>
+		<dependency>
+			<groupId>fi.csc.avaa</groupId>
+			<artifactId>AvaaTools</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.liferay.portal</groupId>
+			<artifactId>util-taglib</artifactId>
+			<version>${liferay.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20140107</version>
+		</dependency>
+		<dependency>
+	        <groupId>jstl</groupId>
+	        <artifactId>jstl</artifactId>
+	        <version>1.2</version>
+        </dependency>
+		<dependency>
+			<groupId>com.liferay.portal</groupId>
+			<artifactId>portal-client</artifactId>
+			<version>${liferay.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.vaadin.addon</groupId>
+			<artifactId>vaadin-charts</artifactId>
+			<version>2.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.vaadin.addons</groupId>
+			<artifactId>vaadin-ipc-for-liferay</artifactId>
+			<version>2.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>fi.csc.avaa</groupId>
+			<artifactId>HDF5writer</artifactId>
+			<version>0.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-exec</artifactId>
+			<version>1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.3.2</version>
+		</dependency>
+		<dependency>
+			<groupId>edu.ucar</groupId>
+			<artifactId>netcdfAll</artifactId>
+			<version>4.6.1</version>
+		</dependency>
+	</dependencies>
+	<repositories>
+		<repository>
+			<id>avaa</id>
+			<url>http://avaa.tdata.fi/maven</url>
+		</repository>
+		<repository>
+			<id>unidataucar</id>
+			<url>http://artifacts.unidata.ucar.edu/content/repositories/unidata-releases/</url>
+		</repository>
+	</repositories>
+</project>

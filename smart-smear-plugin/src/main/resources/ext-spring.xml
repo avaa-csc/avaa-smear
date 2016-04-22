@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+    <bean id="smear" class="org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy">
+        <property name="targetDataSource">
+            <bean class="com.liferay.portal.dao.jdbc.spring.DataSourceFactoryBean">
+                <property name="propertyPrefix" value="jdbc.smear." />
+            </bean>
+        </property>
+    </bean>
+      
+    <bean id="smearHibernateSessionFactory" class="com.liferay.portal.spring.hibernate.PortletHibernateConfiguration">
+        <property name="dataSource" ref="smear" />
+    </bean>
+    
+    <bean id="smearSessionFactory" class="com.liferay.portal.dao.orm.hibernate.SessionFactoryImpl">
+        <property name="sessionFactoryClassLoader" ref="portletClassLoader" />
+        <property name="sessionFactoryImplementor" ref="smearHibernateSessionFactory" />
+    </bean>
+</beans>

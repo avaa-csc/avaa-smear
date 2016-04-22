@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<portlet-app
+    xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd"
+    version="0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd
+                        http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd">
+
+	<portlet>
+		<portlet-name>SmartSMEAR</portlet-name>
+		<display-name>SmartSmearUI</display-name>
+		<portlet-class>com.vaadin.server.VaadinPortlet</portlet-class>
+        
+        <init-param>
+            <name>UIProvider</name>
+            <value>fi.csc.avaa.smear.smartsmear.SmearUIProvider</value>
+        </init-param>
+        
+        <supports>
+            <mime-type>text/html</mime-type>
+            <portlet-mode>view</portlet-mode>
+            <portlet-mode>edit</portlet-mode>
+            <!-- <portlet-mode>help</portlet-mode> -->
+        </supports>
+        
+		<portlet-info>
+			<title>SmartSmearUI</title>
+			<short-title>SmartSMEAR</short-title>
+			<keywords>SmartSMEAR</keywords>
+		</portlet-info>
+		
+		<portlet-preferences>
+			<preference>
+				<name>maxScope</name>
+				<value>183</value>
+				<read-only>false</read-only>
+			</preference>
+		</portlet-preferences>
+	</portlet>
+</portlet-app>

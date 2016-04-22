@@ -1,0 +1,139 @@
+<h1>Application Programming Interfaces (APIs)</h1>
+
+<p style="font-size: 13.3333330154419px; line-height: 17.3333320617676px; color: rgb(51, 51, 51); font-family: Arial, Helvetica, FreeSans, sans-serif;"><span style="font-size:16px;">SMEAR data, trajectory data and the related metadata are stored in a database and accessed via the Liferay service. SMEAR data, t</span><span style="font-size: 16px; line-height: 17.3333320617676px;">rajectory data and metadata are readable via an open API. For trajectory data and metadata,&nbsp;</span><span style="font-size: 16px; line-height: 13pt; background-color: transparent;">GET and&nbsp;POST queries are supported with&nbsp;response format being JSON. SMEAR data API supports GET queries with response format being simple table.&nbsp;Example queries are given below.</span></p>
+
+<p>With windows powershell you can use API by creating client object:&nbsp;</p>
+
+<pre style="margin-bottom: 1em; padding: 5px; border: 0px; overflow: auto; width: auto; max-height: 600px; font-family: Consolas, Menlo, Monaco, 'Lucida Console', 'Liberation Mono', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Courier New', monospace, sans-serif; word-wrap: normal; color: rgb(34, 36, 38); background-color: rgb(238, 238, 238);">
+<code style="font-size: 13px; font-family: Consolas, Menlo, Monaco, 'Lucida Console', 'Liberation Mono', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Courier New', monospace, sans-serif; white-space: inherit; background-color: rgb(238, 238, 238);">$client = new-object System.Net.WebClient
+$client.DownloadFile("http://avaa.tdata.fi/palvelut/smeardata.jsp?variable=GLOB&amp;table=VAR_META&amp;from=2013-03-09%2000:00:00.86&amp;to=2016-03-09%2019:47:12.86&amp;quality=ANY&amp;averaging=NONE&amp;type=NONE", "savedfilename.txt")</code></pre>
+
+<h2 style="line-height: 20px; font-family: Arial, sans-serif; color: rgb(85, 85, 85);">SMEAR data</h2>
+
+<p>SMEAR data is the actual variable data also available via the application. An open API for querying the data is available, the format being e.g.:</p>
+
+<pre>
+http://avaa.tdata.fi/palvelut/smeardata.jsp?variable=Pamb0&amp;table=HYY_META&amp;from=2016-02-11 00:00:00.989&amp;to=2016-02-12 09:06:07.989&amp;quality=ANY&amp;averaging=30MIN&amp;type=ARITHMETIC</pre>
+
+<p>The query result is formatted&nbsp;with "&lt;value&gt; &lt;timestamp&gt;" per row:</p>
+
+<pre style="color: rgb(0, 0, 0); line-height: normal;">
+969.22266   "Feb 11, 2016 12:00:00 AM"
+969.3223   "Feb 11, 2016 12:30:00 AM"
+969.539   "Feb 11, 2016 1:00:00 AM"
+969.97235   "Feb 11, 2016 1:30:00 AM"
+970.284   "Feb 11, 2016 2:00:00 AM"
+970.60034   "Feb 11, 2016 2:30:00 AM"
+970.78265   "Feb 11, 2016 3:00:00 AM"
+970.84534   "Feb 11, 2016 3:30:00 AM" ...</pre>
+
+<p>&nbsp;</p>
+
+<h2>Trajectories</h2>
+
+<p>Trajectory data has been calculated only for the Hyytiälä station and until autumn 2012.</p>
+
+<p>There is also a JSON API available. The query format is</p>
+
+<pre>
+http://avaa.tdata.fi/map-portlet/query.jsp?year=2012&amp;month=07&amp;day=16&amp;hour=16
+</pre>
+
+<p>The query result is about 37kB and has 96 rows such as</p>
+
+<pre>
+[{"_arrTimeID":201207161600,"_arrTime":"Jul 16, 2012 4:00:00 PM","_matTime":735067.0,"_year":2012,"_month":7,"_day":16,"_hour":16,"_doy":198,"_backTime":0,"_lat100":61.85,"_lon100":24.28,"_alt100":100.0,"_azim100":292.7,"_lat250":61.85,"_lon250":24.28,"_alt250":250.0,"_azim250":292.7,"_lat500":61.85,"_lon500":24.28,"_alt500":500.0,"_azim500":292.9,"_cachedModel":false,"_new":false},
+...
+</pre>
+
+<h2>&nbsp;</h2>
+
+<h2>Metadata</h2>
+
+<p>There are five APIs to query metadata:&nbsp;</p>
+
+<h3>Variable metadata</h3>
+
+<p>The first query uses a&nbsp; variable name as a parameter.</p>
+
+<pre>
+http://avaa.tdata.fi/smart-smear-portlet/variablemeta.jsp?file=d112e1</pre>
+
+<p>Because the variable name is used in three tables, there are three results.</p>
+
+<pre>
+[{"_variableID":915,"_tableID":22,"_variable":"d112e1","_description":"Particle concentration dNdlogDp Dp\u003d1.12nm","_unit":"1/cm3","_title":"dN/dlogDp","_source":"HYY-DMPS","_period_start":"Jan 20, 1996 12:00:00 AM","_coverage":100,"_rights":"Public","_mandatory":false,"_derivative":false,"_vtimestamp":"Dec 1, 2014 4:12:09 PM","_category":"Aerosol","_cachedModel":false,"_new":false},{"_variableID":983,"_tableID":23,"_variable":"d112e1","_description":"Particle concentration dNdlogDp Dp\u003d1.12nm","_unit":"1/cm3","_title":"dN/dlogDp","_source":"VAR-DMPS","_period_start":"Dec 10, 1997 12:00:00 AM","_coverage":100,"_rights":"Public","_mandatory":false,"_derivative":false,"_vtimestamp":"Dec 1, 2014 4:08:18 PM","_category":"Aerosol","_cachedModel":false,"_new":false},{"_variableID":1051,"_tableID":24,"_variable":"d112e1","_description":"Particle concentration dNdlogDp Dp\u003d1.12nm","_unit":"1/cm3","_title":"dN/dlogDp","_source":"KUM-DMPS","_period_start":"May 5, 1997 12:00:00 AM","_coverage":100,"_rights":"Public","_mandatory":false,"_derivative":false,"_vtimestamp":"Dec 1, 2014 4:04:45 PM","_category":"Aerosol","_cachedModel":false,"_new":false}]
+</pre>
+
+<h3>Table metadata</h3>
+
+<p>A table metadata&nbsp; query uses the&nbsp; database table id (from query above) as a parameter.</p>
+
+<pre>
+http://avaa.tdata.fi/smart-smear-portlet/tablemetadata.jsp?id=11</pre>
+
+<pre>
+[{ "tableID":11, "identifier":"URN:NBN:fi-fe201207066179", "title":"Värriö SMEAR I meteorology, gases and soil", "spatial_coverage":"DCMI-point: name=Värriö; east=29.610137; north=67.755044; elevation=390;", "name":"VAR_META", "ttimestamp":"2015-11-26 12:23:00.0", "period":1 }]</pre>
+
+<h3>Metadata</h3>
+
+<p>General metadata query doesn't have parameters:</p>
+
+<pre>
+http://avaa.tdata.fi/smart-smear-portlet/metadata.jsp</pre>
+
+<p>and the result is static</p>
+
+<pre>
+[{"_title":"SMEAR Station for measuring ecosystem-atmosphere relations","_rightsCategory":"LICENSED","_access_rights":"https://creativecommons.org/licenses/by/4.0/","_project":"http://www.atm.helsinki.fi/SMEAR/","_maintaining_organisation":"University of Helsinki, Department of Physics, Division of Atmospheric Sciences","_contact":"atm-data@helsinki.fi","_ref":"Cite: Junninen, H; Lauri, A; Keronen, P; Aalto, P; Hiltunen, V; Hari, P; Kulmala, M. Smart-SMEAR: on-line data exploration and visualization tool for SMEAR stations.| BOREAL ENVIRONMENT RESEARCH (BER) Vol 14, Issue 4, pp.447-457","_creator":"http://orcid.org/0000-0001-8826-9108","_discipline":"http://www.yso.fi/onto/okm-tieteenala/ta114","_timestamp":"May 4, 2015 11:54:57 AM","_cachedModel":false,"_new":false}]</pre>
+
+<h3>Tags</h3>
+
+<p>Tags are keywords. They have formal vocabulary like <a href="http://cfconventions.org/Data/cf-standard-names/28/build/cf-standard-name-table.html">http://cfconventions.org/Data/cf-standard-names/28/build/cf-standard-name-table.html</a>.</p>
+
+<pre>
+http://avaa.tdata.fi/smart-smear-portlet/tags.jsp?varid=1</pre>
+
+<p>The database content needs some update, because URL is changed:</p>
+
+<pre>
+[ &nbsp;{
+&nbsp;"tagID":1,
+&nbsp; "vocabulary":"http://cfconventions.org/Data/cf-standard-names/29/build/cf-standard-name-table.html#",
+&nbsp; "tag":"air_temperature",
+&nbsp; "displaykeyword":"ilma - lämpötila"&nbsp;
+&nbsp;} , &nbsp;{
+&nbsp;"tagID":1,
+&nbsp; "vocabulary":"http://www.yso.fi/onto/yso/",
+&nbsp; "tag":"p19483",
+&nbsp; "displaykeyword":"ilma - lämpötila"&nbsp;
+&nbsp;} , &nbsp;{
+&nbsp;"tagID":77,
+&nbsp; "vocabulary":"http://www.yso.fi/onto/yso/",
+&nbsp; "tag":"p5394",
+&nbsp; "displaykeyword":"meteorologia"&nbsp;
+&nbsp;} &nbsp; &nbsp;]
+</pre>
+
+<h3>Events</h3>
+
+<p>Events are also part of the variablemetadata and query parameter is variableID:</p>
+
+<pre>
+http://avaa.tdata.fi/smart-smear-portlet/eventsmeta.jsp?varid=43</pre>
+
+<p>Example results:</p>
+
+<pre>
+[ &nbsp; {
+&nbsp;"eventID":41,
+&nbsp; "event_type":"NewVersionRelease",
+&nbsp; "event":"Processing and quality check of Smear 3 gas data ",
+&nbsp; "who":"Petri Keronen",
+&nbsp; "period_start":"2014-01-01 00:00:00.0",
+&nbsp; "period_end":"2014-12-31 23:59:59.0",
+&nbsp; "etimestamp":"2015-02-17 00:00:00.0"
+&nbsp;} ]
+</pre>
+
+<p>&nbsp;</p>

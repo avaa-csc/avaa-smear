@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+
+<model-hints>
+	<model name="fi.csc.avaa.smear.db.model.HyyCoord">
+		<field name="arrTimeID" type="long" />
+		<field name="arrTime" type="Date" />
+		<field name="matTime" type="float" />
+		<field name="year" type="int" />
+		<field name="month" type="int" />
+		<field name="day" type="int" />
+		<field name="hour" type="int" />
+		<field name="doy" type="int" />
+		<field name="backTime" type="int" />
+		<field name="lat100" type="float" />
+		<field name="lon100" type="float" />
+		<field name="alt100" type="float" />
+		<field name="azim100" type="float" />
+		<field name="lat250" type="float" />
+		<field name="lon250" type="float" />
+		<field name="alt250" type="float" />
+		<field name="azim250" type="float" />
+		<field name="lat500" type="float" />
+		<field name="lon500" type="float" />
+		<field name="alt500" type="float" />
+		<field name="azim500" type="float" />
+	</model>
+</model-hints>

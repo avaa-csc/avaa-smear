@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>fi.csc.avaa.smear</groupId>
+	<artifactId>map-portlet</artifactId>
+	<packaging>war</packaging>
+	<name>map-portlet Portlet</name>
+	<version>0.1</version>
+	
+	<parent>
+		<artifactId>vaadin-liferay-portlet-maven-parent</artifactId>
+		<groupId>fi.csc.avaa</groupId>
+		<version>1.0</version>
+		<relativePath>../avaa-common/vaadin_liferay_portlet_parent_pom.xml</relativePath>
+	</parent>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.liferay.maven.plugins</groupId>
+				<artifactId>liferay-maven-plugin</artifactId>
+				<version>${liferay.version}</version>
+				<configuration>
+					<autoDeployDir>${liferay.auto.deploy.dir}</autoDeployDir>
+					<appServerDeployDir>${liferay.app.server.deploy.dir}</appServerDeployDir>
+					<appServerLibGlobalDir>${liferay.app.server.lib.global.dir}</appServerLibGlobalDir>
+					<appServerPortalDir>${liferay.app.server.portal.dir}</appServerPortalDir>
+					<liferayVersion>${liferay.version}</liferayVersion>
+					<pluginType>portlet</pluginType>
+					<apiBaseDir>${basedir}</apiBaseDir>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>com.liferay.portal</groupId>
+						<artifactId>portal-impl</artifactId>
+						<version>${liferay.version}</version>
+						<scope>system</scope>
+						<systemPath>${liferay.app.server.portal.dir}/WEB-INF/lib/portal-impl.jar</systemPath>
+					</dependency>
+									
+				</dependencies>
+			</plugin>
+		</plugins>
+	</build>
+	<dependencies>
+	<dependency>
+		<groupId>org.apache.jackrabbit</groupId>
+		<artifactId>jackrabbit-core</artifactId>
+		<version>2.1.2</version>
+		<exclusions>
+			<exclusion>
+				<groupId>org.slf4j</groupId>
+				<artifactId>jcl-over-slf4j</artifactId>
+			</exclusion>
+		</exclusions>
+	</dependency>
+	<dependency>
+			<groupId>com.liferay.portal</groupId>
+			<artifactId>util-bridges</artifactId>
+			<version>${liferay.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.liferay.portal</groupId>
+			<artifactId>portal-client</artifactId>
+			<version>${liferay.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet.jsp</groupId>
+			<artifactId>jsp-api</artifactId>
+			<version>2.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.2.4</version>
+		</dependency>         
+	</dependencies>
+</project>

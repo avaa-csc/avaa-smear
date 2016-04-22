@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE service-builder PUBLIC "-//Liferay//DTD Service Builder 6.2.0//EN" "[http://www.liferay.com/dtd/liferay-service-builder_6_2_0.dtd]">
+<service-builder package-path="fi.csc.avaa.smear.db">
+	<author>tkantola</author>
+	<namespace>Map</namespace>
+	<entity name="HyyCoord" table="coord_hyy" local-service="true" remote-service="true"  data-source="trajektori" session-factory="trajektoriSessionFactory">
+		<column name="arrTimeID" type="long" primary="true" />
+		<column name="arrTime" type="Date" />
+		<column name="matTime" type="float" /> 
+		<column name="year" type="int" />
+		<column name="month" type="int" />
+		<column name="day" type="int" />
+		<column name="hour" type="int" />
+		<column name="doy" type="int" />
+		<column name="backTime" type="int" />
+		<column name="lat100" type="float" />  
+		<column name="lon100" type="float" />  
+		<column name="alt100" type="float" />  
+		<column name="azim100" type="float" />  
+		<column name="lat250" type="float" />  
+		<column name="lon250" type="float" />  
+		<column name="alt250" type="float" />  
+		<column name="azim250" type="float" />  
+		<column name="lat500" type="float" />  
+		<column name="lon500" type="float" />  
+		<column name="alt500" type="float" />  
+		<column name="azim500" type="float" />  
+	</entity>
+</service-builder>

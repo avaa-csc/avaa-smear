@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping default-lazy="false" auto-import="false">
+	<import class="fi.csc.avaa.smear.db.model.HyyCoord" />
+	<class name="fi.csc.avaa.smear.db.model.impl.HyyCoordImpl" table="coord_hyy">
+		<cache usage="read-write" />
+		<id name="arrTimeID" type="long">
+			<generator class="assigned" />
+		</id>
+		<property name="arrTime" type="org.hibernate.type.TimestampType" />
+		<property name="matTime" type="com.liferay.portal.dao.orm.hibernate.FloatType" />
+		<property name="year" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
+		<property name="month" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
+		<property name="day" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
+		<property name="hour" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
+		<property name="doy" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
+		<property name="backTime" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
+		<property name="lat100" type="com.liferay.portal.dao.orm.hibernate.FloatType" />
+		<property name="lon100" type="com.liferay.portal.dao.orm.hibernate.FloatType" />
+		<property name="alt100" type="com.liferay.portal.dao.orm.hibernate.FloatType" />
+		<property name="azim100" type="com.liferay.portal.dao.orm.hibernate.FloatType" />
+		<property name="lat250" type="com.liferay.portal.dao.orm.hibernate.FloatType" />
+		<property name="lon250" type="com.liferay.portal.dao.orm.hibernate.FloatType" />
+		<property name="alt250" type="com.liferay.portal.dao.orm.hibernate.FloatType" />
+		<property name="azim250" type="com.liferay.portal.dao.orm.hibernate.FloatType" />
+		<property name="lat500" type="com.liferay.portal.dao.orm.hibernate.FloatType" />
+		<property name="lon500" type="com.liferay.portal.dao.orm.hibernate.FloatType" />
+		<property name="alt500" type="com.liferay.portal.dao.orm.hibernate.FloatType" />
+		<property name="azim500" type="com.liferay.portal.dao.orm.hibernate.FloatType" />
+	</class>
+</hibernate-mapping>

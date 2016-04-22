@@ -1,0 +1,2073 @@
+<?xml version="1.0"?>
+
+<entity-mappings xmlns="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_1_0.xsd">
+	<persistence-unit-metadata>
+		<xml-mapping-metadata-complete/>
+		<persistence-unit-defaults>
+			<access>PROPERTY</access>
+		</persistence-unit-defaults>
+	</persistence-unit-metadata>
+	<mapped-superclass class="fi.csc.smear.db.model.impl.Hyde_eddy233ModelImpl">
+		<attributes>
+			<id name="samptime">
+				<temporal>TIMESTAMP</temporal>
+			</id>
+			<basic name="H" />
+			<basic name="LE" />
+			<basic name="E" />
+			<basic name="F_c" />
+			<basic name="tau" />
+			<basic name="u_star" />
+			<basic name="MO_length" />
+			<basic name="std_u" />
+			<basic name="std_v" />
+			<basic name="std_w" />
+			<basic name="av_u" />
+			<basic name="av_v" />
+			<basic name="av_w" />
+			<basic name="av_t" />
+			<basic name="av_c" />
+			<basic name="av_h" />
+			<basic name="U" />
+			<basic name="wind_dir" />
+			<basic name="eta" />
+			<basic name="theta" />
+			<basic name="beta" />
+			<basic name="c_lag" />
+			<basic name="h_lag" />
+			<basic name="err_packet" />
+			<basic name="licor_t_av" />
+			<basic name="licor_t_std" />
+			<basic name="licor_p_av" />
+			<basic name="licor_p_std" />
+			<basic name="F_CPC" />
+			<basic name="std_CPC" />
+			<basic name="av_CPC" />
+			<basic name="CPC_lag" />
+			<basic name="std_t" />
+			<basic name="std_c" />
+			<basic name="std_h" />
+			<basic name="quality" />
+			<basic name="Qc_H" />
+			<basic name="Qc_LE" />
+			<basic name="Qc_E" />
+			<basic name="Qc_F_c" />
+			<basic name="Qc_tau" />
+			<basic name="Qc_F_CPC" />
+			<basic name="H_EMEP" />
+			<basic name="LE_EMEP" />
+			<basic name="E_EMEP" />
+			<basic name="F_c_EMEP" />
+			<basic name="tau_EMEP" />
+			<basic name="u_star_EMEP" />
+			<basic name="MO_length_EMEP" />
+			<basic name="std_u_EMEP" />
+			<basic name="std_v_EMEP" />
+			<basic name="std_w_EMEP" />
+			<basic name="av_u_EMEP" />
+			<basic name="av_v_EMEP" />
+			<basic name="av_w_EMEP" />
+			<basic name="av_t_EMEP" />
+			<basic name="av_c_EMEP" />
+			<basic name="av_h_EMEP" />
+			<basic name="U_EMEP" />
+			<basic name="wind_dir_EMEP" />
+			<basic name="eta_EMEP" />
+			<basic name="theta_EMEP" />
+			<basic name="beta_EMEP" />
+			<basic name="c_lag_EMEP" />
+			<basic name="h_lag_EMEP" />
+			<basic name="err_packet_EMEP" />
+			<basic name="licor_t_av_EMEP" />
+			<basic name="licor_t_std_EMEP" />
+			<basic name="licor_p_av_EMEP" />
+			<basic name="licor_p_std_EMEP" />
+			<basic name="F_CPC_EMEP" />
+			<basic name="std_CPC_EMEP" />
+			<basic name="av_CPC_EMEP" />
+			<basic name="CPC_lag_EMEP" />
+			<basic name="std_t_EMEP" />
+			<basic name="std_c_EMEP" />
+			<basic name="std_h_EMEP" />
+			<basic name="quality_EMEP" />
+			<basic name="Qc_H_EMEP" />
+			<basic name="Qc_LE_EMEP" />
+			<basic name="Qc_E_EMEP" />
+			<basic name="Qc_F_c_EMEP" />
+			<basic name="Qc_tau_EMEP" />
+			<basic name="Qc_F_CPC_EMEP" />
+			<basic name="NEE" />
+			<basic name="Qc_gapf_NEE" />
+			<basic name="GPP" />
+			<basic name="TER" />
+			<basic name="H_gapf" />
+			<basic name="Qc_gapf_H" />
+			<basic name="ET_gapf" />
+			<basic name="Qc_gapf_ET" />
+			<basic name="NEE_EMEP" />
+			<basic name="Qc_gapf_NEE_EMEP" />
+			<basic name="GPP_EMEP" />
+			<basic name="TER_EMEP" />
+			<basic name="H_gapf_EMEP" />
+			<basic name="Qc_gapf_H_EMEP" />
+			<basic name="ET_gapf_EMEP" />
+			<basic name="Qc_gapf_ET_EMEP" />
+			<transient name="modelAttributes" />
+			<transient name="primaryKey" />
+			<transient name="primaryKeyObj" />
+		</attributes>
+	</mapped-superclass>
+	<mapped-superclass class="fi.csc.smear.db.model.impl.Hyde_eddytowModelImpl">
+		<attributes>
+			<id name="samptime">
+				<temporal>TIMESTAMP</temporal>
+			</id>
+			<basic name="H_radtow" />
+			<basic name="H_radtow_EMEP" />
+			<basic name="Qc_H_radtow" />
+			<basic name="Qc_H_radtow_EMEP" />
+			<basic name="LE_radtow" />
+			<basic name="LE_radtow_EMEP" />
+			<basic name="Qc_LE_radtow" />
+			<basic name="Qc_LE_radtow_EMEP" />
+			<basic name="E_radtow" />
+			<basic name="E_radtow_EMEP" />
+			<basic name="Qc_E_radtow" />
+			<basic name="Qc_E_radtow_EMEP" />
+			<basic name="F_c_radtow" />
+			<basic name="F_c_radtow_EMEP" />
+			<basic name="Qc_F_c_radtow" />
+			<basic name="Qc_F_c_radtow_EMEP" />
+			<basic name="tau_radtow" />
+			<basic name="tau_radtow_EMEP" />
+			<basic name="Qc_tau_radtow" />
+			<basic name="Qc_tau_radtow_EMEP" />
+			<basic name="u_star_radtow" />
+			<basic name="u_star_radtow_EMEP" />
+			<basic name="MO_length_radtow" />
+			<basic name="MO_length_radtow_EMEP" />
+			<basic name="std_u_radtow" />
+			<basic name="std_u_radtow_EMEP" />
+			<basic name="std_v_radtow" />
+			<basic name="std_v_radtow_EMEP" />
+			<basic name="std_w_radtow" />
+			<basic name="std_w_radtow_EMEP" />
+			<basic name="std_t_radtow" />
+			<basic name="std_t_radtow_EMEP" />
+			<basic name="std_c_radtow" />
+			<basic name="std_c_radtow_EMEP" />
+			<basic name="std_h_radtow" />
+			<basic name="std_h_radtow_EMEP" />
+			<basic name="av_u_radtow" />
+			<basic name="av_u_radtow_EMEP" />
+			<basic name="av_v_radtow" />
+			<basic name="av_v_radtow_EMEP" />
+			<basic name="av_w_radtow" />
+			<basic name="av_w_radtow_EMEP" />
+			<basic name="av_t_radtow" />
+			<basic name="av_t_radtow_EMEP" />
+			<basic name="av_c_radtow" />
+			<basic name="av_c_radtow_EMEP" />
+			<basic name="av_h_radtow" />
+			<basic name="av_h_radtow_EMEP" />
+			<basic name="U_radtow" />
+			<basic name="U_radtow_EMEP" />
+			<basic name="wind_dir_radtow" />
+			<basic name="wind_dir_radtow_EMEP" />
+			<basic name="eta_radtow" />
+			<basic name="eta_radtow_EMEP" />
+			<basic name="theta_radtow" />
+			<basic name="theta_radtow_EMEP" />
+			<basic name="beta_radtow" />
+			<basic name="beta_radtow_EMEP" />
+			<basic name="c_lag_radtow" />
+			<basic name="c_lag_radtow_EMEP" />
+			<basic name="h_lag_radtow" />
+			<basic name="h_lag_radtow_EMEP" />
+			<basic name="err_packet_radtow" />
+			<basic name="err_packet_radtow_EMEP" />
+			<basic name="licor_t_std_radtow" />
+			<basic name="licor_t_std_radtow_EMEP" />
+			<basic name="licor_t_av_radtow" />
+			<basic name="licor_t_av_radtow_EMEP" />
+			<basic name="licor_p_std_radtow" />
+			<basic name="licor_p_std_radtow_EMEP" />
+			<basic name="licor_p_av_radtow" />
+			<basic name="licor_p_av_radtow_EMEP" />
+			<basic name="F_O3_radtow" />
+			<basic name="F_O3_radtow_EMEP" />
+			<basic name="Qc_F_O3_radtow" />
+			<basic name="Qc_F_O3_radtow_EMEP" />
+			<basic name="std_O3_radtow" />
+			<basic name="std_O3_radtow_EMEP" />
+			<basic name="av_O3_radtow" />
+			<basic name="av_O3_radtow_EMEP" />
+			<basic name="O3_lag_radtow" />
+			<basic name="O3_lag_radtow_EMEP" />
+			<basic name="NEE_radtow" />
+			<basic name="NEE_radtow_EMEP" />
+			<basic name="Qc_gapf_NEE_radtow" />
+			<basic name="Qc_gapf_NEE_radtow_EMEP" />
+			<basic name="GPP_radtow" />
+			<basic name="GPP_radtow_EMEP" />
+			<basic name="TER_radtow" />
+			<basic name="TER_radtow_EMEP" />
+			<transient name="modelAttributes" />
+			<transient name="primaryKey" />
+			<transient name="primaryKeyObj" />
+		</attributes>
+	</mapped-superclass>
+	<mapped-superclass class="fi.csc.smear.db.model.impl.HydemetaModelImpl">
+		<attributes>
+			<id name="samptime">
+				<temporal>TIMESTAMP</temporal>
+			</id>
+			<basic name="UV_A" />
+			<basic name="UV_B" />
+			<basic name="diffPAR" />
+			<basic name="diffGLOB" />
+			<basic name="dirGLOB" />
+			<basic name="Net" />
+			<basic name="RGlob" />
+			<basic name="Glob" />
+			<basic name="RPAR" />
+			<basic name="PAR" />
+			<basic name="dirPAR" />
+			<basic name="canIR" />
+			<basic name="skyIR" />
+			<basic name="Precip" />
+			<basic name="SWS" />
+			<basic name="Td" />
+			<basic name="Pamb0" />
+			<basic name="T672" />
+			<basic name="T504" />
+			<basic name="T336" />
+			<basic name="T168" />
+			<basic name="T84" />
+			<basic name="T42" />
+			<basic name="WS672" />
+			<basic name="WS504" />
+			<basic name="WS336" />
+			<basic name="WS168" />
+			<basic name="WS84" />
+			<basic name="WS42" />
+			<basic name="WSU740" />
+			<basic name="WSU336" />
+			<basic name="WSU168" />
+			<basic name="WSU84" />
+			<basic name="WD" />
+			<basic name="WD504" />
+			<basic name="WD336" />
+			<basic name="WD168" />
+			<basic name="WDU740" />
+			<basic name="WDU336" />
+			<basic name="WDU168" />
+			<basic name="WDU84" />
+			<basic name="NO672" />
+			<basic name="NO504" />
+			<basic name="NO336" />
+			<basic name="NO168" />
+			<basic name="NO84" />
+			<basic name="NO42" />
+			<basic name="NOx672" />
+			<basic name="NOx504" />
+			<basic name="NOx336" />
+			<basic name="NOx168" />
+			<basic name="NOx84" />
+			<basic name="NOx42" />
+			<basic name="O3672" />
+			<basic name="O3504" />
+			<basic name="O3336" />
+			<basic name="O3168" />
+			<basic name="O384" />
+			<basic name="O342" />
+			<basic name="SO2672" />
+			<basic name="SO2504" />
+			<basic name="SO2336" />
+			<basic name="SO2168" />
+			<basic name="SO284" />
+			<basic name="SO242" />
+			<basic name="H2O672" />
+			<basic name="H2O504" />
+			<basic name="H2O336" />
+			<basic name="H2O168" />
+			<basic name="H2O84" />
+			<basic name="H2O42" />
+			<basic name="CO2672" />
+			<basic name="CO2504" />
+			<basic name="CO2336" />
+			<basic name="CO2168" />
+			<basic name="CO284" />
+			<basic name="CO242" />
+			<basic name="H2S672" />
+			<basic name="H2S504" />
+			<basic name="H2S336" />
+			<basic name="H2S168" />
+			<basic name="H2S84" />
+			<basic name="H2S42" />
+			<basic name="RHIRGA672" />
+			<basic name="RHIRGA504" />
+			<basic name="RHIRGA336" />
+			<basic name="RHIRGA168" />
+			<basic name="RHIRGA84" />
+			<basic name="RHIRGA42" />
+			<basic name="CO672" />
+			<basic name="CO504" />
+			<basic name="CO336" />
+			<basic name="CO168" />
+			<basic name="CO84" />
+			<basic name="CO42" />
+			<basic name="RHTd" />
+			<basic name="PTG" />
+			<basic name="Visibility" />
+			<basic name="Visibilitymin" />
+			<basic name="Visibilitymax" />
+			<basic name="Precipint" />
+			<basic name="Precipintmin" />
+			<basic name="Precipintmax" />
+			<basic name="Precipacc" />
+			<basic name="Snowfallacc" />
+			<basic name="wthcode" />
+			<basic name="wthcodemin" />
+			<basic name="wthcodemax" />
+			<basic name="tsoil_humus" />
+			<basic name="tsoil_A" />
+			<basic name="tsoil_B1" />
+			<basic name="tsoil_B2" />
+			<basic name="tsoil_C1" />
+			<basic name="H2OTd" />
+			<basic name="CO2_storage_flux" />
+			<basic name="wsoil_humus" />
+			<basic name="wsoil_A" />
+			<basic name="wsoil_B1" />
+			<basic name="wsoil_B2" />
+			<basic name="wsoil_C1" />
+			<basic name="LWin" />
+			<basic name="LWout" />
+			<basic name="PRI" />
+			<basic name="NDVI" />
+			<basic name="BNDVI" />
+			<basic name="canPAR1" />
+			<basic name="canPAR2" />
+			<basic name="canPAR3" />
+			<basic name="maaPAR" />
+			<basic name="maaNet" />
+			<basic name="PAR2" />
+			<basic name="Globmast" />
+			<basic name="WDU672" />
+			<basic name="WSU672" />
+			<basic name="RGlob125" />
+			<basic name="CH4168" />
+			<basic name="CH4672" />
+			<basic name="CH41250" />
+			<basic name="T1250" />
+			<basic name="wpsoil_A" />
+			<basic name="wpsoil_B" />
+			<basic name="runoff1" />
+			<basic name="runoff2" />
+			<basic name="drainage1" />
+			<basic name="CO2icos168" />
+			<basic name="CO2icos672" />
+			<basic name="CO2icos1250" />
+			<basic name="H2Oicos168" />
+			<basic name="H2Oicos672" />
+			<basic name="H2Oicos1250" />
+			<basic name="UV_A_EMEP" />
+			<basic name="UV_B_EMEP" />
+			<basic name="diffPAR_EMEP" />
+			<basic name="diffGLOB_EMEP" />
+			<basic name="dirGLOB_EMEP" />
+			<basic name="Net_EMEP" />
+			<basic name="RGlob_EMEP" />
+			<basic name="Glob_EMEP" />
+			<basic name="RPAR_EMEP" />
+			<basic name="PAR_EMEP" />
+			<basic name="dirPAR_EMEP" />
+			<basic name="canIR_EMEP" />
+			<transient name="modelAttributes" />
+			<transient name="primaryKey" />
+			<transient name="primaryKeyObj" />
+		</attributes>
+	</mapped-superclass>
+	<mapped-superclass class="fi.csc.smear.db.model.impl.Hyy_eddysubModelImpl">
+		<attributes>
+			<id name="samptime">
+				<temporal>TIMESTAMP</temporal>
+			</id>
+			<basic name="H_subm" />
+			<basic name="H_subm_EMEP" />
+			<basic name="Qc_H_subm" />
+			<basic name="Qc_H_subm_EMEP" />
+			<basic name="LE_subm" />
+			<basic name="LE_subm_EMEP" />
+			<basic name="Qc_LE_subm" />
+			<basic name="Qc_LE_subm_EMEP" />
+			<basic name="E_subm" />
+			<basic name="E_subm_EMEP" />
+			<basic name="Qc_E_subm" />
+			<basic name="Qc_E_subm_EMEP" />
+			<basic name="F_c_subm" />
+			<basic name="F_c_subm_EMEP" />
+			<basic name="Qc_F_c_subm" />
+			<basic name="Qc_F_c_subm_EMEP" />
+			<basic name="tau_subm" />
+			<basic name="tau_subm_EMEP" />
+			<basic name="Qc_tau_subm" />
+			<basic name="Qc_tau_subm_EMEP" />
+			<basic name="u_star_subm" />
+			<basic name="u_star_subm_EMEP" />
+			<basic name="MO_length_subm" />
+			<basic name="MO_length_subm_EMEP" />
+			<basic name="std_u_subm" />
+			<basic name="std_u_subm_EMEP" />
+			<basic name="std_v_subm" />
+			<basic name="std_v_subm_EMEP" />
+			<basic name="std_w_subm" />
+			<basic name="std_w_subm_EMEP" />
+			<basic name="std_t_subm" />
+			<basic name="std_t_subm_EMEP" />
+			<basic name="std_c_subm" />
+			<basic name="std_c_subm_EMEP" />
+			<basic name="std_h_subm" />
+			<basic name="std_h_subm_EMEP" />
+			<basic name="av_u_subm" />
+			<basic name="av_u_subm_EMEP" />
+			<basic name="av_v_subm" />
+			<basic name="av_v_subm_EMEP" />
+			<basic name="av_w_subm" />
+			<basic name="av_w_subm_EMEP" />
+			<basic name="av_t_subm" />
+			<basic name="av_t_subm_EMEP" />
+			<basic name="av_c_subm" />
+			<basic name="av_c_subm_EMEP" />
+			<basic name="av_h_subm" />
+			<basic name="av_h_subm_EMEP" />
+			<basic name="U_subm" />
+			<basic name="U_subm_EMEP" />
+			<basic name="wind_dir_subm" />
+			<basic name="wind_dir_subm_EMEP" />
+			<basic name="eta_subm" />
+			<basic name="eta_subm_EMEP" />
+			<basic name="theta_subm" />
+			<basic name="theta_subm_EMEP" />
+			<basic name="beta_subm" />
+			<basic name="beta_subm_EMEP" />
+			<basic name="c_lag_subm" />
+			<basic name="c_lag_subm_EMEP" />
+			<basic name="h_lag_subm" />
+			<basic name="h_lag_subm_EMEP" />
+			<basic name="err_packet_subm" />
+			<basic name="err_packet_subm_EMEP" />
+			<basic name="licor_t_std_subm" />
+			<basic name="licor_t_std_subm_EMEP" />
+			<basic name="licor_t_av_subm" />
+			<basic name="licor_t_av_subm_EMEP" />
+			<basic name="licor_p_std_subm" />
+			<basic name="licor_p_std_subm_EMEP" />
+			<basic name="licor_p_av_subm" />
+			<basic name="licor_p_av_subm_EMEP" />
+			<basic name="av_O3_subm" />
+			<basic name="av_O3_subm_EMEP" />
+			<basic name="std_O3_subm" />
+			<basic name="std_O3_subm_EMEP" />
+			<basic name="O3_lag_subm" />
+			<basic name="O3_lag_subm_EMEP" />
+			<basic name="F_O3_subm" />
+			<basic name="F_O3_subm_EMEP" />
+			<basic name="Qc_F_O3_subm" />
+			<basic name="Qc_F_O3_subm_EMEP" />
+			<transient name="modelAttributes" />
+			<transient name="primaryKey" />
+			<transient name="primaryKeyObj" />
+		</attributes>
+	</mapped-superclass>
+	<mapped-superclass class="fi.csc.smear.db.model.impl.HyyAeroModelImpl">
+		<attributes>
+			<id name="samptime">
+				<temporal>TIMESTAMP</temporal>
+			</id>
+			<basic name="cn" />
+			<basic name="cn_t" />
+			<basic name="cn_p" />
+			<transient name="modelAttributes" />
+			<transient name="primaryKey" />
+			<transient name="primaryKeyObj" />
+		</attributes>
+	</mapped-superclass>
+	<mapped-superclass class="fi.csc.smear.db.model.impl.HyyDMPSModelImpl">
+		<attributes>
+			<id name="samptime">
+				<temporal>TIMESTAMP</temporal>
+			</id>
+			<basic name="t1" />
+			<basic name="t2" />
+			<basic name="p1" />
+			<basic name="p2" />
+			<basic name="rh1" />
+			<basic name="rh2" />
+			<basic name="d100e1" />
+			<basic name="d112e1" />
+			<basic name="d126e1" />
+			<basic name="d141e1" />
+			<basic name="d158e1" />
+			<basic name="d178e1" />
+			<basic name="d200e1" />
+			<basic name="d224e1" />
+			<basic name="d251e1" />
+			<basic name="d282e1" />
+			<basic name="d316e1" />
+			<basic name="d355e1" />
+			<basic name="d398e1" />
+			<basic name="d447e1" />
+			<basic name="d501e1" />
+			<basic name="d562e1" />
+			<basic name="d631e1" />
+			<basic name="d708e1" />
+			<basic name="d794e1" />
+			<basic name="d891e1" />
+			<basic name="d100e2" />
+			<basic name="d112e2" />
+			<basic name="d126e2" />
+			<basic name="d141e2" />
+			<basic name="d158e2" />
+			<basic name="d178e2" />
+			<basic name="d200e2" />
+			<basic name="d224e2" />
+			<basic name="d251e2" />
+			<basic name="d282e2" />
+			<basic name="d316e2" />
+			<basic name="d355e2" />
+			<basic name="d398e2" />
+			<basic name="d447e2" />
+			<basic name="d501e2" />
+			<basic name="d562e2" />
+			<basic name="d631e2" />
+			<basic name="d708e2" />
+			<basic name="d794e2" />
+			<basic name="d891e2" />
+			<basic name="d100e3" />
+			<basic name="d112e3" />
+			<basic name="d126e3" />
+			<basic name="d141e3" />
+			<basic name="d158e3" />
+			<basic name="d178e3" />
+			<basic name="d200e3" />
+			<basic name="d224e3" />
+			<basic name="d251e3" />
+			<basic name="d282e3" />
+			<basic name="d316e3" />
+			<basic name="d355e3" />
+			<basic name="d398e3" />
+			<basic name="d447e3" />
+			<basic name="d501e3" />
+			<basic name="d562e3" />
+			<basic name="d631e3" />
+			<basic name="d708e3" />
+			<basic name="d794e3" />
+			<basic name="d891e3" />
+			<basic name="d100e4" />
+			<basic name="tconc" />
+			<transient name="modelAttributes" />
+			<transient name="primaryKey" />
+			<transient name="primaryKeyObj" />
+		</attributes>
+	</mapped-superclass>
+	<mapped-superclass class="fi.csc.smear.db.model.impl.Kumpula_eddyModelImpl">
+		<attributes>
+			<id name="samptime">
+				<temporal>TIMESTAMP</temporal>
+			</id>
+			<basic name="H" />
+			<basic name="H_EMEP" />
+			<basic name="Qc_H" />
+			<basic name="Qc_H_EMEP" />
+			<basic name="LE" />
+			<basic name="LE_EMEP" />
+			<basic name="Qc_LE" />
+			<basic name="Qc_LE_EMEP" />
+			<basic name="E" />
+			<basic name="E_EMEP" />
+			<basic name="Qc_E" />
+			<basic name="Qc_E_EMEP" />
+			<basic name="F_c" />
+			<basic name="F_c_EMEP" />
+			<basic name="Qc_F_c" />
+			<basic name="Qc_F_c_EMEP" />
+			<basic name="tau" />
+			<basic name="tau_EMEP" />
+			<basic name="Qc_tau" />
+			<basic name="Qc_tau_EMEP" />
+			<basic name="u_star" />
+			<basic name="u_star_EMEP" />
+			<basic name="MO_length" />
+			<basic name="MO_length_EMEP" />
+			<basic name="std_u" />
+			<basic name="std_u_EMEP" />
+			<basic name="std_v" />
+			<basic name="std_v_EMEP" />
+			<basic name="std_w" />
+			<basic name="std_w_EMEP" />
+			<basic name="std_t" />
+			<basic name="std_t_EMEP" />
+			<basic name="std_c" />
+			<basic name="std_c_EMEP" />
+			<basic name="std_h" />
+			<basic name="std_h_EMEP" />
+			<basic name="av_u" />
+			<basic name="av_u_EMEP" />
+			<basic name="av_v" />
+			<basic name="av_v_EMEP" />
+			<basic name="av_w" />
+			<basic name="av_w_EMEP" />
+			<basic name="av_t" />
+			<basic name="av_t_EMEP" />
+			<basic name="av_c" />
+			<basic name="av_c_EMEP" />
+			<basic name="av_h" />
+			<basic name="av_h_EMEP" />
+			<basic name="U" />
+			<basic name="U_EMEP" />
+			<basic name="wind_dir" />
+			<basic name="wind_dir_EMEP" />
+			<basic name="eta" />
+			<basic name="eta_EMEP" />
+			<basic name="theta" />
+			<basic name="theta_EMEP" />
+			<basic name="beta" />
+			<basic name="beta_EMEP" />
+			<basic name="c_lag" />
+			<basic name="c_lag_EMEP" />
+			<basic name="h_lag" />
+			<basic name="h_lag_EMEP" />
+			<basic name="err_packet" />
+			<basic name="err_packet_EMEP" />
+			<basic name="licor_t_std" />
+			<basic name="licor_t_std_EMEP" />
+			<basic name="licor_t_av" />
+			<basic name="licor_t_av_EMEP" />
+			<basic name="licor_p_std" />
+			<basic name="licor_p_std_EMEP" />
+			<basic name="licor_p_av" />
+			<basic name="licor_p_av_EMEP" />
+			<basic name="LE_op" />
+			<basic name="LE_op_EMEP" />
+			<basic name="Qc_LE_op" />
+			<basic name="Qc_LE_op_EMEP" />
+			<basic name="E_op" />
+			<basic name="E_op_EMEP" />
+			<basic name="Qc_E_op" />
+			<basic name="Qc_E_op_EMEP" />
+			<basic name="F_c_op" />
+			<basic name="F_c_op_EMEP" />
+			<basic name="Qc_F_c_op" />
+			<basic name="Qc_F_c_op_EMEP" />
+			<basic name="std_c_op" />
+			<basic name="std_c_op_EMEP" />
+			<basic name="std_h_op" />
+			<basic name="std_h_op_EMEP" />
+			<basic name="av_c_op" />
+			<basic name="av_c_op_EMEP" />
+			<basic name="av_h_op" />
+			<basic name="av_h_op_EMEP" />
+			<basic name="c_lag_op" />
+			<basic name="c_lag_op_EMEP" />
+			<basic name="h_lag_op" />
+			<basic name="h_lag_op_EMEP" />
+			<basic name="F_CPC" />
+			<basic name="F_CPC_EMEP" />
+			<basic name="Qc_F_CPC" />
+			<basic name="Qc_F_CPC_EMEP" />
+			<basic name="std_CPC" />
+			<basic name="std_CPC_EMEP" />
+			<basic name="av_CPC" />
+			<basic name="av_CPC_EMEP" />
+			<basic name="CPC_lag" />
+			<basic name="CPC_lag_EMEP" />
+			<basic name="F_N2O" />
+			<basic name="F_N2O_EMEP" />
+			<basic name="Qc_F_N2O" />
+			<basic name="Qc_F_N2O_EMEP" />
+			<basic name="std_N2O" />
+			<basic name="std_N2O_EMEP" />
+			<basic name="av_N2O" />
+			<basic name="av_N2O_EMEP" />
+			<basic name="N2O_lag" />
+			<basic name="N2O_lag_EMEP" />
+			<transient name="modelAttributes" />
+			<transient name="primaryKey" />
+			<transient name="primaryKeyObj" />
+		</attributes>
+	</mapped-superclass>
+	<mapped-superclass class="fi.csc.smear.db.model.impl.KumpulaDMPSModelImpl">
+		<attributes>
+			<id name="samptime">
+				<temporal>TIMESTAMP</temporal>
+			</id>
+			<basic name="t1" />
+			<basic name="t2" />
+			<basic name="p1" />
+			<basic name="p2" />
+			<basic name="rh1" />
+			<basic name="rh2" />
+			<basic name="d100e1" />
+			<basic name="d112e1" />
+			<basic name="d126e1" />
+			<basic name="d141e1" />
+			<basic name="d158e1" />
+			<basic name="d178e1" />
+			<basic name="d200e1" />
+			<basic name="d224e1" />
+			<basic name="d251e1" />
+			<basic name="d282e1" />
+			<basic name="d316e1" />
+			<basic name="d355e1" />
+			<basic name="d398e1" />
+			<basic name="d447e1" />
+			<basic name="d501e1" />
+			<basic name="d562e1" />
+			<basic name="d631e1" />
+			<basic name="d708e1" />
+			<basic name="d794e1" />
+			<basic name="d891e1" />
+			<basic name="d100e2" />
+			<basic name="d112e2" />
+			<basic name="d126e2" />
+			<basic name="d141e2" />
+			<basic name="d158e2" />
+			<basic name="d178e2" />
+			<basic name="d200e2" />
+			<basic name="d224e2" />
+			<basic name="d251e2" />
+			<basic name="d282e2" />
+			<basic name="d316e2" />
+			<basic name="d355e2" />
+			<basic name="d398e2" />
+			<basic name="d447e2" />
+			<basic name="d501e2" />
+			<basic name="d562e2" />
+			<basic name="d631e2" />
+			<basic name="d708e2" />
+			<basic name="d794e2" />
+			<basic name="d891e2" />
+			<basic name="d100e3" />
+			<basic name="d112e3" />
+			<basic name="d126e3" />
+			<basic name="d141e3" />
+			<basic name="d158e3" />
+			<basic name="d178e3" />
+			<basic name="d200e3" />
+			<basic name="d224e3" />
+			<basic name="d251e3" />
+			<basic name="d282e3" />
+			<basic name="d316e3" />
+			<basic name="d355e3" />
+			<basic name="d398e3" />
+			<basic name="d447e3" />
+			<basic name="d501e3" />
+			<basic name="d562e3" />
+			<basic name="d631e3" />
+			<basic name="d708e3" />
+			<basic name="d794e3" />
+			<basic name="d891e3" />
+			<basic name="d100e4" />
+			<basic name="tconc" />
+			<transient name="modelAttributes" />
+			<transient name="primaryKey" />
+			<transient name="primaryKeyObj" />
+		</attributes>
+	</mapped-superclass>
+	<mapped-superclass class="fi.csc.smear.db.model.impl.KumpulametaModelImpl">
+		<attributes>
+			<id name="samptime">
+				<temporal>TIMESTAMP</temporal>
+			</id>
+			<basic name="t" />
+			<basic name="dp" />
+			<basic name="rh" />
+			<basic name="p" />
+			<basic name="ws" />
+			<basic name="wdir" />
+			<basic name="rmm" />
+			<basic name="p0" />
+			<basic name="glob" />
+			<basic name="par" />
+			<basic name="skyir" />
+			<basic name="pwd_visibility_1" />
+			<basic name="pwd_visibility_10" />
+			<basic name="pwd_wmo_0" />
+			<basic name="pwd_wmo_15" />
+			<basic name="pwd_wmo_60" />
+			<basic name="pwd_intensity_w" />
+			<basic name="pwd_rmm" />
+			<basic name="pwd_smm" />
+			<basic name="pwd_nws" />
+			<basic name="Tower_T_4m" />
+			<basic name="Tower_T_8m" />
+			<basic name="Tower_T_16m" />
+			<basic name="Tower_T_32m" />
+			<basic name="Tower_WS_32m" />
+			<basic name="Tower_WS_16m" />
+			<basic name="Tower_WS_8m" />
+			<basic name="Tower_WS_4m" />
+			<basic name="Tower_WDIR_32m" />
+			<basic name="Tower_WDIR_16m" />
+			<basic name="Tower_WDIR_8m" />
+			<basic name="Tower_WDIR_4m" />
+			<basic name="Tower_PAR_32m" />
+			<basic name="Tower_PAR_REFL_32m" />
+			<basic name="Tower_GLOB_32m" />
+			<basic name="Tower_GLOB_REFL_32m" />
+			<basic name="Tower_IR_32m" />
+			<basic name="Tower_IR_REFL_32m" />
+			<basic name="Tower_VT_4m" />
+			<basic name="Tower_VT_8m" />
+			<basic name="Tower_VT_16m" />
+			<basic name="Tower_VT_32m" />
+			<basic name="O_3" />
+			<basic name="NO" />
+			<basic name="NO_x" />
+			<basic name="SO_2" />
+			<basic name="CO" />
+			<basic name="Tower_WS_MAX_32m" />
+			<basic name="Tower_WS_MAX_16m" />
+			<basic name="Tower_WS_MAX_8m" />
+			<basic name="Tower_WS_MAX_4m" />
+			<transient name="modelAttributes" />
+			<transient name="primaryKey" />
+			<transient name="primaryKeyObj" />
+		</attributes>
+	</mapped-superclass>
+	<mapped-superclass class="fi.csc.smear.db.model.impl.kvjEddyModelImpl">
+		<attributes>
+			<id name="samptime">
+				<temporal>TIMESTAMP</temporal>
+			</id>
+			<basic name="H" />
+			<basic name="H_EMEP" />
+			<basic name="Qc_H" />
+			<basic name="Qc_H_EMEP" />
+			<basic name="tau" />
+			<basic name="tau_EMEP" />
+			<basic name="Qc_tau" />
+			<basic name="Qc_tau_EMEP" />
+			<basic name="u_star" />
+			<basic name="u_star_EMEP" />
+			<basic name="MO_length" />
+			<basic name="MO_length_EMEP" />
+			<basic name="err_packet" />
+			<basic name="err_packet_EMEP" />
+			<basic name="F_CO2_LI72" />
+			<basic name="F_CO2_LI72_EMEP" />
+			<basic name="Qc_CO2_LI72" />
+			<basic name="Qc_CO2_LI72_EMEP" />
+			<basic name="F_CH4_PICA" />
+			<basic name="F_CH4_PICA_EMEP" />
+			<basic name="Qc_CH4_PICA" />
+			<basic name="Qc_CH4_PICA_EMEP" />
+			<basic name="F_H2O_LI72" />
+			<basic name="F_H2O_LI72_EMEP" />
+			<basic name="Qc_H2O_LI72" />
+			<basic name="Qc_H2O_LI72_EMEP" />
+			<basic name="F_H2O_PICA" />
+			<basic name="F_H2O_PICA_EMEP" />
+			<basic name="Qc_H2O_PICA" />
+			<basic name="Qc_H2O_PICA_EMEP" />
+			<basic name="LE_LI72" />
+			<basic name="LE_LI72_EMEP" />
+			<basic name="LE_PICA" />
+			<basic name="LE_PICA_EMEP" />
+			<basic name="U" />
+			<basic name="U_EMEP" />
+			<basic name="wind_dir" />
+			<basic name="wind_dir_EMEP" />
+			<basic name="av_u" />
+			<basic name="av_u_EMEP" />
+			<basic name="av_v" />
+			<basic name="av_v_EMEP" />
+			<basic name="av_w" />
+			<basic name="av_w_EMEP" />
+			<basic name="av_t" />
+			<basic name="av_t_EMEP" />
+			<basic name="av_c_LI72" />
+			<basic name="av_c_LI72_EMEP" />
+			<basic name="av_h_LI72" />
+			<basic name="av_h_LI72_EMEP" />
+			<basic name="av_h_PICA" />
+			<basic name="av_h_PICA_EMEP" />
+			<basic name="av_CH4" />
+			<basic name="av_CH4_EMEP" />
+			<basic name="std_u" />
+			<basic name="std_u_EMEP" />
+			<basic name="std_v" />
+			<basic name="std_v_EMEP" />
+			<basic name="std_w" />
+			<basic name="std_w_EMEP" />
+			<basic name="std_t" />
+			<basic name="std_t_EMEP" />
+			<basic name="std_c_LI72" />
+			<basic name="std_c_LI72_EMEP" />
+			<basic name="std_h_LI72" />
+			<basic name="std_h_LI72_EMEP" />
+			<basic name="std_h_PICA" />
+			<basic name="std_h_PICA_EMEP" />
+			<basic name="std_CH4" />
+			<basic name="std_CH4_EMEP" />
+			<basic name="eta" />
+			<basic name="eta_EMEP" />
+			<basic name="theta" />
+			<basic name="theta_EMEP" />
+			<basic name="beta" />
+			<basic name="beta_EMEP" />
+			<basic name="Covs_u" />
+			<basic name="Covs_u_EMEP" />
+			<basic name="Covs_v" />
+			<basic name="Covs_v_EMEP" />
+			<basic name="Covs_Ts" />
+			<basic name="Covs_Ts_EMEP" />
+			<basic name="Covs_CO2_LI72" />
+			<basic name="Covs_CO2_LI72_EMEP" />
+			<basic name="Covs_H2O_LI72" />
+			<basic name="Covs_H2O_LI72_EMEP" />
+			<basic name="Covs_T_C_LI72" />
+			<basic name="Covs_T_C_LI72_EMEP" />
+			<basic name="Covs_P_C_LI72" />
+			<basic name="Covs_P_C_LI72_EMEP" />
+			<basic name="Covs_H2O_PICA" />
+			<basic name="Covs_H2O_PICA_EMEP" />
+			<basic name="Covs_CH4_PICA" />
+			<basic name="Covs_CH4_PICA_EMEP" />
+			<basic name="licor_t_av" />
+			<basic name="licor_t_av_EMEP" />
+			<basic name="licor_p_av" />
+			<basic name="licor_p_av_EMEP" />
+			<basic name="licor_t_std" />
+			<basic name="licor_t_std_EMEP" />
+			<basic name="licor_p_std" />
+			<basic name="licor_p_std_EMEP" />
+			<basic name="c_lag_LI72" />
+			<basic name="c_lag_LI72_EMEP" />
+			<basic name="h_lag_LI72" />
+			<basic name="h_lag_LI72_EMEP" />
+			<basic name="t_lag_LI72" />
+			<basic name="t_lag_LI72_EMEP" />
+			<basic name="p_lag_LI72" />
+			<basic name="p_lag_LI72_EMEP" />
+			<basic name="h_lag_PICA" />
+			<basic name="h_lag_PICA_EMEP" />
+			<basic name="CH4_lag" />
+			<basic name="CH4_lag_EMEP" />
+			<basic name="Nspikes_u" />
+			<basic name="Nspikes_u_EMEP" />
+			<basic name="Nspikes_v" />
+			<basic name="Nspikes_v_EMEP" />
+			<basic name="Nspikes_w" />
+			<basic name="Nspikes_w_EMEP" />
+			<basic name="Nspikes_Ts" />
+			<basic name="Nspikes_Ts_EMEP" />
+			<basic name="Nspikes_CO2_LI72" />
+			<basic name="Nspikes_CO2_LI72_EMEP" />
+			<basic name="Nspikes_H2O_LI72" />
+			<basic name="Nspikes_H2O_LI72_EMEP" />
+			<basic name="Nspikes_T_C_LI72" />
+			<basic name="Nspikes_T_C_LI72_EMEP" />
+			<basic name="Nspikes_P_C_LI72" />
+			<basic name="Nspikes_P_C_LI72_EMEP" />
+			<basic name="Nspikes_H2O_PICA" />
+			<basic name="Nspikes_H2O_PICA_EMEP" />
+			<basic name="Nspikes_CH4_PICA" />
+			<basic name="Nspikes_CH4_PICA_EMEP" />
+			<basic name="FI_u" />
+			<basic name="FI_u_EMEP" />
+			<basic name="FI_Ts" />
+			<basic name="FI_Ts_EMEP" />
+			<basic name="FI_CO2_LI72" />
+			<basic name="FI_CO2_LI72_EMEP" />
+			<basic name="FI_H2O_LI72" />
+			<basic name="FI_H2O_LI72_EMEP" />
+			<basic name="FI_CH4_PICA" />
+			<basic name="FI_CH4_PICA_EMEP" />
+			<basic name="FI_H2O_PICA" />
+			<basic name="FI_H2O_PICA_EMEP" />
+			<basic name="FST_u" />
+			<basic name="FST_u_EMEP" />
+			<basic name="FST_Ts" />
+			<basic name="FST_Ts_EMEP" />
+			<basic name="FST_CO2_LI72" />
+			<basic name="FST_CO2_LI72_EMEP" />
+			<basic name="FST_H2O_LI72" />
+			<basic name="FST_H2O_LI72_EMEP" />
+			<basic name="FST_CH4_PICA" />
+			<basic name="FST_CH4_PICA_EMEP" />
+			<basic name="FST_H2O_PICA" />
+			<basic name="FST_H2O_PICA_EMEP" />
+			<basic name="RFE_u" />
+			<basic name="RFE_u_EMEP" />
+			<basic name="RFE_Ts" />
+			<basic name="RFE_Ts_EMEP" />
+			<basic name="RFE_CO2_LI72" />
+			<basic name="RFE_CO2_LI72_EMEP" />
+			<basic name="RFE_H2O_LI72" />
+			<basic name="RFE_H2O_LI72_EMEP" />
+			<basic name="RFE_CH4_PICA" />
+			<basic name="RFE_CH4_PICA_EMEP" />
+			<basic name="RFE_H2O_PICA" />
+			<basic name="RFE_H2O_PICA_EMEP" />
+			<basic name="FA_u" />
+			<basic name="FA_u_EMEP" />
+			<basic name="FA_v" />
+			<basic name="FA_v_EMEP" />
+			<basic name="FA_Ts" />
+			<basic name="FA_Ts_EMEP" />
+			<basic name="FA_CO2_LI72" />
+			<basic name="FA_CO2_LI72_EMEP" />
+			<basic name="FA_H2O_LI72" />
+			<basic name="FA_H2O_LI72_EMEP" />
+			<basic name="FA_CH4_PICA" />
+			<basic name="FA_CH4_PICA_EMEP" />
+			<basic name="FA_H2O_PICA" />
+			<basic name="FA_H2O_PICA_EMEP" />
+			<basic name="covsvar_u" />
+			<basic name="covsvar_u_EMEP" />
+			<basic name="covsvar_v" />
+			<basic name="covsvar_v_EMEP" />
+			<basic name="covsvar_Ts" />
+			<basic name="covsvar_Ts_EMEP" />
+			<basic name="covsvar_CO2_LI72" />
+			<basic name="covsvar_CO2_LI72_EMEP" />
+			<basic name="covsvar_H2O_LI72" />
+			<basic name="covsvar_H2O_LI72_EMEP" />
+			<basic name="covsvar_CH4_PICA" />
+			<basic name="covsvar_CH4_PICA_EMEP" />
+			<basic name="covsvar_H2O_PICA" />
+			<basic name="covsvar_H2O_PICA_EMEP" />
+			<basic name="SKx_u" />
+			<basic name="SKx_u_EMEP" />
+			<basic name="SKx_v" />
+			<basic name="SKx_v_EMEP" />
+			<basic name="SKx_w" />
+			<basic name="SKx_w_EMEP" />
+			<basic name="SKx_Ts" />
+			<basic name="SKx_Ts_EMEP" />
+			<basic name="SKx_CO2_LI72" />
+			<basic name="SKx_CO2_LI72_EMEP" />
+			<basic name="SKx_H2O_LI72" />
+			<basic name="SKx_H2O_LI72_EMEP" />
+			<basic name="SKx_CH4_PICA" />
+			<basic name="SKx_CH4_PICA_EMEP" />
+			<basic name="SKx_H2O_PICA" />
+			<basic name="SKx_H2O_PICA_EMEP" />
+			<basic name="KUx_u" />
+			<basic name="KUx_u_EMEP" />
+			<basic name="KUx_v" />
+			<basic name="KUx_v_EMEP" />
+			<basic name="KUx_w" />
+			<basic name="KUx_w_EMEP" />
+			<basic name="KUx_Ts" />
+			<basic name="KUx_Ts_EMEP" />
+			<basic name="KUx_CO2_LI72" />
+			<basic name="KUx_CO2_LI72_EMEP" />
+			<basic name="KUx_H2O_LI72" />
+			<basic name="KUx_H2O_LI72_EMEP" />
+			<basic name="KUx_CH4_PICA" />
+			<basic name="KUx_CH4_PICA_EMEP" />
+			<basic name="KUx_H2O_PICA" />
+			<basic name="KUx_H2O_PICA_EMEP" />
+			<basic name="overall_qflag_u" />
+			<basic name="overall_qflag_u_EMEP" />
+			<basic name="overall_qflag_Ts" />
+			<basic name="overall_qflag_Ts_EMEP" />
+			<basic name="overall_qflag_CO2_LI72" />
+			<basic name="overall_qflag_CO2_LI72_EMEP" />
+			<basic name="overall_qflag_H2O_LI72" />
+			<basic name="overall_qflag_H2O_LI72_EMEP" />
+			<basic name="overall_qflag_CH4_PICA" />
+			<basic name="overall_qflag_CH4_PICA_EMEP" />
+			<basic name="overall_qflag_H2O_PICA" />
+			<basic name="overall_qflag_H2O_PICA_EMEP" />
+			<basic name="ITC_qflag_w" />
+			<basic name="ITC_qflag_w_EMEP" />
+			<basic name="ITC_qflag_u" />
+			<basic name="ITC_qflag_u_EMEP" />
+			<basic name="ITC_qflag_Ts" />
+			<basic name="ITC_qflag_Ts_EMEP" />
+			<basic name="ITC_qflag_CO2_LI72" />
+			<basic name="ITC_qflag_CO2_LI72_EMEP" />
+			<basic name="ITC_qflag_H2O_LI72" />
+			<basic name="ITC_qflag_H2O_LI72_EMEP" />
+			<basic name="ITC_qflag_CH4_PICA" />
+			<basic name="ITC_qflag_CH4_PICA_EMEP" />
+			<basic name="ITC_qflag_H2O_PICA" />
+			<basic name="ITC_qflag_H2O_PICA_EMEP" />
+			<basic name="FST_qflag_u" />
+			<basic name="FST_qflag_u_EMEP" />
+			<basic name="FST_qflag_Ts" />
+			<basic name="FST_qflag_Ts_EMEP" />
+			<basic name="FST_qflag_CO2_LI72" />
+			<basic name="FST_qflag_CO2_LI72_EMEP" />
+			<basic name="FST_qflag_H2O_LI72" />
+			<basic name="FST_qflag_H2O_LI72_EMEP" />
+			<basic name="FST_qflag_CH4_PICA" />
+			<basic name="FST_qflag_CH4_PICA_EMEP" />
+			<basic name="FST_qflag_H2O_PICA" />
+			<basic name="FST_qflag_H2O_PICA_EMEP" />
+			<basic name="Hm_u" />
+			<basic name="Hm_u_EMEP" />
+			<basic name="Hm_Ts" />
+			<basic name="Hm_Ts_EMEP" />
+			<basic name="Hm_CO2_LI72" />
+			<basic name="Hm_CO2_LI72_EMEP" />
+			<basic name="Hm_H2O_LI72" />
+			<basic name="Hm_H2O_LI72_EMEP" />
+			<basic name="Hm_CH4_PICA" />
+			<basic name="Hm_CH4_PICA_EMEP" />
+			<basic name="Hm_H2O_PICA" />
+			<basic name="Hm_H2O_PICA_EMEP" />
+			<basic name="Hv_u" />
+			<basic name="Hv_u_EMEP" />
+			<basic name="Hv_Ts" />
+			<basic name="Hv_Ts_EMEP" />
+			<basic name="Hv_CO2_LI72" />
+			<basic name="Hv_CO2_LI72_EMEP" />
+			<basic name="Hv_H2O_LI72" />
+			<basic name="Hv_H2O_LI72_EMEP" />
+			<basic name="Hv_CH4_PICA" />
+			<basic name="Hv_CH4_PICA_EMEP" />
+			<basic name="Hv_H2O_PICA" />
+			<basic name="Hv_H2O_PICA_EMEP" />
+			<basic name="fpr_x_peak" />
+			<basic name="fpr_x_peak_EMEP" />
+			<basic name="fpr_x_80" />
+			<basic name="fpr_x_80_EMEP" />
+			<transient name="modelAttributes" />
+			<transient name="primaryKey" />
+			<transient name="primaryKeyObj" />
+		</attributes>
+	</mapped-superclass>
+	<mapped-superclass class="fi.csc.smear.db.model.impl.Sii1eddyModelImpl">
+		<attributes>
+			<id name="samptime">
+				<temporal>TIMESTAMP</temporal>
+			</id>
+			<basic name="U" />
+			<basic name="U_EMEP" />
+			<basic name="wind_dir" />
+			<basic name="wind_dir_EMEP" />
+			<basic name="eta" />
+			<basic name="eta_EMEP" />
+			<basic name="theta" />
+			<basic name="theta_EMEP" />
+			<basic name="beta" />
+			<basic name="beta_EMEP" />
+			<basic name="H" />
+			<basic name="H_EMEP" />
+			<basic name="tau" />
+			<basic name="tau_EMEP" />
+			<basic name="u_star" />
+			<basic name="u_star_EMEP" />
+			<basic name="MO_length" />
+			<basic name="MO_length_EMEP" />
+			<basic name="err_packet" />
+			<basic name="err_packet_EMEP" />
+			<basic name="F_c_LI70" />
+			<basic name="F_c_LI70_EMEP" />
+			<basic name="F_H2O_LI70" />
+			<basic name="F_H2O_LI70_EMEP" />
+			<basic name="F_CH4_LGR" />
+			<basic name="F_CH4_LGR_EMEP" />
+			<basic name="F_CH4_TGA" />
+			<basic name="F_CH4_TGA_EMEP" />
+			<basic name="F_H2O_PIC" />
+			<basic name="F_H2O_PIC_EMEP" />
+			<basic name="F_CH4_PIC" />
+			<basic name="F_CH4_PIC_EMEP" />
+			<basic name="LE_LI70" />
+			<basic name="LE_LI70_EMEP" />
+			<basic name="LE_PIC" />
+			<basic name="LE_PIC_EMEP" />
+			<basic name="av_u" />
+			<basic name="av_u_EMEP" />
+			<basic name="av_v" />
+			<basic name="av_v_EMEP" />
+			<basic name="av_w" />
+			<basic name="av_w_EMEP" />
+			<basic name="T_s" />
+			<basic name="T_s_EMEP" />
+			<basic name="av_c" />
+			<basic name="av_c_EMEP" />
+			<basic name="av_H2O_LI70" />
+			<basic name="av_H2O_LI70_EMEP" />
+			<basic name="av_CH4_LGR" />
+			<basic name="av_CH4_LGR_EMEP" />
+			<basic name="av_CH4_TGA" />
+			<basic name="av_CH4_TGA_EMEP" />
+			<basic name="av_H2O_PIC" />
+			<basic name="av_H2O_PIC_EMEP" />
+			<basic name="av_CH4_PIC" />
+			<basic name="av_CH4_PIC_EMEP" />
+			<basic name="std_u" />
+			<basic name="std_u_EMEP" />
+			<basic name="std_v" />
+			<basic name="std_v_EMEP" />
+			<basic name="std_w" />
+			<basic name="std_w_EMEP" />
+			<basic name="std_T_s" />
+			<basic name="std_T_s_EMEP" />
+			<basic name="std_c_LI70" />
+			<basic name="std_c_LI70_EMEP" />
+			<basic name="std_H2O_LI70" />
+			<basic name="std_H2O_LI70_EMEP" />
+			<basic name="std_CH4_LGR" />
+			<basic name="std_CH4_LGR_EMEP" />
+			<basic name="std_CH4_TGA" />
+			<basic name="std_CH4_TGA_EMEP" />
+			<basic name="std_H2O_PIC" />
+			<basic name="std_H2O_PIC_EMEP" />
+			<basic name="std_CH4_PIC" />
+			<basic name="std_CH4_PIC_EMEP" />
+			<basic name="c_lag_LI70" />
+			<basic name="c_lag_LI70_EMEP" />
+			<basic name="H2O_lag_LI70" />
+			<basic name="H2O_lag_LI70_EMEP" />
+			<basic name="CH4_lag_LGR" />
+			<basic name="CH4_lag_LGR_EMEP" />
+			<basic name="CH4_lag_TGA" />
+			<basic name="CH4_lag_TGA_EMEP" />
+			<basic name="H2O_lag_PIC" />
+			<basic name="H2O_lag_PIC_EMEP" />
+			<basic name="CH4_lag_PIC" />
+			<basic name="CH4_lag_PIC_EMEP" />
+			<basic name="Qc_H" />
+			<basic name="Qc_H_EMEP" />
+			<basic name="Qc_CO2_LI70" />
+			<basic name="Qc_CO2_LI70_EMEP" />
+			<basic name="Qc_CH4_LGR" />
+			<basic name="Qc_CH4_LGR_EMEP" />
+			<basic name="Qc_CH4_TGA" />
+			<basic name="Qc_CH4_TGA_EMEP" />
+			<basic name="Qc_CH4_PIC" />
+			<basic name="Qc_CH4_PIC_EMEP" />
+			<basic name="Qc_LE_LI70" />
+			<basic name="Qc_LE_LI70_EMEP" />
+			<basic name="Qc_LE_PIC" />
+			<basic name="Qc_LE_PIC_EMEP" />
+			<basic name="Qc_tau" />
+			<basic name="Qc_tau_EMEP" />
+			<transient name="modelAttributes" />
+			<transient name="primaryKey" />
+			<transient name="primaryKeyObj" />
+		</attributes>
+	</mapped-superclass>
+	<mapped-superclass class="fi.csc.smear.db.model.impl.Sii1metaModelImpl">
+		<attributes>
+			<id name="samptime">
+				<temporal>TIMESTAMP</temporal>
+			</id>
+			<basic name="T_a" />
+			<basic name="T_a_EMEP" />
+			<basic name="RH" />
+			<basic name="RH_EMEP" />
+			<basic name="PAR" />
+			<basic name="PAR_EMEP" />
+			<basic name="R_PAR" />
+			<basic name="R_PAR_EMEP" />
+			<basic name="Net_CNR4" />
+			<basic name="Net_CNR4_EMEP" />
+			<basic name="Net_NRLite" />
+			<basic name="Net_NRLite_EMEP" />
+			<basic name="Wsoil_1" />
+			<basic name="Wsoil_1_EMEP" />
+			<basic name="Wsoil_2" />
+			<basic name="Wsoil_2_EMEP" />
+			<basic name="T_p_B5" />
+			<basic name="T_p_B5_EMEP" />
+			<basic name="T_p_B20" />
+			<basic name="T_p_B20_EMEP" />
+			<basic name="T_p_B35" />
+			<basic name="T_p_B35_EMEP" />
+			<basic name="T_p_B50" />
+			<basic name="T_p_B50_EMEP" />
+			<basic name="T_p_C1" />
+			<basic name="T_p_C1_EMEP" />
+			<basic name="T_p_C2" />
+			<basic name="T_p_C2_EMEP" />
+			<basic name="T_p_C5" />
+			<basic name="T_p_C5_EMEP" />
+			<basic name="T_p_C10" />
+			<basic name="T_p_C10_EMEP" />
+			<basic name="T_p_C15" />
+			<basic name="T_p_C15_EMEP" />
+			<basic name="T_p_C20" />
+			<basic name="T_p_C20_EMEP" />
+			<basic name="T_p_C30" />
+			<basic name="T_p_C30_EMEP" />
+			<basic name="T_p_C50" />
+			<basic name="T_p_C50_EMEP" />
+			<basic name="T_p_C70" />
+			<basic name="T_p_C70_EMEP" />
+			<basic name="T_p_C100" />
+			<basic name="T_p_C100_EMEP" />
+			<basic name="WTD" />
+			<basic name="WTD_EMEP" />
+			<basic name="Precip" />
+			<basic name="Precip_EMEP" />
+			<transient name="modelAttributes" />
+			<transient name="primaryKey" />
+			<transient name="primaryKeyObj" />
+		</attributes>
+	</mapped-superclass>
+	<mapped-superclass class="fi.csc.smear.db.model.impl.Sii2eddyModelImpl">
+		<attributes>
+			<id name="samptime">
+				<temporal>TIMESTAMP</temporal>
+			</id>
+			<basic name="U" />
+			<basic name="U_EMEP" />
+			<basic name="wind_dir" />
+			<basic name="wind_dir_EMEP" />
+			<basic name="eta" />
+			<basic name="eta_EMEP" />
+			<basic name="theta" />
+			<basic name="theta_EMEP" />
+			<basic name="beta" />
+			<basic name="beta_EMEP" />
+			<basic name="H" />
+			<basic name="H_EMEP" />
+			<basic name="tau" />
+			<basic name="tau_EMEP" />
+			<basic name="u_star" />
+			<basic name="u_star_EMEP" />
+			<basic name="MO_length" />
+			<basic name="MO_length_EMEP" />
+			<basic name="err_packet" />
+			<basic name="err_packet_EMEP" />
+			<basic name="F_c_LI72" />
+			<basic name="F_c_LI72_EMEP" />
+			<basic name="F_H2O_LI72" />
+			<basic name="F_H2O_LI72_EMEP" />
+			<basic name="F_CH4_LI77" />
+			<basic name="F_CH4_LI77_EMEP" />
+			<basic name="LE_LI72" />
+			<basic name="LE_LI72_EMEP" />
+			<basic name="av_u" />
+			<basic name="av_u_EMEP" />
+			<basic name="av_v" />
+			<basic name="av_v_EMEP" />
+			<basic name="av_w" />
+			<basic name="av_w_EMEP" />
+			<basic name="T_s" />
+			<basic name="T_s_EMEP" />
+			<basic name="av_c" />
+			<basic name="av_c_EMEP" />
+			<basic name="av_H2O_LI72" />
+			<basic name="av_H2O_LI72_EMEP" />
+			<basic name="av_CH4_LI77" />
+			<basic name="av_CH4_LI77_EMEP" />
+			<basic name="std_u" />
+			<basic name="std_u_EMEP" />
+			<basic name="std_v" />
+			<basic name="std_v_EMEP" />
+			<basic name="std_w" />
+			<basic name="std_w_EMEP" />
+			<basic name="std_T_s" />
+			<basic name="std_T_s_EMEP" />
+			<basic name="std_c_LI72" />
+			<basic name="std_c_LI72_EMEP" />
+			<basic name="std_H2O_LI72" />
+			<basic name="std_H2O_LI72_EMEP" />
+			<basic name="std_CH4_LI77" />
+			<basic name="std_CH4_LI77_EMEP" />
+			<basic name="c_lag_LI72" />
+			<basic name="c_lag_LI72_EMEP" />
+			<basic name="H2O_lag_LI72" />
+			<basic name="H2O_lag_LI72_EMEP" />
+			<basic name="CH4_lag_LI77" />
+			<basic name="CH4_lag_LI77_EMEP" />
+			<basic name="Qc_H" />
+			<basic name="Qc_H_EMEP" />
+			<basic name="Qc_CO2_LI70" />
+			<basic name="Qc_CO2_LI70_EMEP" />
+			<basic name="Qc_CH4_LI77" />
+			<basic name="Qc_CH4_LI77_EMEP" />
+			<basic name="Qc_LE_LI72" />
+			<basic name="Qc_LE_LI72_EMEP" />
+			<basic name="Qc_tau" />
+			<basic name="Qc_tau_EMEP" />
+			<transient name="modelAttributes" />
+			<transient name="primaryKey" />
+			<transient name="primaryKeyObj" />
+		</attributes>
+	</mapped-superclass>
+	<mapped-superclass class="fi.csc.smear.db.model.impl.Sii2metaModelImpl">
+		<attributes>
+			<id name="samptime">
+				<temporal>TIMESTAMP</temporal>
+			</id>
+			<basic name="T_a" />
+			<basic name="T_a_EMEP" />
+			<basic name="RH" />
+			<basic name="RH_EMEP" />
+			<basic name="Net" />
+			<basic name="Net_EMEP" />
+			<basic name="T_p_5" />
+			<basic name="T_p_5_EMEP" />
+			<basic name="T_p_B20" />
+			<basic name="T_p_B20_EMEP" />
+			<basic name="T_p_B35" />
+			<basic name="T_p_B35_EMEP" />
+			<basic name="T_p_B50" />
+			<basic name="T_p_B50_EMEP" />
+			<basic name="WTD" />
+			<basic name="WTD_EMEP" />
+			<basic name="Precip" />
+			<basic name="Precip_EMEP" />
+			<transient name="modelAttributes" />
+			<transient name="primaryKey" />
+			<transient name="primaryKeyObj" />
+		</attributes>
+	</mapped-superclass>
+	<mapped-superclass class="fi.csc.smear.db.model.impl.SmearEventsModelImpl">
+		<attributes>
+			<id name="eventID" />
+			<basic name="event_type" />
+			<basic name="event" />
+			<basic name="who" />
+			<basic name="period_start">
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="period_end">
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="etimestamp">
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<transient name="modelAttributes" />
+			<transient name="primaryKey" />
+			<transient name="primaryKeyObj" />
+		</attributes>
+	</mapped-superclass>
+	<mapped-superclass class="fi.csc.smear.db.model.impl.SmearmetadataModelImpl">
+		<attributes>
+			<id name="title" />
+			<basic name="rightsCategory" />
+			<basic name="access_rights" />
+			<basic name="project" />
+			<basic name="maintaining_organisation" />
+			<basic name="contact" />
+			<basic name="ref" />
+			<basic name="creator" />
+			<basic name="discipline" />
+			<basic name="timestamp">
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<transient name="modelAttributes" />
+			<transient name="primaryKey" />
+			<transient name="primaryKeyObj" />
+		</attributes>
+	</mapped-superclass>
+	<mapped-superclass class="fi.csc.smear.db.model.impl.SmearstationModelImpl">
+		<attributes>
+			<id name="stationID" />
+			<basic name="dcmipoint" />
+			<basic name="name" />
+			<basic name="dataAvail" />
+			<transient name="modelAttributes" />
+			<transient name="primaryKey" />
+			<transient name="primaryKeyObj" />
+		</attributes>
+	</mapped-superclass>
+	<mapped-superclass class="fi.csc.smear.db.model.impl.SmearTableMetadataModelImpl">
+		<attributes>
+			<id name="tableID" />
+			<basic name="identifier" />
+			<basic name="title" />
+			<basic name="spatial_coverage" />
+			<basic name="name" />
+			<basic name="ttimestamp">
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="period" />
+			<transient name="modelAttributes" />
+			<transient name="primaryKey" />
+			<transient name="primaryKeyObj" />
+		</attributes>
+	</mapped-superclass>
+	<mapped-superclass class="fi.csc.smear.db.model.impl.SmearTagsModelImpl">
+		<attributes>
+			<id name="tagID" />
+			<basic name="vocabulary" />
+			<basic name="tag" />
+			<basic name="displaykeyword" />
+			<transient name="modelAttributes" />
+			<transient name="primaryKey" />
+			<transient name="primaryKeyObj" />
+		</attributes>
+	</mapped-superclass>
+	<mapped-superclass class="fi.csc.smear.db.model.impl.SmearvariableEventModelImpl">
+		<id-class class="fi.csc.smear.db.service.persistence.SmearvariableEventPK" />
+		<attributes>
+			<id name="eventID" />
+			<id name="variableID" />
+			<transient name="modelAttributes" />
+			<transient name="primaryKey" />
+			<transient name="primaryKeyObj" />
+		</attributes>
+	</mapped-superclass>
+	<mapped-superclass class="fi.csc.smear.db.model.impl.SmearVariableMetadataModelImpl">
+		<attributes>
+			<id name="variableID" />
+			<basic name="tableID" />
+			<basic name="variable" />
+			<basic name="description" />
+			<basic name="unit" />
+			<basic name="title" />
+			<basic name="source" />
+			<basic name="period_start">
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="period_end">
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="coverage" />
+			<basic name="rights" />
+			<basic name="mandatory" />
+			<basic name="derivative" />
+			<basic name="vtimestamp">
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="category" />
+			<transient name="modelAttributes" />
+			<transient name="primaryKey" />
+			<transient name="primaryKeyObj" />
+		</attributes>
+	</mapped-superclass>
+	<mapped-superclass class="fi.csc.smear.db.model.impl.SmearvariableTagsModelImpl">
+		<attributes>
+			<id name="variableID" />
+			<basic name="tagID" />
+			<transient name="modelAttributes" />
+			<transient name="primaryKey" />
+			<transient name="primaryKeyObj" />
+		</attributes>
+	</mapped-superclass>
+	<mapped-superclass class="fi.csc.smear.db.model.impl.TowermetaModelImpl">
+		<attributes>
+			<id name="samptime">
+				<temporal>TIMESTAMP</temporal>
+			</id>
+			<basic name="H" />
+			<basic name="H_EMEP" />
+			<basic name="Qc_H" />
+			<basic name="Qc_H_EMEP" />
+			<basic name="LE" />
+			<basic name="LE_EMEP" />
+			<basic name="Qc_LE" />
+			<basic name="Qc_LE_EMEP" />
+			<basic name="E" />
+			<basic name="E_EMEP" />
+			<basic name="Qc_E" />
+			<basic name="Qc_E_EMEP" />
+			<basic name="F_c" />
+			<basic name="F_c_EMEP" />
+			<basic name="Qc_F_c" />
+			<basic name="Qc_F_c_EMEP" />
+			<basic name="tau" />
+			<basic name="tau_EMEP" />
+			<basic name="Qc_tau" />
+			<basic name="Qc_tau_EMEP" />
+			<basic name="u_star" />
+			<basic name="u_star_EMEP" />
+			<basic name="MO_length" />
+			<basic name="MO_length_EMEP" />
+			<basic name="std_u" />
+			<basic name="std_u_EMEP" />
+			<basic name="std_v" />
+			<basic name="std_v_EMEP" />
+			<basic name="std_w" />
+			<basic name="std_w_EMEP" />
+			<basic name="std_t" />
+			<basic name="std_t_EMEP" />
+			<basic name="std_c" />
+			<basic name="std_c_EMEP" />
+			<basic name="std_h" />
+			<basic name="std_h_EMEP" />
+			<basic name="av_u" />
+			<basic name="av_u_EMEP" />
+			<basic name="av_v" />
+			<basic name="av_v_EMEP" />
+			<basic name="av_w" />
+			<basic name="av_w_EMEP" />
+			<basic name="av_t" />
+			<basic name="av_t_EMEP" />
+			<basic name="av_c" />
+			<basic name="av_c_EMEP" />
+			<basic name="av_h" />
+			<basic name="av_h_EMEP" />
+			<basic name="U" />
+			<basic name="U_EMEP" />
+			<basic name="wind_dir" />
+			<basic name="wind_dir_EMEP" />
+			<basic name="eta" />
+			<basic name="eta_EMEP" />
+			<basic name="theta" />
+			<basic name="theta_EMEP" />
+			<basic name="beta" />
+			<basic name="beta_EMEP" />
+			<basic name="c_lag" />
+			<basic name="c_lag_EMEP" />
+			<basic name="h_lag" />
+			<basic name="h_lag_EMEP" />
+			<basic name="err_packet" />
+			<basic name="err_packet_EMEP" />
+			<basic name="licor_t_std" />
+			<basic name="licor_t_std_EMEP" />
+			<basic name="licor_t_av" />
+			<basic name="licor_t_av_EMEP" />
+			<basic name="licor_p_std" />
+			<basic name="licor_p_std_EMEP" />
+			<basic name="licor_p_av" />
+			<basic name="licor_p_av_EMEP" />
+			<basic name="F_CPC" />
+			<basic name="F_CPC_EMEP" />
+			<basic name="Qc_F_CPC" />
+			<basic name="Qc_F_CPC_EMEP" />
+			<basic name="std_CPC" />
+			<basic name="std_CPC_EMEP" />
+			<basic name="av_CPC" />
+			<basic name="av_CPC_EMEP" />
+			<basic name="CPC_lag" />
+			<basic name="CPC_lag_EMEP" />
+			<transient name="modelAttributes" />
+			<transient name="primaryKey" />
+			<transient name="primaryKeyObj" />
+		</attributes>
+	</mapped-superclass>
+	<mapped-superclass class="fi.csc.smear.db.model.impl.VarDMPSModelImpl">
+		<attributes>
+			<id name="samptime">
+				<temporal>TIMESTAMP</temporal>
+			</id>
+			<basic name="t1" />
+			<basic name="t2" />
+			<basic name="p1" />
+			<basic name="p2" />
+			<basic name="rh1" />
+			<basic name="rh2" />
+			<basic name="d100e1" />
+			<basic name="d112e1" />
+			<basic name="d126e1" />
+			<basic name="d141e1" />
+			<basic name="d158e1" />
+			<basic name="d178e1" />
+			<basic name="d200e1" />
+			<basic name="d224e1" />
+			<basic name="d251e1" />
+			<basic name="d282e1" />
+			<basic name="d316e1" />
+			<basic name="d355e1" />
+			<basic name="d398e1" />
+			<basic name="d447e1" />
+			<basic name="d501e1" />
+			<basic name="d562e1" />
+			<basic name="d631e1" />
+			<basic name="d708e1" />
+			<basic name="d794e1" />
+			<basic name="d891e1" />
+			<basic name="d100e2" />
+			<basic name="d112e2" />
+			<basic name="d126e2" />
+			<basic name="d141e2" />
+			<basic name="d158e2" />
+			<basic name="d178e2" />
+			<basic name="d200e2" />
+			<basic name="d224e2" />
+			<basic name="d251e2" />
+			<basic name="d282e2" />
+			<basic name="d316e2" />
+			<basic name="d355e2" />
+			<basic name="d398e2" />
+			<basic name="d447e2" />
+			<basic name="d501e2" />
+			<basic name="d562e2" />
+			<basic name="d631e2" />
+			<basic name="d708e2" />
+			<basic name="d794e2" />
+			<basic name="d891e2" />
+			<basic name="d100e3" />
+			<basic name="d112e3" />
+			<basic name="d126e3" />
+			<basic name="d141e3" />
+			<basic name="d158e3" />
+			<basic name="d178e3" />
+			<basic name="d200e3" />
+			<basic name="d224e3" />
+			<basic name="d251e3" />
+			<basic name="d282e3" />
+			<basic name="d316e3" />
+			<basic name="d355e3" />
+			<basic name="d398e3" />
+			<basic name="d447e3" />
+			<basic name="d501e3" />
+			<basic name="d562e3" />
+			<basic name="d631e3" />
+			<basic name="d708e3" />
+			<basic name="d794e3" />
+			<basic name="d891e3" />
+			<basic name="d100e4" />
+			<basic name="tconc" />
+			<transient name="modelAttributes" />
+			<transient name="primaryKey" />
+			<transient name="primaryKeyObj" />
+		</attributes>
+	</mapped-superclass>
+	<mapped-superclass class="fi.csc.smear.db.model.impl.VareddyModelImpl">
+		<attributes>
+			<id name="samptime">
+				<temporal>TIMESTAMP</temporal>
+			</id>
+			<basic name="H" />
+			<basic name="H_EMEP" />
+			<basic name="LE" />
+			<basic name="LE_EMEP" />
+			<basic name="E" />
+			<basic name="E_EMEP" />
+			<basic name="F_c" />
+			<basic name="F_c_EMEP" />
+			<basic name="tau" />
+			<basic name="tau_EMEP" />
+			<basic name="u_star" />
+			<basic name="u_star_EMEP" />
+			<basic name="MO_length" />
+			<basic name="MO_length_EMEP" />
+			<basic name="std_u" />
+			<basic name="std_u_EMEP" />
+			<basic name="std_v" />
+			<basic name="std_v_EMEP" />
+			<basic name="std_w" />
+			<basic name="std_w_EMEP" />
+			<basic name="std_t" />
+			<basic name="std_t_EMEP" />
+			<basic name="std_c" />
+			<basic name="std_c_EMEP" />
+			<basic name="std_h" />
+			<basic name="std_h_EMEP" />
+			<basic name="av_u" />
+			<basic name="av_u_EMEP" />
+			<basic name="av_v" />
+			<basic name="av_v_EMEP" />
+			<basic name="av_w" />
+			<basic name="av_w_EMEP" />
+			<basic name="av_t" />
+			<basic name="av_t_EMEP" />
+			<basic name="av_c" />
+			<basic name="av_c_EMEP" />
+			<basic name="av_h" />
+			<basic name="av_h_EMEP" />
+			<basic name="U" />
+			<basic name="U_EMEP" />
+			<basic name="wind_dir" />
+			<basic name="wind_dir_EMEP" />
+			<basic name="c_lag" />
+			<basic name="c_lag_EMEP" />
+			<basic name="h_lag" />
+			<basic name="h_lag_EMEP" />
+			<basic name="licor_t_std" />
+			<basic name="licor_t_std_EMEP" />
+			<basic name="licor_t_av" />
+			<basic name="licor_t_av_EMEP" />
+			<basic name="licor_p_std" />
+			<basic name="licor_p_std_EMEP" />
+			<basic name="licor_p_av" />
+			<basic name="licor_p_av_EMEP" />
+			<basic name="H_sub" />
+			<basic name="H_sub_EMEP" />
+			<basic name="LE_sub" />
+			<basic name="LE_sub_EMEP" />
+			<basic name="E_sub" />
+			<basic name="E_sub_EMEP" />
+			<basic name="F_c_sub" />
+			<basic name="F_c_sub_EMEP" />
+			<basic name="tau_sub" />
+			<basic name="tau_sub_EMEP" />
+			<basic name="u_star_sub" />
+			<basic name="u_star_sub_EMEP" />
+			<basic name="MO_length_sub" />
+			<basic name="MO_length_sub_EMEP" />
+			<basic name="std_u_sub" />
+			<basic name="std_u_sub_EMEP" />
+			<basic name="std_v_sub" />
+			<basic name="std_v_sub_EMEP" />
+			<basic name="std_w_sub" />
+			<basic name="std_w_sub_EMEP" />
+			<basic name="std_t_sub" />
+			<basic name="std_t_sub_EMEP" />
+			<basic name="std_c_sub" />
+			<basic name="std_c_sub_EMEP" />
+			<basic name="std_h_sub" />
+			<basic name="std_h_sub_EMEP" />
+			<basic name="av_u_sub" />
+			<basic name="av_u_sub_EMEP" />
+			<basic name="av_v_sub" />
+			<basic name="av_v_sub_EMEP" />
+			<basic name="av_w_sub" />
+			<basic name="av_w_sub_EMEP" />
+			<basic name="av_t_sub" />
+			<basic name="av_t_sub_EMEP" />
+			<basic name="av_c_sub" />
+			<basic name="av_c_sub_EMEP" />
+			<basic name="av_h_sub" />
+			<basic name="av_h_sub_EMEP" />
+			<basic name="U_sub" />
+			<basic name="U_sub_EMEP" />
+			<basic name="wind_dir_sub" />
+			<basic name="wind_dir_sub_EMEP" />
+			<transient name="modelAttributes" />
+			<transient name="primaryKey" />
+			<transient name="primaryKeyObj" />
+		</attributes>
+	</mapped-superclass>
+	<mapped-superclass class="fi.csc.smear.db.model.impl.Varrio_treeModelImpl">
+		<attributes>
+			<id name="SAMPTIME">
+				<temporal>TIMESTAMP</temporal>
+			</id>
+			<basic name="F_CO2_tree0" />
+			<basic name="F_H2O_tree0" />
+			<basic name="Tcuv_tree0" />
+			<basic name="PARcuv_tree0" />
+			<basic name="CO2_tree0" />
+			<basic name="H2O_tree0" />
+			<basic name="F_CO2_tree1" />
+			<basic name="F_H2O_tree1" />
+			<basic name="Tcuv_tree1" />
+			<basic name="PARcuv_tree1" />
+			<basic name="CO2_tree1" />
+			<basic name="H2O_tree1" />
+			<basic name="F_CO2_tree2" />
+			<basic name="F_H2O_tree2" />
+			<basic name="Tcuv_tree2" />
+			<basic name="PARcuv_tree2" />
+			<basic name="CO2_tree2" />
+			<basic name="H2O_tree2" />
+			<basic name="F_CO2_tree3" />
+			<basic name="F_H2O_tree3" />
+			<basic name="Tcuv_tree3" />
+			<basic name="PARcuv_tree3" />
+			<basic name="CO2_tree3" />
+			<basic name="H2O_tree3" />
+			<basic name="F_CO2_tree0_EMEP" />
+			<basic name="F_H2O_tree0_EMEP" />
+			<basic name="Tcuv_tree0_EMEP" />
+			<basic name="PARcuv_tree0_EMEP" />
+			<basic name="CO2_tree0_EMEP" />
+			<basic name="H2O_tree0_EMEP" />
+			<basic name="F_CO2_tree1_EMEP" />
+			<basic name="F_H2O_tree1_EMEP" />
+			<basic name="Tcuv_tree1_EMEP" />
+			<basic name="PARcuv_tree1_EMEP" />
+			<basic name="CO2_tree1_EMEP" />
+			<basic name="H2O_tree1_EMEP" />
+			<basic name="F_CO2_tree2_EMEP" />
+			<basic name="F_H2O_tree2_EMEP" />
+			<basic name="Tcuv_tree2_EMEP" />
+			<basic name="PARcuv_tree2_EMEP" />
+			<basic name="CO2_tree2_EMEP" />
+			<basic name="H2O_tree2_EMEP" />
+			<basic name="F_CO2_tree3_EMEP" />
+			<basic name="F_H2O_tree3_EMEP" />
+			<basic name="Tcuv_tree3_EMEP" />
+			<basic name="PARcuv_tree3_EMEP" />
+			<basic name="CO2_tree3_EMEP" />
+			<basic name="H2O_tree3_EMEP" />
+			<transient name="modelAttributes" />
+			<transient name="primaryKey" />
+			<transient name="primaryKeyObj" />
+		</attributes>
+	</mapped-superclass>
+	<mapped-superclass class="fi.csc.smear.db.model.impl.VarriometaModelImpl">
+		<attributes>
+			<id name="SAMPTIME">
+				<temporal>TIMESTAMP</temporal>
+			</id>
+			<basic name="WS0" />
+			<basic name="WS1" />
+			<basic name="WS2" />
+			<basic name="WS3" />
+			<basic name="WS4" />
+			<basic name="RMM" />
+			<basic name="TLOG" />
+			<basic name="PAR" />
+			<basic name="GLOB" />
+			<basic name="REFL" />
+			<basic name="NET" />
+			<basic name="UVA" />
+			<basic name="UVB" />
+			<basic name="UVAT" />
+			<basic name="UVBT" />
+			<basic name="RAIN" />
+			<basic name="TDRY0" />
+			<basic name="TWET0" />
+			<basic name="TDRY1" />
+			<basic name="TWET1" />
+			<basic name="TDRY2" />
+			<basic name="TWET2" />
+			<basic name="TDRY3" />
+			<basic name="TWET3" />
+			<basic name="TDRY4" />
+			<basic name="TWET4" />
+			<basic name="ST" />
+			<basic name="WDIR" />
+			<basic name="CPC1" />
+			<basic name="O3_0" />
+			<basic name="O3_1" />
+			<basic name="O3_2" />
+			<basic name="O3_3" />
+			<basic name="O3_4" />
+			<basic name="SO2_0" />
+			<basic name="SO2_1" />
+			<basic name="SO2_2" />
+			<basic name="SO2_3" />
+			<basic name="SO2_4" />
+			<basic name="NO_0" />
+			<basic name="NO_1" />
+			<basic name="NO_2" />
+			<basic name="NO_4" />
+			<basic name="NOX_0" />
+			<basic name="NOX_1" />
+			<basic name="NOX_2" />
+			<basic name="NOX_4" />
+			<basic name="P" />
+			<basic name="HUM_RH" />
+			<basic name="HUM_T" />
+			<basic name="temp" />
+			<basic name="WS00" />
+			<basic name="visibility" />
+			<basic name="rainint" />
+			<basic name="Precipacc" />
+			<basic name="haildiammax" />
+			<basic name="snowint" />
+			<basic name="visibilitylpm" />
+			<basic name="wthcode" />
+			<basic name="CO_1" />
+			<basic name="quality" />
+			<basic name="Tsoil" />
+			<basic name="wsoil" />
+			<basic name="CO206" />
+			<basic name="CO2soil" />
+			<basic name="Tsoil_EMEP" />
+			<basic name="wsoil_EMEP" />
+			<basic name="CO206_EMEP" />
+			<basic name="CO2soil_EMEP" />
+			<transient name="modelAttributes" />
+			<transient name="primaryKey" />
+			<transient name="primaryKeyObj" />
+		</attributes>
+	</mapped-superclass>
+	<entity class="fi.csc.smear.db.model.impl.Hyde_eddy233Impl" name="Hyde_eddy233">
+		<table name="HYY_EDDY233" />
+		<attributes />
+	</entity>
+	<entity class="fi.csc.smear.db.model.impl.Hyde_eddytowImpl" name="Hyde_eddytow">
+		<table name="HYY_EDDYTOW" />
+		<attributes />
+	</entity>
+	<entity class="fi.csc.smear.db.model.impl.HydemetaImpl" name="Hydemeta">
+		<table name="HYY_META" />
+		<attributes />
+	</entity>
+	<entity class="fi.csc.smear.db.model.impl.Hyy_eddysubImpl" name="Hyy_eddysub">
+		<table name="HYY_EDDYSUB" />
+		<attributes />
+	</entity>
+	<entity class="fi.csc.smear.db.model.impl.HyyAeroImpl" name="HyyAero">
+		<table name="HYY_AERO" />
+		<attributes />
+	</entity>
+	<entity class="fi.csc.smear.db.model.impl.HyyDMPSImpl" name="HyyDMPS">
+		<table name="HYY_DMPS" />
+		<attributes />
+	</entity>
+	<entity class="fi.csc.smear.db.model.impl.Kumpula_eddyImpl" name="Kumpula_eddy">
+		<table name="KUM_EDDY" />
+		<attributes />
+	</entity>
+	<entity class="fi.csc.smear.db.model.impl.KumpulaDMPSImpl" name="KumpulaDMPS">
+		<table name="KUM_DMPS" />
+		<attributes />
+	</entity>
+	<entity class="fi.csc.smear.db.model.impl.KumpulametaImpl" name="Kumpulameta">
+		<table name="KUM_META" />
+		<attributes />
+	</entity>
+	<entity class="fi.csc.smear.db.model.impl.kvjEddyImpl" name="kvjEddy">
+		<table name="KVJ_EDDY" />
+		<attributes />
+	</entity>
+	<entity class="fi.csc.smear.db.model.impl.Sii1eddyImpl" name="Sii1eddy">
+		<table name="SII1_EDDY" />
+		<attributes />
+	</entity>
+	<entity class="fi.csc.smear.db.model.impl.Sii1metaImpl" name="Sii1meta">
+		<table name="SII1_META" />
+		<attributes />
+	</entity>
+	<entity class="fi.csc.smear.db.model.impl.Sii2eddyImpl" name="Sii2eddy">
+		<table name="SII2_EDDY" />
+		<attributes />
+	</entity>
+	<entity class="fi.csc.smear.db.model.impl.Sii2metaImpl" name="Sii2meta">
+		<table name="SII2_META" />
+		<attributes />
+	</entity>
+	<entity class="fi.csc.smear.db.model.impl.SmearEventsImpl" name="SmearEvents">
+		<table name="Events" />
+		<attributes />
+	</entity>
+	<entity class="fi.csc.smear.db.model.impl.SmearmetadataImpl" name="Smearmetadata">
+		<table name="Metadata" />
+		<attributes />
+	</entity>
+	<entity class="fi.csc.smear.db.model.impl.SmearstationImpl" name="Smearstation">
+		<table name="station" />
+		<attributes />
+	</entity>
+	<entity class="fi.csc.smear.db.model.impl.SmearTableMetadataImpl" name="SmearTableMetadata">
+		<table name="TableMetadata" />
+		<attributes />
+	</entity>
+	<entity class="fi.csc.smear.db.model.impl.SmearTagsImpl" name="SmearTags">
+		<table name="Tags" />
+		<attributes />
+	</entity>
+	<entity class="fi.csc.smear.db.model.impl.SmearvariableEventImpl" name="SmearvariableEvent">
+		<table name="variableEvent" />
+		<attributes />
+	</entity>
+	<entity class="fi.csc.smear.db.model.impl.SmearVariableMetadataImpl" name="SmearVariableMetadata">
+		<table name="VariableMetadata" />
+		<attributes />
+	</entity>
+	<entity class="fi.csc.smear.db.model.impl.SmearvariableTagsImpl" name="SmearvariableTags">
+		<table name="variableTags" />
+		<attributes />
+	</entity>
+	<entity class="fi.csc.smear.db.model.impl.TowermetaImpl" name="Towermeta">
+		<table name="TOR_EDDY" />
+		<attributes />
+	</entity>
+	<entity class="fi.csc.smear.db.model.impl.VarDMPSImpl" name="VarDMPS">
+		<table name="VAR_DMPS" />
+		<attributes />
+	</entity>
+	<entity class="fi.csc.smear.db.model.impl.VareddyImpl" name="Vareddy">
+		<table name="VAR_EDDY" />
+		<attributes />
+	</entity>
+	<entity class="fi.csc.smear.db.model.impl.Varrio_treeImpl" name="Varrio_tree">
+		<table name="VAR_TREE" />
+		<attributes />
+	</entity>
+	<entity class="fi.csc.smear.db.model.impl.VarriometaImpl" name="Varriometa">
+		<table name="VAR_META" />
+		<attributes />
+	</entity>
+</entity-mappings>

@@ -12,7 +12,7 @@
 		<artifactId>vaadin-liferay-portlet-maven-parent</artifactId>
 		<groupId>fi.csc.avaa</groupId>
 		<version>1.0</version>
-		<relativePath>../avaa-common/vaadin_liferay_portlet_parent_pom.xml</relativePath>
+		<relativePath>../../avaa-common/vaadin_liferay_portlet_parent_pom.xml</relativePath>
 	</parent>
 	
 	<build>

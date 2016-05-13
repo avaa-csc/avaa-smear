@@ -26,6 +26,7 @@
 			<groupId>fi.csc.avaa</groupId>
 			<artifactId>AvaaTools</artifactId>
 			<version>1.0.0</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.liferay.portal</groupId>

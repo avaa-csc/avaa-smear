@@ -5,12 +5,8 @@ package fi.csc.avaa.smear.smartsmear;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Stream;
 
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
@@ -58,6 +54,7 @@ public class Vizualisation  implements java.io.Serializable {
 	private Date start;
 	private Date end;
 	private Data dbdata;
+	private Download download;
 	
 	private float graphMinValue;
 	private float graphMaxValue;
@@ -112,21 +109,28 @@ public class Vizualisation  implements java.io.Serializable {
 		this.end = end;
 		this.dbdata = new Data(finalset, tableset, metadata.getHTindex());
 		db.open();
-		tableset.forEach(table ->
-		db.avg(dbdata, table, start.getTime(), end.getTime(), DB.NONE, DB.NONE, checkQuality)); //ei keskiarvoistusta
-		db.close();
+		try {
+			tableset.forEach(table ->
+					db.avg(dbdata, table, start.getTime(), end.getTime(), DB.NONE, DB.NONE, checkQuality)); //ei keskiarvoistusta
+		} finally {
+			db.close();
+		}
 	}
 	
-	public Vizualisation(Date start, Date end, DB db, Metadata metadata, int widthInPixels, int heightInPixels, boolean checkQuality, Set<String> tableset, Set<String> variables) {
+	public Vizualisation(Date start, Date end, DB db, Metadata metadata, int widthInPixels, int heightInPixels, boolean checkQuality, Download download) {
 		this.chartHeight = heightInPixels;
 		this.chartWidth = widthInPixels;
 		this.start = start;
 		this.end = end;
-		this.dbdata = new Data(variables, tableset, metadata.getHTindex());
+		this.download = download;
+		this.dbdata = new Data(this.download.getData().finalset, this.download.getData().tableset, metadata.getHTindex());
 		db.open();
-		tableset.forEach(table ->
-		db.avg(dbdata, table, start.getTime(), end.getTime(), DB.NONE, DB.NONE, checkQuality)); //ei keskiarvoistusta
-		db.close();
+		try {
+			this.download.getData().tableset.forEach(table ->
+					db.avg(dbdata, table, start.getTime(), end.getTime(), DB.NONE, DB.NONE, checkQuality)); //ei keskiarvoistusta
+		} finally {
+			db.close();
+		}
 	}
 	
 	CssLayout kuvaajat() {
@@ -431,9 +435,7 @@ public class Vizualisation  implements java.io.Serializable {
 		
 	/**
 	 * 
-	 * @param startdate java.util.Date
-	 * @param enddate java.util.Date
-	 * @return Timeline from vaadin addon chart 
+	 * @return Timeline from vaadin addon chart
 	 * */
 	
 	public Timeline temperature() {
@@ -648,7 +650,7 @@ public class Vizualisation  implements java.io.Serializable {
 	 * @param table String database table name
 	 * @param property String database column name
 	 */
-	public boolean setDataInRange(IndexedContainer c, String table,  String property) {
+	public boolean setDataInRange(IndexedContainer c, String table, String property) {
 		float[][] fa = dbdata.getFtaulu(table);
 		LocalDateTime[] timestamps = dbdata.getTimestamps(table);
 		String[] labels = dbdata.getLabels(table);
@@ -677,7 +679,6 @@ public class Vizualisation  implements java.io.Serializable {
 	 * 
 	 * @param start Date
 	 * @param end Date
-	 * @param stations  int VÄRRIÖ = 1; HYYTIÄLÄ = 2; KUMPULA = 4;
 	 * @return Timeline vaadin chart addon
 	 */
 	public Timeline co(Date start, Date end) {
@@ -793,11 +794,11 @@ public class Vizualisation  implements java.io.Serializable {
 		return timeline;
 	}
 	
-	public CssLayout plotVariables(Set<String> set, Tree t, HierarchicalContainer treecontainer,  Download dl) {
+	public CssLayout plotVariables(ArrayList<String> set, Tree t, HierarchicalContainer treecontainer) {
 		CssLayout rowscss = new CssLayout();	
 		// now we have dl and there is the data too
-		Data data = dl.getData();
-		try{	
+		Data data = download.getData();
+		try{
 			int noc = data.getColumnCount(); //no of columns
 			int rc = noc > MAXNOVIZ ? MAXNOVIZ : noc ;  //real colums 
 			HorizontalLayout[] rows = new HorizontalLayout[rc];
@@ -845,7 +846,7 @@ public class Vizualisation  implements java.io.Serializable {
 				}
 				// vrealname = muuttujan nimi. Puun alkiot ovat muuttuja:taulu muotoa
 				String variab = labels[i];
-				String vrealname = data.clean(variab);
+				String vrealname = Data.clean(variab);
 				if(vrealname == null) {
 					Notification notif = new Notification("Unable to visualise one or more variables", "Please select variables that are available");
 					notif.show(UI.getCurrent().getPage());
@@ -897,7 +898,7 @@ public class Vizualisation  implements java.io.Serializable {
 			if (null == data) {
 				System.err.println("Null pointer Exception because data was null");
 			} else {
-				System.err.println("datan rivit: "+ data.getRivienlkm());
+				System.err.println("datan rivit: "+ data.getRowAmount());
 				e.printStackTrace();
 			}
 		} catch (  java.lang.ArrayIndexOutOfBoundsException e) {

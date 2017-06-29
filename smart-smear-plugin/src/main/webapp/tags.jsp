@@ -22,8 +22,16 @@
       FileInputStream in = new FileInputStream(f);
       prop.load(in);
       String salasana = prop.getProperty("salasana");
-%><c:set var="salasana"><%= salasana %></c:set><c:set
- var="varid"><%= Long.parseLong(request.getParameter("varid")) %></c:set>
+%><c:set var="salasana"><%= salasana %></c:set><%
+ long varid = 0L;
+ try {
+     varid = Long.parseLong(request.getParameter("varid"));
+ } catch(NumberFormatException e) {
+     out.println("Invalid varid parameter");
+     return;
+ }
+%>
+<c:set var="varid"><%=varid%></c:set>
  <sql:setDataSource var="smear"  driver="com.mysql.jdbc.Driver"
      url="jdbc:mysql://db5.csc.fi:3320/smear?useUnicode=true&characterEncoding=UTF-8"
      user="AVAA-read"  password="${salasana}"

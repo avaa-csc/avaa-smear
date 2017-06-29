@@ -19,6 +19,6 @@
                                 /WEB-INF/tld/liferay-portlet.tld
                         </taglib-location>
                 </taglib>
-        </jsp-config>    
+        </jsp-config>
  </web-app>
   

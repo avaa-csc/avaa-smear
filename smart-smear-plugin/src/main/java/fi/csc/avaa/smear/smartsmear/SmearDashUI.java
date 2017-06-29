@@ -330,7 +330,7 @@ public class SmearDashUI extends UI {
 						notif.show(UI.getCurrent().getPage());
 					} else {
 		    			liferayipc.sendEvent("NewTrajectory", csvsoi(startdate.getValue())+","+aheight.getValue());
-		    			updateVizualisation(startdate, enddate, chartsection,variableselection, null);
+		    			updateVizualisation(startdate, enddate, chartsection);
 		    			SmearViewUI.doJVMGarbageCollection();
 					}
 				}
@@ -349,7 +349,7 @@ public class SmearDashUI extends UI {
     			enddate.setValue(currCalendar.getTime());
     			startdate.setValue(getModifiedDate(enddate.getValue(), -1));
     			timewindow.setValue("Day");
-    			updateVizualisation(startdate,enddate, chartsection, variableselection, null); 
+    			updateVizualisation(startdate,enddate, chartsection);
     		}
     	});
     	querySecondRowLayout.setSpacing(true);
@@ -471,7 +471,7 @@ public class SmearDashUI extends UI {
     	center.addComponent(queryFirstRowLayout);
     	layout.addComponent(center);
     	layout.addComponent(chartsection);
-    	updateVizualisation(startdate,enddate, chartsection, variableselection, null);
+    	updateVizualisation(startdate,enddate, chartsection);
     }
 
 	/**
@@ -484,12 +484,9 @@ public class SmearDashUI extends UI {
     	return metadata;
     }
 
-	public void updateVizualisation(final PopupDateField start, final PopupDateField end, final VerticalLayout chartsection, final VerticalLayout variableselection, Download dl) { 
+	public void updateVizualisation(final PopupDateField start, final PopupDateField end, final VerticalLayout chartsection) {
     	Vizualisation viz = new Vizualisation(start.getValue(), end.getValue(), db, metadata, 360, 360, false);
-    	//HorizontalLayout[] rows = new HorizontalLayout[Vizualisation.ROWS];
-    	CssLayout rows = new CssLayout();
-    	rows = viz.emptyrow();
-    	rows = viz.kuvaajat();
+		CssLayout rows = viz.kuvaajat();
     	rows.setSizeFull();
     	Responsive.makeResponsive(rows);
     	

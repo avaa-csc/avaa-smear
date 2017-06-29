@@ -6,9 +6,11 @@
 	<groupId>fi.csc.avaa.smear.smartsmear</groupId>
 	<artifactId>smart-smear-portlet</artifactId>
 	<packaging>war</packaging>
-	<version>0.7</version>
+	<!--Use this if packaging jar as maven (repo in avoin-prod) dependency for HDF5writer project-->
+	<!--<packaging>jar</packaging>-->
+	<version>0.9</version>
 	<name>SmartSMEAR UI</name>
-
+ 
 	<parent>
 		<artifactId>vaadin-liferay-portlet-maven-parent</artifactId>
 		<groupId>fi.csc.avaa</groupId>
@@ -61,34 +63,25 @@
 			<version>2.0.0</version>
 		</dependency>
 		<dependency>
-			<groupId>fi.csc.avaa</groupId>
-			<artifactId>HDF5writer</artifactId>
-			<version>0.2</version>
-		</dependency>
-		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-exec</artifactId>
 			<version>1.2</version>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-			<version>3.3.2</version>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>2.6</version>
 		</dependency>
-		<dependency>
-			<groupId>edu.ucar</groupId>
-			<artifactId>netcdfAll</artifactId>
-			<version>4.6.1</version>
-		</dependency>
+
 	</dependencies>
 	<repositories>
 		<repository>
 			<id>avaa</id>
 			<url>http://avaa.tdata.fi/maven</url>
 		</repository>
-		<repository>
+		<!-- repository>
 			<id>unidataucar</id>
 			<url>http://artifacts.unidata.ucar.edu/content/repositories/unidata-releases/</url>
-		</repository>
+		</repository-->
 	</repositories>
 </project>

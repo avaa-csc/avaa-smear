@@ -36,7 +36,7 @@ public class SmearEMailWindow extends EMailWindowBase<String> {
 		fileTypeSelect.setNullSelectionAllowed(false);
 		fileTypeSelect.setRequired(true);
 		fileTypeSelect.setRequiredError(WARNING_TEXT_FILE_TYPE_VALIDATION);
-		fileTypeSelect.addItems(FileType.CSV, FileType.TXT, FileType.META, FileType.HDF5);
+		fileTypeSelect.addItems(FileType.CSV, FileType.TXT, FileType.HDF5);
 		fileTypeSelect.select(FileType.CSV);
 		contentLayout.addComponent(fileTypeSelect, 1);
 		

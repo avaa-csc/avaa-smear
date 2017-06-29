@@ -182,3 +182,11 @@ input[type="text"], .timewindow-select .v-select-select {
     white-space: normal !important;
     line-height: 18px !important;
 }
+
+.availability-btn {
+	margin-top: 15px !important;
+}
+
+.btn-selected .v-button-wrap {
+	border: 1px solid blue !important;
+}

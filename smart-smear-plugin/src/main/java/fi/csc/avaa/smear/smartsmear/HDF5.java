@@ -13,8 +13,6 @@ import org.apache.commons.exec.DefaultExecutor;
 
 import com.vaadin.ui.ComboBox;
 
-import fi.csc.avaa.HDF5open;
-//import fi.csc.smear.db.model.Varriometa;
 /**
  * write HDF5 file
  *  CLASSPATH jhdf5obj.jar:jhdf5.jar:jhdfobj.jar:
@@ -89,9 +87,9 @@ public class HDF5 implements Runnable{
 			fileOut.close();
 			//http://commons.apache.org/proper/commons-exec/apidocs/index.html
 			Map<String,String> environment = new HashMap<String,String>();
-			environment.put("CLASSPATH", ".:"+LIB+"/jarh5obj.jar:"+LIB+"/jarhdf5.jar:"+LIB+"/jarhdfobj.jar:seleniumtest.jar");
-			String line = "/etc/alternatives/jre_1.8.0/bin/java -server -Djava.library.path="+HDF5PATH+LIB+
-					" fi.csc.avaa.HDF5writer/HDF5writer "+ tmp.getAbsolutePath();
+			environment.put("CLASSPATH", ".:"+LIB+"/hdf-java-3.2.1.jar");
+			String line = "/etc/alternatives/jre_1.8.0/bin/java -Djava.library.path="+HDF5PATH+LIB+
+					" -jar HDF5writer-0.4.jar "+ tmp.getAbsolutePath();
 			CommandLine cmdLine = CommandLine.parse(line);
 			DefaultExecutor executor = new DefaultExecutor();
 			executor.setExitValue(0);

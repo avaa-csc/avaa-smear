@@ -22,13 +22,20 @@
         fi.csc.smear.db.model.SmearTableMetadata,
         fi.csc.smear.db.service.SmearTableMetadataLocalServiceUtil,
         java.util.List,
-        com.google.gson.Gson"%>
-                <% 
+        com.google.gson.Gson"%><%
                 final String EROTIN = "\", ";
                 final String IEROTIN = ", ";
+                long tableId = 0L;
+                try {
+                	tableId = Long.parseLong(request.getParameter("id"));
+                } catch(NumberFormatException e) {
+                	out.println("Invalid id parameter");
+                	return;
+                }
+
                  DynamicQuery query = DynamicQueryFactoryUtil.forClass(SmearTableMetadata.class)
                                 .add(RestrictionsFactoryUtil.eq("tableID",
-                                		Long.parseLong(request.getParameter("id"))));
+                                		tableId));
                 List<SmearTableMetadata> data = SmearTableMetadataLocalServiceUtil.dynamicQuery(query);
                 out.print("[{ "); 
                 //data.forEach(
@@ -42,5 +49,5 @@
                 		    "\"ttimestamp\":\""+tmd.getTtimestamp()+EROTIN+
                 		    "\"period\":"+tmd.getPeriod());
                 }
-                out.print(" }]"); 
-                %>
+                out.print(" }]");
+%>

@@ -1,11 +1,11 @@
 /**
- * 
+ *
  */
 package fi.csc.avaa.smear.smartsmear;
 
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import com.liferay.portal.model.PersistedModel;
 import com.vaadin.shared.Position;
@@ -17,36 +17,17 @@ import com.vaadin.ui.Tree;
 import com.vaadin.ui.Tree.ItemStyleGenerator;
 import com.vaadin.ui.UI;
 
-import fi.csc.smear.db.model.Hyde_eddy233;
-import fi.csc.smear.db.model.Hyde_eddytow;
-import fi.csc.smear.db.model.Hydemeta;
-import fi.csc.smear.db.model.HyyAero;
-import fi.csc.smear.db.model.HyyDMPS;
-import fi.csc.smear.db.model.Hyy_eddysub;
-import fi.csc.smear.db.model.KumpulaDMPS;
-import fi.csc.smear.db.model.Kumpula_eddy;
-import fi.csc.smear.db.model.Kumpulameta;
-import fi.csc.smear.db.model.Sii1eddy;
-import fi.csc.smear.db.model.Sii1meta;
-import fi.csc.smear.db.model.Sii2eddy;
-import fi.csc.smear.db.model.Sii2meta;
-import fi.csc.smear.db.model.Towermeta;
-import fi.csc.smear.db.model.VarDMPS;
-import fi.csc.smear.db.model.Vareddy;
-import fi.csc.smear.db.model.Varrio_tree;
-import fi.csc.smear.db.model.Varriometa;
-import fi.csc.smear.db.model.kvjEddy;
+import fi.csc.smear.db.model.*;
 
 /**
  * Used for styling Smart Smear variable tree items based on the variable quality.
- * 
+ *
  * @author jmlehtin
  *
  */
 public class VariableItemStyleGenerator implements ItemStyleGenerator {
 
 	private static final long serialVersionUID = 1L;
-	//private Button varExistButton;
 	private CheckBox varExistButton;
 	private boolean showAvailability = false;
 	private PopupDateField fromDate, toDate;
@@ -55,45 +36,30 @@ public class VariableItemStyleGenerator implements ItemStyleGenerator {
 	private Tree tree;
 	private DB db; // = new DB();
 	public static final int MAX_AVAILABILITY_PERIOD = 180;
-	private Map<RowCountKey, Integer> totalRowCountInPeriod;
-	
+	private Map<RowTotalCountKey, Integer> totalRowCountInPeriod;
+	private Map<VariableAvailabilityKey, Double> varAvailabilityInPeriod;
+
 	public VariableItemStyleGenerator(DB db,PopupDateField fromDate, PopupDateField toDate, List<Object> visibleItemIds, Tree tree, ComboBox qualitySelection) {
-		this.db = db;
-		this.fromDate = fromDate;
-		this.toDate = toDate;
-		this.visibleItemIds = visibleItemIds;
+		this(db, fromDate, toDate, visibleItemIds, qualitySelection);
 		this.tree = tree;
-		this.qualitySelection = qualitySelection;
-		this.totalRowCountInPeriod = new TreeMap<>();
 		createVarExistSelection();
 	}
-	
+
 	public VariableItemStyleGenerator(DB db,PopupDateField fromDate, PopupDateField toDate, List<Object> visibleItemIds, ComboBox qualitySelection) {
 		this.db = db;
 		this.fromDate = fromDate;
 		this.toDate = toDate;
 		this.qualitySelection = qualitySelection;
-		this.totalRowCountInPeriod = new TreeMap<>();
+		this.visibleItemIds = visibleItemIds;
+		this.totalRowCountInPeriod = new HashMap<>();
+		this.varAvailabilityInPeriod = new HashMap<>();
 	}
-	
-	public void createNewTotalRowCount(RowCountKey key, int totalRowAmount) {
-		totalRowCountInPeriod.put(key, totalRowAmount);
-	}
-	
+
 	@Override
 	public String getStyle(Tree source, Object itemId) {
 		if(visibleItemIds.contains(itemId)) {
 			if(checkVarExistence()) {
-				String[] idStrings = String.valueOf(itemId).split(":");
-				String variableName = idStrings[0];
-				String tableName = idStrings[1];
-				Class<? extends PersistedModel> tableClass = getTableClass(tableName);
-				double availabilityPercent = 0.0d;
-				if(checkVarQuality()) {
-					availabilityPercent = getVariableExistencePercentInPeriod(variableName, tableName, tableClass, true);
-				} else {
-					availabilityPercent = getVariableExistencePercentInPeriod(variableName, tableName, tableClass, false);
-				}
+				Double availabilityPercent = getVariableAvailabilityInPeriod(itemId);
 				if(availabilityPercent == 0.0d) {
 					return "red";
 				} else if(availabilityPercent > 0.0d && availabilityPercent < 0.5d) {
@@ -110,31 +76,71 @@ public class VariableItemStyleGenerator implements ItemStyleGenerator {
 			return "";
 		}
 	}
-	
+
+	private VariableAvailabilityKey getVariableAvailabilityKey(Object varId) {
+		String[] parts = String.valueOf(varId).split(Download.MUUTTUJAEROTIN);
+		String variable = parts[0];
+		String tableName = parts[1];
+		return new VariableAvailabilityKey(tableName, this.fromDate.getValue(), this.toDate.getValue(), variable, checkVarQuality());
+	}
+
+	public List<Double> getVariableAvailabilities(List<String> variableIds, boolean isQuality) {
+		List<Double> availabilities = new ArrayList<>();
+		for (String varId : variableIds) {
+			VariableAvailabilityKey key = getVariableAvailabilityKey(varId);
+			if (varAvailabilityInPeriod.get(key) == null) {
+				setVariableAvailabilitiesAsBatch(variableIds, isQuality);
+			}
+			availabilities.add(varAvailabilityInPeriod.get(key));
+		}
+		return availabilities;
+	}
+
+	private void setVariableAvailabilitiesAsBatch(List<String> variableIds, boolean considerQuality) {
+		if(variableIds != null && variableIds.size() > 0) {
+			Map<String, List<String>> tableGroupedVarNames = new HashMap<>();
+			variableIds.stream().forEach(varId -> {
+				String varName = varId.split(Download.MUUTTUJAEROTIN)[0];
+				String varTable = varId.split(Download.MUUTTUJAEROTIN)[1];
+
+				List<String> tableVars = tableGroupedVarNames.get(varTable);
+				if(tableVars == null) {
+					tableVars = new ArrayList<>();
+					tableGroupedVarNames.put(varTable, tableVars);
+				}
+				tableGroupedVarNames.get(varTable).add(varName);
+			});
+			List<String> varNames = variableIds.stream().map(varId -> String.valueOf(varId).split(Download.MUUTTUJAEROTIN)[0]).collect(Collectors.toList());
+			Map<String, Double> varAvailabilities = db.getVariableAvailabilitiesInPeriod(tableGroupedVarNames, fromDate.getValue().getTime(), toDate.getValue().getTime(), considerQuality);
+			for(int i=0; i < variableIds.size(); i++) {
+				String varName = varNames.get(i);
+				VariableAvailabilityKey key = getVariableAvailabilityKey(variableIds.get(i));
+				varAvailabilityInPeriod.put(key, varAvailabilities.get(varName));
+			}
+		}
+	}
+
 	public boolean checkVarExistence() {
 		return showAvailability;
 	}
-	
+
 	public void unselectVarExistenceButton() {
 		varExistButton.setCaption("Show data availability");
 		showAvailability = false;
 	}
-	
+
 	public boolean checkVarQuality() {
 		return SmearViewUI.CHECKED.equals(qualitySelection.getValue());
 	}
-	
+
 	/**
 	 * Create checkbox for switching on/off the checking of the variable availability
-	 * 
+	 *
 	 */
 	private void createVarExistSelection() {
 		showAvailability = false;
-		//varExistButton = new Button("<b>Show data availability</b>");
 		varExistButton = new CheckBox("Show data availability");
-		//varExistButton.setHtmlContentAllowed(true);
 		varExistButton.addStyleName("variable-availability-selection link");
-		//varExistButton.setIcon(FontAwesome.QUESTION_CIRCLE);
 		varExistButton.setDescription("<p>Display how much data a variable on scale from 0.0 to 1.0 has in the given time period. Maximum period where availability can be displayed is 180 days. Recommended usage is not to have too many expanded tree branches when checking for the availability as this can slow the application down unnecessarily.</p><ul><li style='color: red'>0.0</li><li style='color: rgb(210, 204, 79);'>&lt; 0.5</li><li style='color: #36b645;'>&gt;= 0.5</li></ul>");
 		varExistButton.addValueChangeListener(e -> {
 			if(SmearViewUI.isStartDateBeforeEndDate(fromDate, toDate)) {
@@ -145,102 +151,81 @@ public class VariableItemStyleGenerator implements ItemStyleGenerator {
 					notif.show(UI.getCurrent().getPage());
 					varExistButton.setValue(false);
 				} else {
-		    		//CheckBox btn = e.getCheckBox();
-					//Button btn = e.getButton();
-		    		showAvailability = !showAvailability;
-		    		if(showAvailability) {
-		    			//varExistButton.setCaption("Hide data availability");
-		    			//btn.setCaption("<b>Hide data availability</b>");
-		    		} else {
-		    			varExistButton.setCaption("Show data availability");
-		    			//btn.setCaption("<b>Show data availability</b>");
-		    		}
-		    		inspect();
+					showAvailability = !showAvailability;
+					if(!showAvailability) {
+						varExistButton.setCaption("Show data availability");
+					}
+					inspect();
 				}
 			} else {
 				varExistButton.setValue(false);
 			}
-    	});
+		});
 	}
-	
-	//public Button getVariableExistButton() {
+
 	public CheckBox getVariableExistButton() {
 		return varExistButton;
 	}
 
 	/**
 	 * Get the amount of non null variable rows compared to the total amount of rows in the time period
-	 * 
-	 * @param itemId
+	 *
 	 * @return
 	 */
-	public double getVariableExistencePercentInPeriod(String variableName, String tableName, Class<? extends PersistedModel> tableClass, boolean considerQuality) {
+	private double getVariableExistencePercentInPeriod(Object varId, boolean considerQuality) {
+		String[] parts = String.valueOf(varId).split(Download.MUUTTUJAEROTIN);
+		String variable = parts[0];
+		String tableName = parts[1];
 		int varRows = 0;
-		
-		if (tableClass.equals(Varriometa.class) ||
-			tableClass.equals(Varrio_tree.class)) {
-			if(considerQuality) {
-				varRows = db.getNonNullAndQualityVariableRowAmountInPeriod(tableName, variableName, "samptime", fromDate.getValue().getTime(), "samptime", toDate.getValue().getTime());
-			} else {
-				varRows = db.getNonNullVariableRowAmountInPeriod(tableName, variableName, "samptime", fromDate.getValue().getTime(), "samptime", toDate.getValue().getTime());
-			}
+		if(considerQuality) {
+			varRows = db.getNonNullAndQualityVariableRowAmountInPeriod(tableName, variable, fromDate.getValue().getTime(), toDate.getValue().getTime());
 		} else {
-			if(considerQuality) {
-				varRows = db.getNonNullAndQualityVariableRowAmountInPeriod(tableName, variableName, "SAMPTIME", fromDate.getValue().getTime(), "SAMPTIME", toDate.getValue().getTime());
-			} else {
-				varRows = db.getNonNullVariableRowAmountInPeriod(tableName, variableName, "SAMPTIME", fromDate.getValue().getTime(), "SAMPTIME", toDate.getValue().getTime());
-			}
+			varRows = db.getNonNullVariableRowAmountInPeriod(tableName, variable, fromDate.getValue().getTime(), toDate.getValue().getTime());
 		}
-		
 		if(varRows >= 0) {
-			Integer totRows = getTotalRowsInPeriod(tableName, tableClass);
+			Integer totRows = getTotalRowsInPeriod(tableName);
 			if(totRows != null && totRows > 0) {
 				return new Double(varRows) / new Double(totRows);
 			}
-			
+
 		}
 		return 0.0d;
 	}
-	
-	public double getVariableExistenceQualityPercentInPeriod(String variableName, String tableName, Class<? extends PersistedModel> tableClass) {
-		int varRows = 0;
-		
-		if (tableClass.equals(Varriometa.class) ||
-			tableClass.equals(Varrio_tree.class)) {
-				varRows = db.getNonNullAndQualityVariableRowAmountInPeriod(tableName, variableName, "samptime", fromDate.getValue().getTime(), "samptime", toDate.getValue().getTime());
-		} else {
-				varRows = db.getNonNullAndQualityVariableRowAmountInPeriod(tableName, variableName, "SAMPTIME", fromDate.getValue().getTime(), "SAMPTIME", toDate.getValue().getTime());
-		}
-		
-		if(varRows >= 0) {
-			Integer totRows = db.getNonNullVariableRowAmountInPeriod(tableName, variableName, "samptime", fromDate.getValue().getTime(), "samptime", toDate.getValue().getTime());
-			if(totRows != null && totRows > 0) {
-				return new Double(varRows) / new Double(totRows);
-			}
-		}
-		return 0.0d;
-	}
-	
-	public Integer getTotalRowsInPeriod(String stationName,
-			Class<? extends PersistedModel> tableClass) {
-		
-		RowCountKey key = new RowCountKey(tableClass, fromDate.getValue(), toDate.getValue());
+
+	public Integer getTotalRowsInPeriod(String tableName) {
+		RowTotalCountKey key = new RowTotalCountKey(tableName, fromDate.getValue(), toDate.getValue());
 		Integer totRowCount = totalRowCountInPeriod.get(key);
 		if(totRowCount == null) {
-			if (tableClass.equals(Varriometa.class) ||
-				tableClass.equals(Varrio_tree.class)) {
-				totRowCount = db.getTotalRowsInPeriod(stationName, "samptime", fromDate.getValue().getTime(), "samptime", toDate.getValue().getTime());
-			} else {
-				totRowCount = db.getTotalRowsInPeriod(stationName, "SAMPTIME", fromDate.getValue().getTime(), "SAMPTIME", toDate.getValue().getTime());
-			}
-			createNewTotalRowCount(key, totRowCount);
+			totalRowCountInPeriod.put(key, db.getTotalRowsInPeriod(tableName, fromDate.getValue().getTime(), toDate.getValue().getTime()));
 		}
 		return totalRowCountInPeriod.get(key);
 	}
-	
+
+	private Double getVariableAvailabilityInPeriod(Object varId) {
+		VariableAvailabilityKey key = getVariableAvailabilityKey(varId);
+//		System.out.println("Getting availability for " + key.getTableName() + " - " + key.getVariable());
+		Double availability = varAvailabilityInPeriod.get(key);
+		if(availability == null) {
+//			System.out.println("Could not find var availability for " + varId.toString());
+			long startTime = System.nanoTime();
+			if(checkVarQuality()) {
+				availability = getVariableExistencePercentInPeriod(varId, true);
+			} else {
+				availability = getVariableExistencePercentInPeriod(varId, false);
+			}
+			long endTime = System.nanoTime();
+//			System.out.println("Calculated var availability: " + availability);
+//			System.out.println("It took seconds: " + TimeUnit.NANOSECONDS.toSeconds(endTime-startTime));
+			varAvailabilityInPeriod.put(key, availability);
+		} else {
+//			System.out.println("Found cached var availability for " + varId.toString() + " and it is " + availability);
+		}
+		return varAvailabilityInPeriod.get(key);
+	}
+
 	/**
 	 * Mapping between table names and table classes
-	 * 
+	 *
 	 * @param stationName
 	 * @return
 	 */
@@ -283,11 +268,13 @@ public class VariableItemStyleGenerator implements ItemStyleGenerator {
 			return Towermeta.class;
 		} else if(Station.TAULUT[6][0].equals(stationName)) {
 			return kvjEddy.class;
+		} else if(Station.TAULUT[6][1].equals(stationName)) {
+			return kvjMeta.class;
 		} else {
 			return null;
 		}
 	}
-	
+
 	public void inspect() {
 		if(SmearViewUI.dateRangeExceedsMaxPeriod(fromDate, toDate, MAX_AVAILABILITY_PERIOD)) {
 			String notifCaption = null, notifText = null;
@@ -306,7 +293,9 @@ public class VariableItemStyleGenerator implements ItemStyleGenerator {
 				notif.show(UI.getCurrent().getPage());
 			}
 		}
-		tree.markAsDirty();
+		if(tree != null) {
+			tree.markAsDirty();
+		}
 	}
-	
+
 }

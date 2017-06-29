@@ -50,10 +50,14 @@ public class Station  {
 	public static final String Torni = "SMEAR III Helsinki Hotel Torni";
 	public static final String Kuivajärvi = "SMEAR II Lake Kuivajärvi";
 	public static final int KUIVAJÄRVI = 7;
-	public static final String ASEMAT[] = {Hyytiälä, Kumpula, Värriö, Siikaneva1, Siikaneva2, Torni, Kuivajärvi};	
+	public static final String Puijo = "SMEAR IV Puijo";
+	public static final int PUIJO = 8;
+	public static final String ASEMAT[] = {Hyytiälä, Kumpula, Värriö, Siikaneva1, Siikaneva2, Torni, Kuivajärvi, Puijo};
 	public static final String TAULUT[][] = {{"HYY_META", "HYY_EDDY233", "HYY_EDDYTOW", "HYY_EDDYSUB", "HYY_DMPS", "HYY_AERO"}, 
 		{"KUM_META", "KUM_EDDY", "KUM_DMPS"}, {"VAR_META", "VAR_TREE", "VAR_EDDY", "VAR_DMPS"}, 
-		{"SII1_META", "SII1_EDDY"},{"SII2_META", "SII2_EDDY"},{"TOR_EDDY"}, {"KVJ_EDDY"} };
+		{"SII1_META", "SII1_EDDY"},{"SII2_META", "SII2_EDDY"},{"TOR_EDDY"}, {"KVJ_EDDY", "KVJ_META"},
+            {"PUI_cdp", "PUI_dmps_int", "PUI_dmps_tot", "PUI_maap_int", "PUI_maap_tot", "PUI_neph_int",
+            "PUI_neph_tot", "PUI_weather"}};
 	public static final String DESCRIPTION = "description";
 	public static final String TITLE = "title";
 	public static final String UNIT = "unit";

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apach
+e.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>fi.csc.avaa</groupId>
+	<artifactId>HDF5writer</artifactId>
+	<packaging>jar</packaging>
+	<version>0.4</version>
+	<name>HDF5writer</name>
+    <url>http://avaa.tdata.fi</url>
+    <properties>
+      <liferay.version>6.2.5</liferay.version>
+    </properties>
+
+    <dependencies>
+      <dependency>
+		<artifactId>smart-smear-portlet</artifactId>
+		<groupId>fi.csc.avaa.smear.smartsmear</groupId>
+		<version>0.9</version>
+      </dependency>
+      <dependency>
+            <groupId>org.hdfgroup</groupId>
+            <artifactId>hdf-java</artifactId>
+            <version>3.2.1</version>
+      </dependency>
+      <dependency>
+			<groupId>com.liferay.portal</groupId>
+			<artifactId>portal-service</artifactId>
+			<version>${liferay.version}</version>
+      </dependency>
+      <dependency>
+			<groupId>com.liferay.portal</groupId>
+			<artifactId>util-java</artifactId>
+			<version>${liferay.version}</version>
+      </dependency>
+      <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.21</version>
+      </dependency>
+<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-nop -->
+<dependency>
+    <groupId>org.slf4j</groupId>
+    <artifactId>slf4j-simple</artifactId>
+    <version>1.7.21</version>
+</dependency>
+        <!-- dependency>
+            <groupId>edu.ucar</groupId>
+            <artifactId>netcdfAll</artifactId>
+            <version>4.6.6</version>
+        </dependency-->
+    </dependencies>
+
+<build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>2.4.3</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <transformers>
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                  <manifestEntries>
+                    <Main-Class>fi.csc.avaa.HDF5writer.HDF5writer</Main-Class>
+                    <!--Build-Number>2</Build-Number-->
+                  </manifestEntries>
+                </transformer>
+              </transformers>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+	<repositories>
+		<repository>
+			<id>avaa</id>
+			<url>http://avaa.tdata.fi/maven</url>
+		</repository>
+	</repositories>
+    <developers>
+<developer>
+<name>The Avaa team</name>
+<id>theavaateam</id>
+<email>pj at csc.fi</email>
+</developer>
+</developers>
+
+</project>

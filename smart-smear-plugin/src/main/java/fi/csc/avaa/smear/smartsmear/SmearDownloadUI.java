@@ -2,16 +2,10 @@ package fi.csc.avaa.smear.smartsmear;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-import java.util.TreeSet;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import javax.portlet.PortletPreferences;
 import javax.portlet.PortletRequest;
@@ -21,16 +15,13 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.JavaConstants;
-import com.vaadin.addon.ipcforliferay.LiferayIPC;
 import com.vaadin.annotations.Title;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.data.validator.DateRangeValidator;
 import com.vaadin.server.FileDownloader;
-import com.vaadin.server.FileResource;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Page;
 import com.vaadin.server.StreamResource;
@@ -54,12 +45,13 @@ import com.vaadin.ui.PopupView;
 import com.vaadin.ui.ProgressBar;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.CellStyleGenerator;
-import com.vaadin.ui.Tree;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
+import fi.csc.avaa.vaadin.email.NotifyingThread;
 import fi.csc.avaa.vaadin.email.ThreadCompleteListener;
+import fi.csc.avaa.vaadin.tools.VaadinTools;
 import fi.csc.smear.db.model.SmearVariableMetadata;
 import fi.csc.smear.db.service.SmearTableMetadataLocalServiceUtil;
 
@@ -73,10 +65,8 @@ import fi.csc.smear.db.service.SmearTableMetadataLocalServiceUtil;
  */
 @SuppressWarnings("serial")
 @Title("SmartSMEAR")
-//@Theme("liferay")
 public class SmearDownloadUI extends UI implements ThreadCompleteListener {
 	
-	//@WebServlet(value = "/VAADIN/*", asyncSupported = true)
     @VaadinServletConfiguration(productionMode = true, ui = SmearDownloadUI.class)
     public static class Servlet extends VaadinServlet {
     }
@@ -85,25 +75,17 @@ public class SmearDownloadUI extends UI implements ThreadCompleteListener {
     private static Log log = LogFactoryUtil.getLog(SmearViewUI.class);
     public static final String CITE = "Cite: Junninen, H; Lauri, A; Keronen, P; Aalto, P; Hiltunen, V; Hari, P; Kulmala, M."+
 	"Smart-SMEAR: on-line data exploration and visualization tool for SMEAR stations. BOREAL ENVIRONMENT RESEARCH (BER) Vol 14, Issue 4, pp.447-457";
+	public static final String SMEARDATA_API_BASE_URL = "/smear-services/smeardata.jsp?";
     private final DB db = new DB();
-    public HierarchicalContainer stationcontainer;
-    public static final String DESCRIPTION = "description";
-    public static final String TITLE = "title";
-    public static final String UNIT = "unit";
-    public static final String SOURCE = "source";
-    public static final String AVAILABLE = "available";
-    public static final String CONTACT_EMAIL = "";
     public static final String CHECKED = "CHECKED";
     public static final String WIDTH = "130px";
     public static final String SMALLBUTTONWIDTH = "30px";
     private  List<SmearVariableMetadata> vmdata; //used to create Metadata, voitaisiin laskea staattisesti
-    public String contact_email = "Someone";
     public boolean nohuman;
     public static int maxVisualisationTimeWindow = 180;
 	private Metadata metadata;
     private static final String MAX_SCOPE = "maxScope";
     public volatile String storedEmailAddress;
-    private List<Object> visibleVarItemIds;
 	private ResizingTable muuttujat;
 	private List<SmearVariableMetadata> mdata = null;
 	private VariableItemStyleGenerator variableStyleGenerator;
@@ -114,8 +96,8 @@ public class SmearDownloadUI extends UI implements ThreadCompleteListener {
 	private Button nextbutton = new Button(">>");
 	private ComboBox quality = new ComboBox("Quality Level:");
 	private ComboBox aheight = new ComboBox("Arrival Height:");
-	private ComboBox avaraging = new ComboBox("Averaging:");
-	private ComboBox typeavaraging = new ComboBox("Averaging Type:");
+	private ComboBox averaging = new ComboBox("Averaging:");
+	private ComboBox averagingType = new ComboBox("Averaging Type:");
 	private OptionGroup asemat = new OptionGroup("Station");
 	private NativeSelect kategoria = new NativeSelect("Select variable category");
 	private List<DownloadTableRowId> selectedRowIds;
@@ -123,7 +105,13 @@ public class SmearDownloadUI extends UI implements ThreadCompleteListener {
 	private VerticalLayout tablesection;
 	private ProgressBar pBar;
 	private ConfirmDownloadWindow cdw;
-	
+	private Button dlBtn;
+	private FileDownloader opener = null;
+	private DownloadThread dlThread;
+	private CheckBox calcAvailability;
+	private BlockerWindow blockerWindow;
+	private FileType clickedFiletypeBtn;
+
     private static Date getModifiedDate(Date currentdate, int modifier) {
     	Calendar calendar = new GregorianCalendar();
     	calendar.setTime(currentdate);
@@ -141,8 +129,9 @@ public class SmearDownloadUI extends UI implements ThreadCompleteListener {
     
 	@Override
     protected void init(VaadinRequest request) {
+		UI.getCurrent().getReconnectDialogConfiguration().setDialogText("Please wait while loading data. It may take quite some time if the interval is long and/or the interval contains a lot of data.");
+		UI.getCurrent().getReconnectDialogConfiguration().setDialogTextGaveUp("Please wait while loading data. It may take quite some time if the interval is long and/or the interval contains a lot of data.");
     	this.nohuman = false;
-    	this.visibleVarItemIds = new ArrayList<>();
     	this.storedEmailAddress = null;
     	
     	this.selectedRowIds = new ArrayList<>();
@@ -177,18 +166,151 @@ public class SmearDownloadUI extends UI implements ThreadCompleteListener {
 						Notification.Type.WARNING_MESSAGE, false)
 				.show(Page.getCurrent());
     		} else {
-	    		Set<String> selectedVariableIds = new HashSet<>();
-	    		selectedRowIds.forEach(rowId -> selectedVariableIds.add(rowId.getMetadata().getVariable() + Download.MUUTTUJAEROTIN + rowId.getTablename()));
-	    		
-	    		DownloadThread dlThread = new DownloadThread(startdate.getValue(), enddate.getValue(), db, selectedVariableIds, metadata, avaraging, typeavaraging, String.valueOf(quality.getValue()), variableStyleGenerator);
-	    		dlThread.addListener(SmearDownloadUI.this);
-	    		UI.getCurrent().setPollInterval(100);
-	    		pBar = new ProgressBar();
-	    		pBar.setIndeterminate(true);
-	    		pBar.setEnabled(false);
-	    		tablesection.addComponent(pBar);
-	    		tablesection.setComponentAlignment(pBar, Alignment.BOTTOM_RIGHT);
-	    		dlThread.start();
+				Map<String, List<String>> varsGroupedByTable = new HashMap<>();
+				selectedRowIds.forEach(rowId -> {
+					String var = rowId.getMetadata().getVariable();
+					String table = rowId.getTablename();
+					if(!varsGroupedByTable.containsKey(table)) {
+						varsGroupedByTable.put(table, new ArrayList<>());
+					}
+					varsGroupedByTable.get(table).add(var);
+				});
+
+				ArrayList<String> selectedVariableIds = new ArrayList<>();
+				selectedRowIds.forEach(rowId -> selectedVariableIds.add(rowId.getMetadata().getVariable() + Download.MUUTTUJAEROTIN + rowId.getTablename()));
+
+				HorizontalLayout buttons = new HorizontalLayout();
+				buttons.setSpacing(true);
+				buttons.setMargin(true);
+
+				Button csvBtn = new Button("CSV");
+				Button txtBtn = new Button("TXT");
+				Button metaBtn = new Button("Meta");
+				Button hdf5Btn = new Button("HDF5");
+				dlBtn = new Button("Download");
+				dlBtn.setEnabled(false);
+
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+				csvBtn.addClickListener(f -> {
+					clickedFiletypeBtn = FileType.CSV;
+					csvBtn.setStyleName("btn-selected");
+					txtBtn.setEnabled(false);
+					metaBtn.setEnabled(false);
+					hdf5Btn.setEnabled(false);
+					if(opener != null) {
+						dlBtn.removeExtension(opener);
+					}
+					dlBtn.setEnabled(true);
+				});
+
+				txtBtn.addClickListener(f -> {
+					clickedFiletypeBtn = FileType.TXT;
+					txtBtn.setStyleName("btn-selected");
+					csvBtn.setEnabled(false);
+					metaBtn.setEnabled(false);
+					hdf5Btn.setEnabled(false);
+					if(opener != null) {
+						dlBtn.removeExtension(opener);
+					}
+					dlBtn.setEnabled(true);
+				});
+
+				metaBtn.addClickListener(f -> {
+					opener = new FileDownloader(new StreamResource(null, ""));
+					opener.extend(dlBtn);
+					clickedFiletypeBtn = FileType.META;
+					metaBtn.setStyleName("btn-selected");
+					csvBtn.setEnabled(false);
+					txtBtn.setEnabled(false);
+					hdf5Btn.setEnabled(false);
+					opener.setFileDownloadResource(null);
+					dlThread = new DownloadThread(startdate.getValue(), enddate.getValue(), db, selectedVariableIds,  null, metadata, averaging, averagingType, String.valueOf(quality.getValue()), DownloadThread.FileFormat.META);
+					dlThread.addListener(SmearDownloadUI.this);
+					UI.getCurrent().setPollInterval(100);
+					pBar = new ProgressBar();
+					pBar.setIndeterminate(true);
+					pBar.setEnabled(false);
+					tablesection.addComponent(pBar);
+					dlThread.start();
+				});
+
+				hdf5Btn.addClickListener(f -> {
+					opener = new FileDownloader(new StreamResource(null, ""));
+					opener.extend(dlBtn);
+					clickedFiletypeBtn = FileType.HDF5;
+					hdf5Btn.setStyleName("btn-selected");
+					csvBtn.setEnabled(false);
+					txtBtn.setEnabled(false);
+					metaBtn.setEnabled(false);
+					opener.setFileDownloadResource(null);
+					VaadinTools.showNotification("Please wait until download button becomes available..", null);
+					dlThread = new DownloadThread(startdate.getValue(), enddate.getValue(), db, selectedVariableIds, calcAvailability.getValue() ? variableStyleGenerator.getVariableAvailabilities(selectedVariableIds, String.valueOf(quality).equals(SmearViewUI.CHECKED)) : null, metadata, averaging, averagingType, String.valueOf(quality.getValue()), DownloadThread.FileFormat.HDF5);
+					dlThread.addListener(SmearDownloadUI.this);
+					UI.getCurrent().setPollInterval(100);
+					pBar = new ProgressBar();
+					pBar.setIndeterminate(true);
+					pBar.setEnabled(false);
+					tablesection.addComponent(pBar);
+					dlThread.start();
+				});
+
+				dlBtn.addClickListener(f -> {
+					switch(clickedFiletypeBtn) {
+						case CSV:
+							for(Map.Entry<String, List<String>> varsGrpTableEntry : varsGroupedByTable.entrySet()) {
+								getUI().getPage().open(SMEARDATA_API_BASE_URL + "variables=" + varsGrpTableEntry.getValue().stream().collect(Collectors.joining(",")) + "&table=" + varsGrpTableEntry.getKey() + "&from=" + sdf.format(startdate.getValue()) + "&to=" + sdf.format(enddate.getValue()) + "&quality=" + String.valueOf(quality.getValue()) + "&averaging=" + averaging.getValue().toString() + "&type=" + averagingType.getValue().toString() + "&format=csv", "_blank");
+							}
+							VaadinTools.showNotification("Please wait until downloading is completed..", null);
+							break;
+						case HDF5:
+							VaadinTools.showNotification("Please wait until generating the file is completed..", null);
+							break;
+						case TXT:
+							for(Map.Entry<String, List<String>> varsGrpTableEntry : varsGroupedByTable.entrySet()) {
+								getUI().getPage().open(SMEARDATA_API_BASE_URL + "variables=" + varsGrpTableEntry.getValue().stream().collect(Collectors.joining(",")) + "&table=" + varsGrpTableEntry.getKey() + "&from=" + sdf.format(startdate.getValue()) + "&to=" + sdf.format(enddate.getValue()) + "&quality=" + String.valueOf(quality.getValue()) + "&averaging=" + averaging.getValue().toString() + "&type=" + averagingType.getValue().toString() + "&format=txt", "_blank");
+							}
+							VaadinTools.showNotification("Please wait until downloading is completed..", null);
+							break;
+						case META:
+							break;
+						case NETCDF:
+							break;
+					}
+
+					csvBtn.removeStyleName("btn-selected");
+					txtBtn.removeStyleName("btn-selected");
+					metaBtn.removeStyleName("btn-selected");
+					hdf5Btn.removeStyleName("btn-selected");
+					csvBtn.setEnabled(true);
+					txtBtn.setEnabled(true);
+					metaBtn.setEnabled(true);
+					hdf5Btn.setEnabled(true);
+					dlBtn.setEnabled(false);
+				});
+
+				buttons.addComponent(csvBtn);
+				buttons.addComponent(txtBtn);
+				buttons.addComponent(metaBtn);
+				buttons.addComponent(hdf5Btn);
+				buttons.addComponent(dlBtn);
+
+				Window multiDlWindow = new Window("Select download format", buttons);
+				multiDlWindow.setDraggable(false);
+				multiDlWindow.setResizable(false);
+				multiDlWindow.setModal(true);
+				multiDlWindow.center();
+
+				if(!UI.getCurrent().getWindows().contains(multiDlWindow)) {
+					UI.getCurrent().addWindow(multiDlWindow);
+					multiDlWindow.focus();
+				}
+
+				multiDlWindow.addCloseListener(f -> {
+					dlThread.dl = null;
+					dlThread = null;
+				});
+
     		}
     	});
     	dlSelectedBtn.setVisible(false);
@@ -243,14 +365,6 @@ public class SmearDownloadUI extends UI implements ThreadCompleteListener {
     		
     	});
     	
-    	kategoria.addValueChangeListener(new NativeSelect.ValueChangeListener() {
-    		public void valueChange(ValueChangeEvent event) {
-    			updateTable();
-    			muuttujat.setVisible(true);
-    			dlSelectedBtn.setVisible(true);
-    		}
-    	});
-
     	queryFirstRowLayout.setMargin(true);
     	final GregorianCalendar currCalendar = new GregorianCalendar();
     	currCalendar.setTime(new Date());
@@ -393,35 +507,35 @@ public class SmearDownloadUI extends UI implements ThreadCompleteListener {
 
     	//Averaging
 
-    	avaraging.addItem("NONE");
-    	avaraging.addItem("30MIN");
-    	avaraging.addItem("1HOUR");
-    	avaraging.setItemCaption("NONE", "None");
-    	avaraging.setItemCaption("30MIN", "30 min");
-    	avaraging.setItemCaption("1HOUR", "1 hour");
-    	avaraging.setNullSelectionAllowed(false);
-    	avaraging.setValue("NONE");
-    	avaraging.setImmediate(true);
-    	avaraging.setWidth(WIDTH);
-    	avaraging.setHeight("100%");
+    	averaging.addItem("NONE");
+    	averaging.addItem("30MIN");
+    	averaging.addItem("1HOUR");
+    	averaging.setItemCaption("NONE", "None");
+    	averaging.setItemCaption("30MIN", "30 min");
+    	averaging.setItemCaption("1HOUR", "1 hour");
+    	averaging.setNullSelectionAllowed(false);
+    	averaging.setValue("NONE");
+    	averaging.setImmediate(true);
+    	averaging.setWidth(WIDTH);
+    	averaging.setHeight("100%");
 
-    	//Type of avaraging
+    	//Type of averaging
 
-    	typeavaraging.addItem("NONE");
-    	typeavaraging.addItem("ARITHMETIC");
-    	typeavaraging.addItem(Download.GEOMETRIC);
-    	typeavaraging.addItem(Download.MEDIAN);
-    	typeavaraging.addItem(Download.SUMM);
-    	typeavaraging.setItemCaption("NONE", "None");
-    	typeavaraging.setItemCaption("ARITHMETIC", "Arithmetic");
-    	typeavaraging.setItemCaption(Download.GEOMETRIC, "Geometric");
-    	typeavaraging.setItemCaption(Download.MEDIAN, "Median");
-    	typeavaraging.setItemCaption(Download.SUMM, "Sum");
-    	typeavaraging.setNullSelectionAllowed(false);
-    	typeavaraging.setValue("NONE");
-    	typeavaraging.setImmediate(true);
-    	typeavaraging.setWidth(WIDTH);
-    	typeavaraging.setHeight("100%");
+    	averagingType.addItem("NONE");
+    	averagingType.addItem(Download.ARITHMETIC);
+    	averagingType.addItem(Download.GEOMETRIC);
+    	averagingType.addItem(Download.MEDIAN);
+    	averagingType.addItem(Download.SUM);
+    	averagingType.setItemCaption("NONE", "None");
+    	averagingType.setItemCaption(Download.ARITHMETIC, "Arithmetic");
+    	averagingType.setItemCaption(Download.GEOMETRIC, "Geometric");
+    	averagingType.setItemCaption(Download.MEDIAN, "Median");
+    	averagingType.setItemCaption(Download.SUM, "Sum");
+    	averagingType.setNullSelectionAllowed(false);
+    	averagingType.setValue("NONE");
+    	averagingType.setImmediate(true);
+    	averagingType.setWidth(WIDTH);
+    	averagingType.setHeight("100%");
 
     	// Arrival Height
 
@@ -455,17 +569,16 @@ public class SmearDownloadUI extends UI implements ThreadCompleteListener {
     	queryButtonRowLayout.setStyleName("query-layout");
     	queryButtonRowLayout.setSpacing(true);
 
-    	final LiferayIPC liferayipc = new LiferayIPC();
-    	liferayipc.extend(this);
     	Button button = new Button();
     	button.setCaption("Update >>");
     	button.setIcon(FontAwesome.SEARCH);
     	button.setStyleName("query-button");
-    	button.setDescription("Click to retrieve data visualization of selected variables");
-    	
+
     	button.addClickListener(new Button.ClickListener() {
     		public void buttonClick(ClickEvent event) {
     			updateTable();
+				muuttujat.setVisible(true);
+				dlSelectedBtn.setVisible(true);
     		}
     	});
     	
@@ -501,10 +614,15 @@ public class SmearDownloadUI extends UI implements ThreadCompleteListener {
     	helpLabel.setWidth(500, Unit.PIXELS);
     	PopupView helpPopup = new PopupView("Help", helpLabel);
     	helpPopup.addStyleName("help-popup-view-download");
+
+		calcAvailability = new CheckBox("Calculate availability on update", false);
+		calcAvailability.setDescription("Check this if you want availability calculated for all variables in the table after clicking update. Please note for long time spans this operation may be very slow.");
     	
     	queryThirdRowLayout.addComponent(helpPopup);
     	queryThirdRowLayout.addComponent(asemat);
     	queryThirdRowLayout.addComponent(kategoria);
+		queryThirdRowLayout.addComponent(calcAvailability);
+		calcAvailability.setStyleName("availability-btn");
     	left.addComponent(queryThirdRowLayout);
     	
     	left.addComponent(queryFirstRowLayout);
@@ -519,8 +637,8 @@ public class SmearDownloadUI extends UI implements ThreadCompleteListener {
     	mainview.addClickListener(new Button.ClickListener() {
     		public void buttonClick(ClickEvent event) {
     			quality.setValue("ANY");
-    			avaraging.setValue("NONE");
-    			typeavaraging.setValue("NONE");
+    			averaging.setValue("NONE");
+    			averagingType.setValue("NONE");
     			asemat.setValue(null);
     			enddate.setValue(currCalendar.getTime());
     			startdate.setValue(getModifiedDate(enddate.getValue(), -1));
@@ -528,8 +646,8 @@ public class SmearDownloadUI extends UI implements ThreadCompleteListener {
     		}
     	});
     	querySecondRowLayout.addComponent(quality);
-    	querySecondRowLayout.addComponent(avaraging);
-    	querySecondRowLayout.addComponent(typeavaraging);
+    	querySecondRowLayout.addComponent(averaging);
+    	querySecondRowLayout.addComponent(averagingType);
     	
     	left.addComponent(querySecondRowLayout);
     	
@@ -635,26 +753,26 @@ public class SmearDownloadUI extends UI implements ThreadCompleteListener {
     			}
     		}
     	}); 
-    	typeavaraging.addValueChangeListener(new Field.ValueChangeListener() {
+    	averagingType.addValueChangeListener(new Field.ValueChangeListener() {
     		public void valueChange(ValueChangeEvent event) {
-    			if (typeavaraging.getValue() != "NONE" && nohuman == false){
+    			if (averagingType.getValue() != "NONE" && nohuman == false){
     				nohuman = true;
-    				avaraging.setValue("1HOUR");
+    				averaging.setValue("1HOUR");
     				nohuman = false;
     			}
     			
     		}
     	});
-    	avaraging.addValueChangeListener(new Field.ValueChangeListener() {
+    	averaging.addValueChangeListener(new Field.ValueChangeListener() {
     		public void valueChange(ValueChangeEvent event) {
-    			if (avaraging.getValue() != "NONE" && nohuman == false){
+    			if (averaging.getValue() != "NONE" && nohuman == false){
     				nohuman = true;
-    				typeavaraging.setValue("ARITHMETIC");
+    				averagingType.setValue("ARITHMETIC");
     				nohuman = false;
     			}
-    			if (avaraging.getValue() == "NONE" && nohuman == false){
+    			if (averaging.getValue() == "NONE" && nohuman == false){
     				nohuman = true;
-    				typeavaraging.setValue("NONE");
+    				averagingType.setValue("NONE");
     				nohuman = false;
     			}
     		
@@ -665,17 +783,6 @@ public class SmearDownloadUI extends UI implements ThreadCompleteListener {
     	layout.addComponent(right);
     }
     
-    @SuppressWarnings("unchecked")
-	protected static Set<String> getSelectedVariables(Tree tree) {
-    	Set<String> results = new TreeSet<>();
-    	for(Object itemId : (Set<String>) tree.getValue()) {
-			if(!tree.hasChildren(itemId)) {
-				results.add(itemId.toString());
-			}
-		}
-    	return results;
-    }
-    
     private void buildTable() {
     	muuttujat = new ResizingTable("");
     	muuttujat.setImmediate(true);
@@ -684,7 +791,7 @@ public class SmearDownloadUI extends UI implements ThreadCompleteListener {
     	
     	muuttujat.addContainerProperty("Variable", String.class, null);
     	muuttujat.addContainerProperty("Description", String.class, null);
-    	muuttujat.addContainerProperty("Availability %", Double.class, null);
+    	muuttujat.addContainerProperty("Availability %", String.class, null);
     	muuttujat.addContainerProperty("Download", HorizontalLayout.class, null);
     	muuttujat.addContainerProperty("Select", CheckBox.class, null);
     	
@@ -703,6 +810,7 @@ public class SmearDownloadUI extends UI implements ThreadCompleteListener {
 			}
 		});
     }
+
 	/**
      * station is ignored, because vmdata is set by table
      *  
@@ -716,69 +824,14 @@ public class SmearDownloadUI extends UI implements ThreadCompleteListener {
 	@Override
 	public void notifyOfThreadComplete(Thread thread) {
 		if(thread instanceof DownloadThread) {
-			DownloadThread dlThread = (DownloadThread) thread;
-			Download dl = dlThread.getDownload();
-			if(dl != null && !dl.allHaveErrors()) {
-				FileLoaderThread fileThread = new FileLoaderThread(dl);
-				UI.getCurrent().setPollInterval(100);
-				fileThread.addListener(SmearDownloadUI.this);
-				fileThread.start();
-			} else {
-				tablesection.removeComponent(pBar);
+			dlThread = (DownloadThread) thread;
+			if(dlThread.getDownload() != null && !dlThread.getDownload().allHaveErrors()) {
+				opener.setFileDownloadResource(dlThread.getResource());
+				dlBtn.setEnabled(true);
 			}
-		} else if(thread instanceof FileLoaderThread) {
-			FileLoaderThread fileThread = (FileLoaderThread) thread;
-			
-			StreamResource csvFileRes = fileThread.getCsvStreamRes();
-			StreamResource txtFileRes = fileThread.getTxtStreamRes();
-			StreamResource metaFileRes = fileThread.getMetaStreamRes();
-			FileResource hdf5FileRes = fileThread.getHdf5FileRes();
-
-			HorizontalLayout buttons = new HorizontalLayout();
-    		buttons.setSpacing(true);
-    		buttons.setMargin(true);
-			
-    		FileDownloader csvDownloader = new FileDownloader(new StreamResource(null, ""));
-    		FileDownloader txtDownloader = new FileDownloader(new StreamResource(null, ""));
-    		FileDownloader metaDownloader = new FileDownloader(new StreamResource(null, ""));
-    		FileDownloader hdf5Downloader = new FileDownloader(new StreamResource(null, ""));
-    		
-	    	if(csvFileRes != null) {
-	    		Button csvBtn = new Button("CSV");
-	    		csvDownloader.setFileDownloadResource(csvFileRes);
-	    		csvDownloader.extend(csvBtn);
-	    		buttons.addComponent(csvBtn);
-	    	}
-	    	if(txtFileRes != null) {
-	    		Button txtBtn = new Button("TXT");
-	    		txtDownloader.setFileDownloadResource(txtFileRes);
-	    		txtDownloader.extend(txtBtn);
-	    		buttons.addComponent(txtBtn);
-	    	}
-	    	if(metaFileRes != null) {
-	    		Button metaBtn = new Button("Meta");
-	    		metaDownloader.setFileDownloadResource(metaFileRes);
-	    		metaDownloader.extend(metaBtn);
-	    		buttons.addComponent(metaBtn);
-	    	}
-			if (hdf5FileRes != null) {
-				Button hdf5Btn = new Button("HDF5");
-				hdf5Downloader.setFileDownloadResource(hdf5FileRes);
-				hdf5Downloader.extend(hdf5Btn);
-	    		buttons.addComponent(hdf5Btn);
-			}
-    		
-    		Window multiDlWindow = new Window("Select download format", buttons);
-    		multiDlWindow.setDraggable(false);
-    		multiDlWindow.setResizable(false);
-    		multiDlWindow.setModal(true);
-    		multiDlWindow.center();
-
-    		tablesection.removeComponent(pBar);
-    		if(!UI.getCurrent().getWindows().contains(multiDlWindow)) {
-				UI.getCurrent().addWindow(multiDlWindow);
-				multiDlWindow.focus();
-			}
+			tablesection.removeComponent(pBar);
+		} else if(thread instanceof WorkThread) {
+			db.close();
 		}
 		SmearViewUI.doJVMGarbageCollection();
 	}
@@ -853,7 +906,9 @@ public class SmearDownloadUI extends UI implements ThreadCompleteListener {
 			muuttujat.removeAllItems();
 			selectedRowIds.clear();
 			db.open();
-			
+			List<Object> itemIds = new ArrayList<>();
+			List<String> variableIds = new ArrayList<>();
+
 			String varTableName = null;
 			long prevTableId = -1;
 			for (SmearVariableMetadata meta: vmdata) {
@@ -868,7 +923,7 @@ public class SmearDownloadUI extends UI implements ThreadCompleteListener {
 							}
 							prevTableId = varTableId;
 						}
-						DownloadTableRowId rowId = new DownloadTableRowId(meta, varTableName);
+						final DownloadTableRowId rowId = new DownloadTableRowId(meta, varTableName);
 						Item newItem = muuttujat.addItem(rowId);
 						newItem.getItemProperty("Variable").setValue(meta.getTitle());
 						if (meta.getDescription() != null) {
@@ -876,22 +931,12 @@ public class SmearDownloadUI extends UI implements ThreadCompleteListener {
 						} else {
 							newItem.getItemProperty("Description").setValue("");
 						}
-						boolean considerQuality = false;
-						Double percent = 0.0d;
-						
-						visibleVarItemIds.add(meta);
-						//percentage = new VariableItemStyleGenerator(startdate, enddate, visibleVarItemIds, quality);
-						if (CHECKED.equals(quality.getValue())){
-							considerQuality = true;
-						}
-						percent = 100 * variableStyleGenerator.getVariableExistencePercentInPeriod(meta.getVariable(), varTableName, VariableItemStyleGenerator.getTableClass(varTableName), considerQuality);
-						
-						//var.getItemProperty("Availability").setValue(new BigDecimal(percent).setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue()+"%");
-						newItem.getItemProperty("Availability %").setValue(new BigDecimal(percent).setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue());
-						
+
+						String variableId = meta.getVariable() + Download.MUUTTUJAEROTIN + varTableName;
+						variableIds.add(variableId);
+						itemIds.add(rowId);
 						Button downloaddata = new Button("Download");
 						downloaddata.setImmediate(true);
-						
 						final String tempVarTableName = varTableName;
 						
 						HorizontalLayout dllayout = new HorizontalLayout();
@@ -899,32 +944,86 @@ public class SmearDownloadUI extends UI implements ThreadCompleteListener {
 						newItem.getItemProperty("Download").setValue(dllayout);
 						
 						downloaddata.addClickListener(e -> {
-			    			Timestamp startTs = new Timestamp(startdate.getValue().getTime());
-			    			Timestamp endTs = new Timestamp(enddate.getValue().getTime());
-			    			String apicall = "http://avaa.tdata.fi/palvelut/smeardata.jsp?variable="+meta.getVariable()+"&table="+tempVarTableName+"&from="+startTs+"&to="+endTs+"&quality="+String.valueOf(quality.getValue())+"&averaging="+avaraging+"&type="+typeavaraging;
-			    			String message = "<h6>Variable:</h6><p >Name:  "+meta.getTitle()+"<br> Description:  "
-			    			+meta.getDescription()+"<br>"+"Source:  "+meta.getSource()+"<br>"+"Unit:  "+meta.getUnit()+"<br>"+"Column name:  "+meta.getVariable()+"<br>"+"From table:  "+tempVarTableName+"</p><h6>Options:</h6><p>From: "+startdate.getValue()+"<br>"+"To: "+enddate.getValue()+"<br>"
-			    			+"Averaging: "+avaraging+"<br>"+"Averaging type: "+typeavaraging+"<br>"+"Quality: "+String.valueOf(quality.getValue())+"</p><h6>API call:</h6>";
-		    				cdw = new ConfirmDownloadWindow("Download", message, apicall, startdate.getValue(), enddate.getValue(), db, meta.getVariable()+":"+tempVarTableName, metadata, avaraging, typeavaraging, String.valueOf(quality.getValue()), variableStyleGenerator, this, dllayout) ;
+							Timestamp startTs = new Timestamp(startdate.getValue().getTime());
+							Timestamp endTs = new Timestamp(enddate.getValue().getTime());
+							String apicall = "https://avaa.tdata.fi/smear-services/smeardata.jsp?variables=" + meta.getVariable() + "&table=" + tempVarTableName + "&from=" + startTs + "&to=" + endTs + "&quality=" + String.valueOf(quality.getValue()) + "&averaging=" + averaging + "&type=" + averagingType;
+							String message = "<h6>Variable:</h6><p >Name:  " + meta.getTitle() + "<br> Description:  "
+									+ meta.getDescription() + "<br>" + "Source:  " + meta.getSource() + "<br>" + "Unit:  " + meta.getUnit() + "<br>" + "Column name:  " + meta.getVariable() + "<br>" + "From table:  " + tempVarTableName + "</p><h6>Options:</h6><p>From: " + startdate.getValue() + "<br>" + "To: " + enddate.getValue() + "<br>"
+									+ "Averaging: " + averaging + "<br>" + "Averaging type: " + averagingType + "<br>" + "Quality: " + String.valueOf(quality.getValue()) + "</p><h6>API call:</h6>";
+							cdw = new ConfirmDownloadWindow("Download", message, apicall, startdate.getValue(), enddate.getValue(), db, meta.getVariable() + ":" + tempVarTableName, metadata, averaging, averagingType, String.valueOf(quality.getValue()), variableStyleGenerator, dllayout, muuttujat.getItem(rowId).getItemProperty("Availability %").getValue().equals("0.0"));
+							openDownloadWindow();
 				    	});
 						
 						CheckBox selectCheckbox = new CheckBox();
 						selectCheckbox.addValueChangeListener(e -> {
 							if(selectCheckbox.getValue()) {
-								selectedRowIds.add(rowId);
+								if(muuttujat.getItem(rowId).getItemProperty("Availability %").getValue().equals("0.0")) {
+									selectCheckbox.setValue(false);
+									VaadinTools.showWarning("No values in the selected timeframe", null);
+								} else {
+									selectedRowIds.add(rowId);
+								}
 							} else {
 								selectedRowIds.remove(rowId);
 							}
 						});
-						
 						newItem.getItemProperty("Select").setValue(selectCheckbox);
 					}
-				} //if not null
-			} //for
-			db.close();
-			SmearViewUI.doJVMGarbageCollection();
+				}
+			}
+			if(variableIds != null && variableIds.size() > 0) {
+				if (calcAvailability.getValue()) {
+					blockerWindow = new BlockerWindow("Please wait while calculating the variable availabilities...");
+					UI.getCurrent().addWindow(blockerWindow);
+					UI.getCurrent().setPollInterval(100);
+					WorkThread thread = new WorkThread(variableIds, itemIds);
+					thread.addListener(SmearDownloadUI.this);
+					thread.start();
+				} else {
+					for (Object itemId : itemIds) {
+						muuttujat.getItem(itemId).getItemProperty("Availability %").setValue("N/A");
+					}
+				}
+			}
 		} else {
 			muuttujat.removeAllItems();//if not null
 		}
+	}
+
+	private class WorkThread extends NotifyingThread {
+
+		List<String> variableIds;
+		List<Object> itemIds;
+
+		public WorkThread(List<String> variableIds, List<Object> itemIds) {
+			this.itemIds = itemIds;
+			this.variableIds = variableIds;
+		}
+
+		@Override
+		public void doRun() {
+			UI.getCurrent().getSession().getLockInstance().lock();
+			int i = 0;
+			List<Double> availabilities = variableStyleGenerator.getVariableAvailabilities(variableIds, String.valueOf(quality).equals(SmearViewUI.CHECKED));
+			for (Object itemId : itemIds) {
+				muuttujat.getItem(itemId).getItemProperty("Availability %").setValue(String.valueOf(new BigDecimal(availabilities.get(i) * 100).setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue()));
+				i++;
+			}
+
+			boolean isRemoved = false;
+			int counter = 0;
+			while (!isRemoved && counter < 1000) {
+				try {
+					isRemoved = UI.getCurrent().removeWindow(blockerWindow);
+				} catch (IllegalStateException e) {
+					counter++;
+				}
+			}
+
+			UI.getCurrent().setPollInterval(-1);
+			UI.getCurrent().getSession().getLockInstance().unlock();
+		}
+
+
 	}
 }

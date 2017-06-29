@@ -16,6 +16,8 @@ import fi.csc.avaa.smear.smartsmear.SmearViewUI;
 import fi.csc.avaa.smear.smartsmear.VariableItemStyleGenerator;
 import fi.csc.avaa.vaadin.email.Action;
 
+import java.util.List;
+
 /**
  * This class implements the functionality of what happens when a user clicks send after providing email address to SmearEmailWindow.
  * 
@@ -33,12 +35,11 @@ public class SmearGenerateFileAction implements Action<String> {
 	private ComboBox avg;
 	private ComboBox typeOfAVG;
 	private ComboBox quality;
-	private VariableItemStyleGenerator itemStyle;
-	
+
 	public SmearGenerateFileAction() {
 		
 	}
-	public SmearGenerateFileAction(PopupDateField start, PopupDateField end, DB db, Tree tree, Metadata metadata, ComboBox avg, ComboBox typeOfAVG, ComboBox quality, NativeSelect fileType, VariableItemStyleGenerator itemStyle) {
+	public SmearGenerateFileAction(PopupDateField start, PopupDateField end, DB db, Tree tree, Metadata metadata, ComboBox avg, ComboBox typeOfAVG, ComboBox quality, NativeSelect fileType) {
 		this.start = start;
 		this.end = end;
 		this.db = db;
@@ -48,15 +49,12 @@ public class SmearGenerateFileAction implements Action<String> {
 		this.typeOfAVG = typeOfAVG;
 		this.quality = quality;
 		this.fileType = fileType;
-		this.itemStyle = itemStyle;
 	}
 
 	@Override
 	public String doAction() {
 		synchronized(this) {
-			Download dl = new Download(start.getValue(), end.getValue(), db, SmearViewUI.getSelectedVariables(tree), metadata, avg, typeOfAVG, String.valueOf(quality.getValue()), itemStyle);
-			String filename = generateFile(dl);
-			return filename;
+			return generateFile(new Download(start.getValue(), end.getValue(), db, SmearViewUI.getSelectedVariables(tree), null, metadata, avg, typeOfAVG, String.valueOf(quality.getValue())));
 		}
 	}
 
@@ -71,8 +69,6 @@ public class SmearGenerateFileAction implements Action<String> {
 			return null;
 		case TXT:
 			return dl.writeTabFile();
-		case META:
-			return dl.writeMetaFile();
 		default:
 			return null;
 		}

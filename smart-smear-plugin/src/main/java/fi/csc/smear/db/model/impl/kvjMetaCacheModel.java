@@ -1,0 +1,410 @@
+package fi.csc.smear.db.model.impl;
+
+import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.model.CacheModel;
+
+import fi.csc.smear.db.model.kvjMeta;
+
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
+
+import java.util.Date;
+
+/**
+ * The cache model class for representing kvjMeta in entity cache.
+ *
+ * @author pj
+ * @see kvjMeta
+ * @generated
+ */
+public class kvjMetaCacheModel implements CacheModel<kvjMeta>, Externalizable {
+    public long samptime;
+    public float Tw2;
+    public float Tw5;
+    public float Tw10;
+    public float Tw15;
+    public float Tw20;
+    public float Tw25;
+    public float Tw30;
+    public float Tw35;
+    public float Tw40;
+    public float Tw45;
+    public float Tw50;
+    public float Tw60;
+    public float Tw70;
+    public float Tw80;
+    public float Tw100;
+    public float Tw120;
+    public float CO2w02;
+    public float CO2w15;
+    public float CO2w25;
+    public float CO2w70;
+    public float Glob;
+    public float RGlob;
+    public float LWin;
+    public float LWout;
+    public float PARw02;
+    public float PARw07;
+    public float PARw10;
+    public float Ta;
+    public float RH;
+    public int Tw2_EMEP;
+    public int Tw5_EMEP;
+    public int Tw10_EMEP;
+    public int Tw15_EMEP;
+    public int Tw20_EMEP;
+    public int Tw25_EMEP;
+    public int Tw30_EMEP;
+    public int Tw35_EMEP;
+    public int Tw40_EMEP;
+    public int Tw45_EMEP;
+    public int Tw50_EMEP;
+    public int Tw60_EMEP;
+    public int Tw70_EMEP;
+    public int Tw80_EMEP;
+    public int Tw100_EMEP;
+    public int Tw120_EMEP;
+    public int CO2w02_EMEP;
+    public int CO2w15_EMEP;
+    public int CO2w25_EMEP;
+    public int CO2w70_EMEP;
+    public int Glob_EMEP;
+    public int RGlob_EMEP;
+    public int LWin_EMEP;
+    public int LWout_EMEP;
+    public int PARw02_EMEP;
+    public int PARw07_EMEP;
+    public int PARw10_EMEP;
+    public int Ta_EMEP;
+    public int RH_EMEP;
+
+    @Override
+    public String toString() {
+        StringBundler sb = new StringBundler(119);
+
+        sb.append("{samptime=");
+        sb.append(samptime);
+        sb.append(", Tw2=");
+        sb.append(Tw2);
+        sb.append(", Tw5=");
+        sb.append(Tw5);
+        sb.append(", Tw10=");
+        sb.append(Tw10);
+        sb.append(", Tw15=");
+        sb.append(Tw15);
+        sb.append(", Tw20=");
+        sb.append(Tw20);
+        sb.append(", Tw25=");
+        sb.append(Tw25);
+        sb.append(", Tw30=");
+        sb.append(Tw30);
+        sb.append(", Tw35=");
+        sb.append(Tw35);
+        sb.append(", Tw40=");
+        sb.append(Tw40);
+        sb.append(", Tw45=");
+        sb.append(Tw45);
+        sb.append(", Tw50=");
+        sb.append(Tw50);
+        sb.append(", Tw60=");
+        sb.append(Tw60);
+        sb.append(", Tw70=");
+        sb.append(Tw70);
+        sb.append(", Tw80=");
+        sb.append(Tw80);
+        sb.append(", Tw100=");
+        sb.append(Tw100);
+        sb.append(", Tw120=");
+        sb.append(Tw120);
+        sb.append(", CO2w02=");
+        sb.append(CO2w02);
+        sb.append(", CO2w15=");
+        sb.append(CO2w15);
+        sb.append(", CO2w25=");
+        sb.append(CO2w25);
+        sb.append(", CO2w70=");
+        sb.append(CO2w70);
+        sb.append(", Glob=");
+        sb.append(Glob);
+        sb.append(", RGlob=");
+        sb.append(RGlob);
+        sb.append(", LWin=");
+        sb.append(LWin);
+        sb.append(", LWout=");
+        sb.append(LWout);
+        sb.append(", PARw02=");
+        sb.append(PARw02);
+        sb.append(", PARw07=");
+        sb.append(PARw07);
+        sb.append(", PARw10=");
+        sb.append(PARw10);
+        sb.append(", Ta=");
+        sb.append(Ta);
+        sb.append(", RH=");
+        sb.append(RH);
+        sb.append(", Tw2_EMEP=");
+        sb.append(Tw2_EMEP);
+        sb.append(", Tw5_EMEP=");
+        sb.append(Tw5_EMEP);
+        sb.append(", Tw10_EMEP=");
+        sb.append(Tw10_EMEP);
+        sb.append(", Tw15_EMEP=");
+        sb.append(Tw15_EMEP);
+        sb.append(", Tw20_EMEP=");
+        sb.append(Tw20_EMEP);
+        sb.append(", Tw25_EMEP=");
+        sb.append(Tw25_EMEP);
+        sb.append(", Tw30_EMEP=");
+        sb.append(Tw30_EMEP);
+        sb.append(", Tw35_EMEP=");
+        sb.append(Tw35_EMEP);
+        sb.append(", Tw40_EMEP=");
+        sb.append(Tw40_EMEP);
+        sb.append(", Tw45_EMEP=");
+        sb.append(Tw45_EMEP);
+        sb.append(", Tw50_EMEP=");
+        sb.append(Tw50_EMEP);
+        sb.append(", Tw60_EMEP=");
+        sb.append(Tw60_EMEP);
+        sb.append(", Tw70_EMEP=");
+        sb.append(Tw70_EMEP);
+        sb.append(", Tw80_EMEP=");
+        sb.append(Tw80_EMEP);
+        sb.append(", Tw100_EMEP=");
+        sb.append(Tw100_EMEP);
+        sb.append(", Tw120_EMEP=");
+        sb.append(Tw120_EMEP);
+        sb.append(", CO2w02_EMEP=");
+        sb.append(CO2w02_EMEP);
+        sb.append(", CO2w15_EMEP=");
+        sb.append(CO2w15_EMEP);
+        sb.append(", CO2w25_EMEP=");
+        sb.append(CO2w25_EMEP);
+        sb.append(", CO2w70_EMEP=");
+        sb.append(CO2w70_EMEP);
+        sb.append(", Glob_EMEP=");
+        sb.append(Glob_EMEP);
+        sb.append(", RGlob_EMEP=");
+        sb.append(RGlob_EMEP);
+        sb.append(", LWin_EMEP=");
+        sb.append(LWin_EMEP);
+        sb.append(", LWout_EMEP=");
+        sb.append(LWout_EMEP);
+        sb.append(", PARw02_EMEP=");
+        sb.append(PARw02_EMEP);
+        sb.append(", PARw07_EMEP=");
+        sb.append(PARw07_EMEP);
+        sb.append(", PARw10_EMEP=");
+        sb.append(PARw10_EMEP);
+        sb.append(", Ta_EMEP=");
+        sb.append(Ta_EMEP);
+        sb.append(", RH_EMEP=");
+        sb.append(RH_EMEP);
+        sb.append("}");
+
+        return sb.toString();
+    }
+
+    @Override
+    public kvjMeta toEntityModel() {
+        kvjMetaImpl kvjMetaImpl = new kvjMetaImpl();
+
+        if (samptime == Long.MIN_VALUE) {
+            kvjMetaImpl.setSamptime(null);
+        } else {
+            kvjMetaImpl.setSamptime(new Date(samptime));
+        }
+
+        kvjMetaImpl.setTw2(Tw2);
+        kvjMetaImpl.setTw5(Tw5);
+        kvjMetaImpl.setTw10(Tw10);
+        kvjMetaImpl.setTw15(Tw15);
+        kvjMetaImpl.setTw20(Tw20);
+        kvjMetaImpl.setTw25(Tw25);
+        kvjMetaImpl.setTw30(Tw30);
+        kvjMetaImpl.setTw35(Tw35);
+        kvjMetaImpl.setTw40(Tw40);
+        kvjMetaImpl.setTw45(Tw45);
+        kvjMetaImpl.setTw50(Tw50);
+        kvjMetaImpl.setTw60(Tw60);
+        kvjMetaImpl.setTw70(Tw70);
+        kvjMetaImpl.setTw80(Tw80);
+        kvjMetaImpl.setTw100(Tw100);
+        kvjMetaImpl.setTw120(Tw120);
+        kvjMetaImpl.setCO2w02(CO2w02);
+        kvjMetaImpl.setCO2w15(CO2w15);
+        kvjMetaImpl.setCO2w25(CO2w25);
+        kvjMetaImpl.setCO2w70(CO2w70);
+        kvjMetaImpl.setGlob(Glob);
+        kvjMetaImpl.setRGlob(RGlob);
+        kvjMetaImpl.setLWin(LWin);
+        kvjMetaImpl.setLWout(LWout);
+        kvjMetaImpl.setPARw02(PARw02);
+        kvjMetaImpl.setPARw07(PARw07);
+        kvjMetaImpl.setPARw10(PARw10);
+        kvjMetaImpl.setTa(Ta);
+        kvjMetaImpl.setRH(RH);
+        kvjMetaImpl.setTw2_EMEP(Tw2_EMEP);
+        kvjMetaImpl.setTw5_EMEP(Tw5_EMEP);
+        kvjMetaImpl.setTw10_EMEP(Tw10_EMEP);
+        kvjMetaImpl.setTw15_EMEP(Tw15_EMEP);
+        kvjMetaImpl.setTw20_EMEP(Tw20_EMEP);
+        kvjMetaImpl.setTw25_EMEP(Tw25_EMEP);
+        kvjMetaImpl.setTw30_EMEP(Tw30_EMEP);
+        kvjMetaImpl.setTw35_EMEP(Tw35_EMEP);
+        kvjMetaImpl.setTw40_EMEP(Tw40_EMEP);
+        kvjMetaImpl.setTw45_EMEP(Tw45_EMEP);
+        kvjMetaImpl.setTw50_EMEP(Tw50_EMEP);
+        kvjMetaImpl.setTw60_EMEP(Tw60_EMEP);
+        kvjMetaImpl.setTw70_EMEP(Tw70_EMEP);
+        kvjMetaImpl.setTw80_EMEP(Tw80_EMEP);
+        kvjMetaImpl.setTw100_EMEP(Tw100_EMEP);
+        kvjMetaImpl.setTw120_EMEP(Tw120_EMEP);
+        kvjMetaImpl.setCO2w02_EMEP(CO2w02_EMEP);
+        kvjMetaImpl.setCO2w15_EMEP(CO2w15_EMEP);
+        kvjMetaImpl.setCO2w25_EMEP(CO2w25_EMEP);
+        kvjMetaImpl.setCO2w70_EMEP(CO2w70_EMEP);
+        kvjMetaImpl.setGlob_EMEP(Glob_EMEP);
+        kvjMetaImpl.setRGlob_EMEP(RGlob_EMEP);
+        kvjMetaImpl.setLWin_EMEP(LWin_EMEP);
+        kvjMetaImpl.setLWout_EMEP(LWout_EMEP);
+        kvjMetaImpl.setPARw02_EMEP(PARw02_EMEP);
+        kvjMetaImpl.setPARw07_EMEP(PARw07_EMEP);
+        kvjMetaImpl.setPARw10_EMEP(PARw10_EMEP);
+        kvjMetaImpl.setTa_EMEP(Ta_EMEP);
+        kvjMetaImpl.setRH_EMEP(RH_EMEP);
+
+        kvjMetaImpl.resetOriginalValues();
+
+        return kvjMetaImpl;
+    }
+
+    @Override
+    public void readExternal(ObjectInput objectInput) throws IOException {
+        samptime = objectInput.readLong();
+        Tw2 = objectInput.readFloat();
+        Tw5 = objectInput.readFloat();
+        Tw10 = objectInput.readFloat();
+        Tw15 = objectInput.readFloat();
+        Tw20 = objectInput.readFloat();
+        Tw25 = objectInput.readFloat();
+        Tw30 = objectInput.readFloat();
+        Tw35 = objectInput.readFloat();
+        Tw40 = objectInput.readFloat();
+        Tw45 = objectInput.readFloat();
+        Tw50 = objectInput.readFloat();
+        Tw60 = objectInput.readFloat();
+        Tw70 = objectInput.readFloat();
+        Tw80 = objectInput.readFloat();
+        Tw100 = objectInput.readFloat();
+        Tw120 = objectInput.readFloat();
+        CO2w02 = objectInput.readFloat();
+        CO2w15 = objectInput.readFloat();
+        CO2w25 = objectInput.readFloat();
+        CO2w70 = objectInput.readFloat();
+        Glob = objectInput.readFloat();
+        RGlob = objectInput.readFloat();
+        LWin = objectInput.readFloat();
+        LWout = objectInput.readFloat();
+        PARw02 = objectInput.readFloat();
+        PARw07 = objectInput.readFloat();
+        PARw10 = objectInput.readFloat();
+        Ta = objectInput.readFloat();
+        RH = objectInput.readFloat();
+        Tw2_EMEP = objectInput.readInt();
+        Tw5_EMEP = objectInput.readInt();
+        Tw10_EMEP = objectInput.readInt();
+        Tw15_EMEP = objectInput.readInt();
+        Tw20_EMEP = objectInput.readInt();
+        Tw25_EMEP = objectInput.readInt();
+        Tw30_EMEP = objectInput.readInt();
+        Tw35_EMEP = objectInput.readInt();
+        Tw40_EMEP = objectInput.readInt();
+        Tw45_EMEP = objectInput.readInt();
+        Tw50_EMEP = objectInput.readInt();
+        Tw60_EMEP = objectInput.readInt();
+        Tw70_EMEP = objectInput.readInt();
+        Tw80_EMEP = objectInput.readInt();
+        Tw100_EMEP = objectInput.readInt();
+        Tw120_EMEP = objectInput.readInt();
+        CO2w02_EMEP = objectInput.readInt();
+        CO2w15_EMEP = objectInput.readInt();
+        CO2w25_EMEP = objectInput.readInt();
+        CO2w70_EMEP = objectInput.readInt();
+        Glob_EMEP = objectInput.readInt();
+        RGlob_EMEP = objectInput.readInt();
+        LWin_EMEP = objectInput.readInt();
+        LWout_EMEP = objectInput.readInt();
+        PARw02_EMEP = objectInput.readInt();
+        PARw07_EMEP = objectInput.readInt();
+        PARw10_EMEP = objectInput.readInt();
+        Ta_EMEP = objectInput.readInt();
+        RH_EMEP = objectInput.readInt();
+    }
+
+    @Override
+    public void writeExternal(ObjectOutput objectOutput)
+        throws IOException {
+        objectOutput.writeLong(samptime);
+        objectOutput.writeFloat(Tw2);
+        objectOutput.writeFloat(Tw5);
+        objectOutput.writeFloat(Tw10);
+        objectOutput.writeFloat(Tw15);
+        objectOutput.writeFloat(Tw20);
+        objectOutput.writeFloat(Tw25);
+        objectOutput.writeFloat(Tw30);
+        objectOutput.writeFloat(Tw35);
+        objectOutput.writeFloat(Tw40);
+        objectOutput.writeFloat(Tw45);
+        objectOutput.writeFloat(Tw50);
+        objectOutput.writeFloat(Tw60);
+        objectOutput.writeFloat(Tw70);
+        objectOutput.writeFloat(Tw80);
+        objectOutput.writeFloat(Tw100);
+        objectOutput.writeFloat(Tw120);
+        objectOutput.writeFloat(CO2w02);
+        objectOutput.writeFloat(CO2w15);
+        objectOutput.writeFloat(CO2w25);
+        objectOutput.writeFloat(CO2w70);
+        objectOutput.writeFloat(Glob);
+        objectOutput.writeFloat(RGlob);
+        objectOutput.writeFloat(LWin);
+        objectOutput.writeFloat(LWout);
+        objectOutput.writeFloat(PARw02);
+        objectOutput.writeFloat(PARw07);
+        objectOutput.writeFloat(PARw10);
+        objectOutput.writeFloat(Ta);
+        objectOutput.writeFloat(RH);
+        objectOutput.writeInt(Tw2_EMEP);
+        objectOutput.writeInt(Tw5_EMEP);
+        objectOutput.writeInt(Tw10_EMEP);
+        objectOutput.writeInt(Tw15_EMEP);
+        objectOutput.writeInt(Tw20_EMEP);
+        objectOutput.writeInt(Tw25_EMEP);
+        objectOutput.writeInt(Tw30_EMEP);
+        objectOutput.writeInt(Tw35_EMEP);
+        objectOutput.writeInt(Tw40_EMEP);
+        objectOutput.writeInt(Tw45_EMEP);
+        objectOutput.writeInt(Tw50_EMEP);
+        objectOutput.writeInt(Tw60_EMEP);
+        objectOutput.writeInt(Tw70_EMEP);
+        objectOutput.writeInt(Tw80_EMEP);
+        objectOutput.writeInt(Tw100_EMEP);
+        objectOutput.writeInt(Tw120_EMEP);
+        objectOutput.writeInt(CO2w02_EMEP);
+        objectOutput.writeInt(CO2w15_EMEP);
+        objectOutput.writeInt(CO2w25_EMEP);
+        objectOutput.writeInt(CO2w70_EMEP);
+        objectOutput.writeInt(Glob_EMEP);
+        objectOutput.writeInt(RGlob_EMEP);
+        objectOutput.writeInt(LWin_EMEP);
+        objectOutput.writeInt(LWout_EMEP);
+        objectOutput.writeInt(PARw02_EMEP);
+        objectOutput.writeInt(PARw07_EMEP);
+        objectOutput.writeInt(PARw10_EMEP);
+        objectOutput.writeInt(Ta_EMEP);
+        objectOutput.writeInt(RH_EMEP);
+    }
+}

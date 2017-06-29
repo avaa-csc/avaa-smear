@@ -104,8 +104,18 @@
 			numZoomLevels : 8,
 			projection: new OpenLayers.Projection("EPSG:900913")
 		});
+
+		var options = {
+			attribution: '&copy; <a style="color: green;" target="_blank" href="http://ows.terrestris.de/dienste.html">terrestris</a>. Data: &copy; <a style="color: green;" target="_blank" href="http://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>'
+		};
 		 
-		var ol_wms = new OpenLayers.Layer.OSM();
+		var ol_wms = new OpenLayers.Layer.WMS("background",
+					"http://ows.terrestris.de/osm/service",
+				{
+					layers: "OSM-WMS",
+					version: "1.1.0"
+				},
+				options);
 		var wms_layer =  new OpenLayers.Layer.WMS("OSGeo (same origin - proxied)", "http://vmap0.tiles.osgeo.org/wms/vmap0", {
             layers: "basic"
         });
@@ -205,10 +215,10 @@
 		style_kumpula.title = "Kumpula; east=24.961227; north=60.202887; elevation=45";
 		
 		var style_varrio = OpenLayers.Util.extend({}, layer_style_blue);
-		style_varrio.title = "Värriö; east=29.610137; north=67.755044; elevation=390";
+		style_varrio.title = "Vï¿½rriï¿½; east=29.610137; north=67.755044; elevation=390";
 
 		var style_hyytiala = OpenLayers.Util.extend({}, layer_style);
-		style_hyytiala.title = "Hyytiälä; east=24.294795; north=61.847463; elevation=179";
+		style_hyytiala.title = "Hyytiï¿½lï¿½; east=24.294795; north=61.847463; elevation=179";
 
 		var style_puijo = OpenLayers.Util.extend({}, layer_style_gold);
 		style_puijo.title = "Puijo; east=27.65; north=62.9; elevation=306";
@@ -241,7 +251,7 @@
 		style_torni.title = "Torni; east=24.9387; north=60.1678; elevation=15";
 		
 		var style_kuivajarvi = OpenLayers.Util.extend({}, layer_style_gold);
-		style_kuivajarvi.title = "Kuivajärvi; east=24.282; north=61.846; elevation=?";
+		style_kuivajarvi.title = "Kuivajï¿½rvi; east=24.282; north=61.846; elevation=?";
 		
 		var markers = new OpenLayers.Layer.Vector('Stations', {
 			style : layer_style

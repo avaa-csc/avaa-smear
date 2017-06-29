@@ -3,15 +3,13 @@
  */
 package fi.csc.avaa.smear.smartsmear;
 
-//import java.sql.ResultSetMetaData;
 import java.io.Serializable;
-import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.DateTimeException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Data
@@ -21,29 +19,28 @@ import java.util.Set;
 public class Data implements Serializable {
 
 	private static final long serialVersionUID = 599945710442058651L;
+	private static final String SEPARATORFORMAT = "yyyy"+Download.separator+"MM"+Download.separator+"dd"+Download.separator+
+			"HH"+Download.separator+"mm"+Download.separator+"ss";
+	public static final DateFormat SDF = new SimpleDateFormat(SEPARATORFORMAT);
 	private Hashtable<String, ArrayList<String>> labels = new Hashtable<String, ArrayList<String>>();
-	private String[] samptimes;
-	private Hashtable<String, float[][]> fdata = new Hashtable<String, float[][]>();
-	private Hashtable<String, LocalDateTime[]> timestamps = new Hashtable<>();
+	private Hashtable<String, float[][]> fdata = new Hashtable<>();
+	private Hashtable<String, long[]> epochs;
 	private Hashtable<String, Integer> htindex;
 	public Set<String> finalset;
 	public Set<String> tableset;
-	public LinkedList<String> tablelist = new LinkedList<String>(); //kuten tableset, mutta järjestettynä tarkkaresoluutioisin alkuun
-	private boolean eka = true;
-	private int nocolums = 0; //number of columns
-	private int rivit;
-	private String[] muotoaika; //yyyyTABmmTABddTABhhTAB...
-	private String[] nws; 
-	private long t1, t2; // datan aikaväli lasketaan t2-t1
-	private String nwsname;
-	private long[] unixtimes;
-	private String maxtaulu; // taulu, jossa on eniten rivejä.
-	
+	public LinkedList<String> tablelist = new LinkedList<>(); //kuten tableset, mutta järjestettynä tarkkaresoluutioisin alkuun
+	private int amountOfColumns = 0; //number of columns
+	private int amountOfRows;
+	private String[] nws; // This is meant for containing values of one single variable: KUM_META:pwd_nws, which contains chars as values instead of floats
+	private String nwsColName;
+	private String lastEpochKey;
+
 	public Data(Set<String> finalset, Set<String> tableset, Hashtable<String, Integer>  htindex ) {
 		this.finalset = finalset;
 		this.tableset = tableset;
 		//this.sb = new StringBuffer();
 		this.htindex = htindex; //from metadata
+		this.epochs = new Hashtable<>();
 	}
 
 	/**
@@ -75,27 +72,18 @@ public class Data implements Serializable {
 			ret = htindex.get(v+Download.MUUTTUJAEROTIN+tabl);
 		} catch(Exception e) {
 		}
-		//return htindex.get(v+Download.MUUTTUJAEROTIN+tabl);
 		if (ret == null) {
 			return 0;
 		}
 		return ret;
 	}
 
-	public boolean ekaTaulu() {
-		return eka;
-	}
-
-	public void setEka(Boolean f) {
-		eka = f;
-	}
-
-	public int getRivienlkm() {
-		return rivit;
+	public int getRowAmount() {
+		return amountOfRows;
 	}
 	
-	public void setRivit(int lkm) {
-		this.rivit = lkm;
+	public void setRowAmount(int lkm) {
+		this.amountOfRows = lkm;
 	}
 
 	public String[] getLabels(String table) {
@@ -108,11 +96,11 @@ public class Data implements Serializable {
 	}
 
 	public int getColumnCount() {
-		return nocolums;
+		return amountOfColumns;
 	}
 
-	public void addSarakelkm(int i) {
-		this.nocolums += i; 		
+	public void addColumnCountBy(int i) {
+		this.amountOfColumns += i;
 	}
 
 	public void addLabels(ArrayList<String> cn, String table) {
@@ -121,66 +109,13 @@ public class Data implements Serializable {
 
 	public void addFtaulu(float[][] fa, String taulu) {
 		fdata.put(taulu, fa);
-		//rivit = fa[0].length;
 	}
 	
 	public float[][] getFtaulu(String taulu) {
 		return fdata.get(taulu);
 	}
 
-	/**
-	 * @return the t2
-	 */
-	public long getT2() {
-		return t2;
-	}
-
-	/**
-	 * @param t2 long toisen datapisteen aika
-	 */
-	public void setT2(long t2) {
-		this.t2 = t2;
-	}
-
-	/**
-	 * @return the t1
-	 */
-	public long getT1() {
-		return t1;
-	}
-
-	/**
-	 * @param t1 long ensimmäisen  datapisteen aika 
-	 */
-	public void setT1(long t1) {
-		this.t1 = t1;
-	}
-
-	public void setNWS(String[] nws) {
-		this.nws = nws;		
-	}
-	
-	public String[] getNWS() {
-		return this.nws;
-	}
-
-	public void setNWSname(String columnName) {
-		this.nwsname = columnName;		
-	}
-	
-	public String getNWSname() {
-		return this.nwsname;
-	}
-
-	public void setTimestamps(LocalDateTime[] timestamps, String taulu) {
-		this.timestamps.put(taulu, timestamps);		
-	}
-	
-	public LocalDateTime[] getTimestamps(String taulu) {
-		return this.timestamps.get(taulu);
-	}
-	
-	public String clean(String s) {
+	public static String clean(String s) {
 	    	String clean = s;
 	    	if (null != s) {
 	    		if (s.startsWith("avg(") || s.startsWith("sum(")) {
@@ -192,41 +127,105 @@ public class Data implements Serializable {
 			return clean;
 		}
 
-	public long[] getUnixtimes() {
-		return this.unixtimes;
+	public long[] getEpoch(String table) {
+		if(table == null || epochs.isEmpty()) {
+			return null;
+		}
+		if(epochs.containsKey(table)) {
+			return epochs.get(table);
+		}
+		return epochs.entrySet().iterator().next().getValue();
 	}
 
-	public void setUnixtimes(long[] epoch) {
-		this.unixtimes = epoch;		
+	public long[] getLastEpoch() {
+		if(!epochs.isEmpty() && lastEpochKey != null) {
+			return epochs.get(lastEpochKey);
+		}
+		return new long[0];
 	}
 
-	/**
-	 * @return the String[] muotoaika
-	 */
-	public String[] getMuotoaika() {
-		return muotoaika;
+	public void setEpoch(long[] epoch, String table) {
+		this.lastEpochKey = table;
+		this.epochs.put(table, epoch);
 	}
 
-	/**
-	 * @param muotoaika the String[] muotoaika to set
-	 */
-	public void setMuotoaika(String[] muotoaika) {
-		this.muotoaika = muotoaika;
+	public LocalDateTime[] getTimestamps(String table) {
+		if(table == null) {
+			return null;
+		}
+		long[] unixtimes = getEpoch(table);
+		LocalDateTime[] timestamps = new LocalDateTime[unixtimes.length];
+		for (int i = 0; i < unixtimes.length; i++) {
+			String formattedDateStr = getFormattedDate(unixtimes[i]);
+			if (formattedDateStr != null) {
+				String[] splittedFormattedDateStr = formattedDateStr.split(",");
+				if (splittedFormattedDateStr.length == 6) {
+					try {
+						timestamps[i] = LocalDateTime.of(Integer.parseInt(splittedFormattedDateStr[0]), Integer.parseInt(splittedFormattedDateStr[1]), Integer.parseInt(splittedFormattedDateStr[2]), Integer.parseInt(splittedFormattedDateStr[3]), Integer.parseInt(splittedFormattedDateStr[4]), Integer.parseInt(splittedFormattedDateStr[5]));
+					} catch (NumberFormatException | DateTimeException e) {
+						timestamps[i] = null;
+					}
+				} else {
+					timestamps[i] = null;
+				}
+			} else {
+				timestamps[i] = null;
+			}
+		}
+		return timestamps;
 	}
 
-	public void setMaxtaulu(String kanta) {	
-		this.maxtaulu = kanta;
+	public String[] getFormattedDates(String table) {
+		if(table == null) {
+			return null;
+		}
+		long[] unixtimes = getEpoch(table);
+		String[] formattedDates = new String[unixtimes.length];
+		for(int i=0; i < unixtimes.length; i++) {
+			formattedDates[i] = getFormattedDate(unixtimes[i]);
+		}
+		return formattedDates;
 	}
-	
-	public String getMaxtaulu() {
-		return this.maxtaulu;
+
+	private String getFormattedDate(long epoch) {
+		if (epoch != 0L) {
+			java.util.Date ud = new java.util.Date((epoch * 1000) + (2 * 3600 * 1000));
+			SDF.setTimeZone(TimeZone.getTimeZone("UTC"));
+			return SDF.format(ud);
+		}
+		return null;
 	}
-	
-	public void setSamptimes(String[] samptimes) {
-		this.samptimes = samptimes;		
+
+	// The NWS methods and getSamptimes are currently used only in HDF5writer.java, so no references in this project (2.11.2016)
+    /* but it have to be public [ERROR] /home/pj/IdeaProjects/avaa-smear/HDF5writer/src/main/java/fi/csc/avaa/HDF5writer/HDF5writer.java:[125,46] getSamptimes(java.lang.String) has private access in fi.csc.avaa.smear.smartsmear.Data */
+	public String[] getSamptimes(String table) {
+		if(table == null) {
+			return null;
+		}
+		List<String> timestamps = Arrays.asList(getTimestamps(table)).stream().map(ts -> ts.toString()).collect(Collectors.toList());
+		List<String> samptimes = timestamps.stream().map(fd -> {
+			if(fd != null && fd.length() > 0) {
+		   		return fd.replace('T', ' ').concat(":00.0");
+			}
+			return null;
+		}).collect(Collectors.toList());
+		return samptimes.toArray( new String[ samptimes.size() ] );
 	}
-	
-	public String[] getSamptimes() {
-		return this.samptimes;
+
+	public void setNWS(String[] nws) {
+		this.nws = nws;
 	}
+
+	public String[] getNWS() {
+		return this.nws;
+	}
+
+	public void setNWSname(String columnName) {
+		this.nwsColName = columnName;
+	}
+
+	public String getNWSname() {
+		return this.nwsColName;
+	}
+
 }

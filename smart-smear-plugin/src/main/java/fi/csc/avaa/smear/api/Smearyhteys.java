@@ -1,7 +1,7 @@
 /**
  * 
  */
-package fi.csc.avaa.smear.smartsmear;
+package fi.csc.avaa.smear.api;
 
 //import java.io.IOException;
 import java.sql.Connection;

@@ -3,7 +3,6 @@
  */
 package fi.csc.avaa.HDF5writer;
 
-//import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -12,18 +11,18 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
 
-import fi.csc.avaa.HDF5open;
+import fi.csc.avaa.smear.smartsmear.HDF5open;
 import fi.csc.avaa.smear.smartsmear.Data;
 import fi.csc.avaa.smear.smartsmear.Metadata;
 import fi.csc.avaa.smear.smartsmear.SmearViewUI;
-import ncsa.hdf.hdf5lib.H5;
-import ncsa.hdf.hdf5lib.HDF5Constants;
-import ncsa.hdf.object.Attribute;
-import ncsa.hdf.object.Dataset;
-import ncsa.hdf.object.Datatype;
-import ncsa.hdf.object.FileFormat;
-import ncsa.hdf.object.Group;
-import ncsa.hdf.object.h5.H5File;
+import hdf.hdf5lib.H5;
+import hdf.hdf5lib.HDF5Constants;
+import hdf.object.Attribute;
+import hdf.object.Dataset;
+import hdf.object.Datatype;
+import hdf.object.FileFormat;
+import hdf.object.Group;
+import hdf.object.h5.H5File;
 
 
 /**
@@ -117,28 +116,34 @@ public class HDF5writer {
 		    Datatype nativefloat = h5f.createDatatype(Datatype.CLASS_FLOAT, 4, Datatype.NATIVE, Datatype.NATIVE);
 		    
 		    long  dims[] = new long[1];
-		    String[] samptimes = data.getSamptimes();
+			Iterator<String> iter = data.tableset.iterator();
+			String taulunnimi = null;
+			if(iter.hasNext()) {
+				taulunnimi = (String) iter.next();
+			}
+		    String[] samptimes = data.getSamptimes(taulunnimi);
 		    if(samptimes == null) {
 		    	System.out.println("samptimes == null");
 		    	System.exit(4);
 		    }
 		    int rows = samptimes.length;
-			dims[0] =  rows ;
+			dims[0] = rows ;
 		    Dataset dataset = h5f.createScalarDS("samptime", station, isodate, dims, null, null, GZIPNO, samptimes);
 		    if (null == dataset) { System.out.println("NULLdataset"); }
-		    System.out.println("Ajanpituus: "+samptimes[0].length());
+//		    System.out.println("Ajanpituus: "+samptimes[0].length());
 		    dataset.write(samptimes);
-		    dataset = h5f.createScalarDS("UNIXtime", station, unixtime, dims, null, null, GZIPNO, data.getUnixtimes());
-		    dataset.write(data.getUnixtimes());
-		    Iterator<String> iter = data.tableset.iterator();
-		    while( iter.hasNext()) {
-		    	String taulunnimi = (String)iter.next();
+			long[] unixtimes = data.getEpoch(taulunnimi);
+		    dataset = h5f.createScalarDS("UNIXtime", station, unixtime, dims, null, null, GZIPNO, unixtimes);
+		    dataset.write(unixtimes);
+			iter = data.tableset.iterator();
+		    while(iter.hasNext()) {
+				taulunnimi = (String) iter.next();
 		    	float[][] fa = data.getFtaulu(taulunnimi);
 		    	//int cc = fa.length;
 		    	String[] ColumnNames =  data.getLabels(taulunnimi);
 		    	if (null != ColumnNames) {
 		    		int cc = ColumnNames.length;
-		    		System.out.println("HDFsarakkeet: "+cc);
+//		    		System.out.println("HDFsarakkeet: "+cc);
 		    		for (int i = 0; i < cc; i++) {
 		    			if (!ColumnNames[i].equals(data.getNWSname())) {
 		    				createAndWriteDS(ColumnNames[i], station, nativefloat, dims,  fa[i], taulunnimi);
@@ -151,7 +156,7 @@ public class HDF5writer {
 		    	try  {
 		    	 dataset = h5f.createScalarDS(data.getNWSname(), station, meteocode, dims, null, null, GZIPNO, nws);		    			    
 		    	 dataset.write(nws);
-		    	} catch (ncsa.hdf.hdf5lib.exceptions.HDF5SymbolTableException e ) {
+		    	} catch (hdf.hdf5lib.exceptions.HDF5SymbolTableException e ) {
 		    		System.err.println("HDF5 NWS virhe: "+data.getNWSname());
 		    		e.printStackTrace();
 		    	}
@@ -180,9 +185,9 @@ public class HDF5writer {
 			try {
 				dataset = h5f.createScalarDS(name, station, nativefloat, dims,
 						null, null, GZIPNO, fa);
-				metawrite(dataset, data.clean(name)+":"+taulunnimi); //13.11. Metadata.javan muutos
+				metawrite(dataset, Data.clean(name)+":"+taulunnimi); //13.11. Metadata.javan muutos
 				dataset.write(fa);
-			} catch (ncsa.hdf.hdf5lib.exceptions.HDF5LibraryException e) {
+			} catch (hdf.hdf5lib.exceptions.HDF5LibraryException e) {
 				System.err.println(e+" HDF5LibraryException: "+name);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -234,7 +239,7 @@ public class HDF5writer {
         long[] dims = { 1 };
         String values[] = new String[1];
         values[0] = value;
-        Datatype datatype = null;
+        Datatype datatype;
         int dtype = 0;
         try {
             //+4 sallii pari ä-kirjainta, jotka ovat pitempiä UTF-8 koodauksessa
@@ -244,10 +249,12 @@ public class HDF5writer {
             dtype = datatype.toNative();
             H5.H5Tset_cset(dtype, HDF5Constants.H5T_CSET_UTF8); 
             //System.out.println("Onnistui luoda merkkijono"+dtype);
-        } catch ( ncsa.hdf.hdf5lib.exceptions.HDF5LibraryException e )  {
+        } catch ( hdf.hdf5lib.exceptions.HDF5LibraryException e )  {
             System.out.println("Error to createDatatype"+e.getMajorErrorNumber() +e.getMessage());
+            datatype = null;
         } catch ( Exception e )  {
             System.out.println("Other error to createDatatype"+e.toString());
+            datatype = null;
         }
         Attribute result = new Attribute(name, datatype, dims);
         result.setValue(values);

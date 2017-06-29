@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.concurrent.TimeUnit;
 
 import javax.portlet.PortletPreferences;
@@ -35,7 +34,6 @@ import com.vaadin.data.util.PropertysetItem;
 import com.vaadin.data.validator.DateRangeValidator;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.server.FileDownloader;
-import com.vaadin.server.FileResource;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Page;
 import com.vaadin.server.Responsive;
@@ -45,26 +43,9 @@ import com.vaadin.server.VaadinServlet;
 import com.vaadin.shared.ui.MultiSelectMode;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.ui.AbstractSelect;
+import com.vaadin.ui.*;
 import com.vaadin.ui.AbstractSelect.ItemDescriptionGenerator;
-import com.vaadin.ui.Alignment;
-import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.Field;
-import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.NativeSelect;
-import com.vaadin.ui.Notification;
-import com.vaadin.ui.PopupDateField;
-import com.vaadin.ui.PopupView;
-import com.vaadin.ui.Tree;
-import com.vaadin.ui.UI;
-import com.vaadin.ui.VerticalLayout;
 
 import fi.csc.avaa.smear.smartsmear.email.SmearEMailWindow;
 import fi.csc.avaa.smear.smartsmear.email.SmearGenerateFileAction;
@@ -95,7 +76,6 @@ public class SmearViewUI extends UI implements ThreadCompleteListener {
     private static Log log = LogFactoryUtil.getLog(SmearViewUI.class);
     public static final String CITE = "Cite: Junninen, H; Lauri, A; Keronen, P; Aalto, P; Hiltunen, V; Hari, P; Kulmala, M."+
 	"Smart-SMEAR: on-line data exploration and visualization tool for SMEAR stations. BOREAL ENVIRONMENT RESEARCH (BER) Vol 14, Issue 4, pp.447-457";
-    //private Vizualisation viz = new Vizualisation();
     private final DB db = new DB();
     public HierarchicalContainer treecontainer;
     public static final String DESCRIPTION = "description";
@@ -105,16 +85,10 @@ public class SmearViewUI extends UI implements ThreadCompleteListener {
     public static final String AVAILABLE = "available";
     public static final String CONTACT_EMAIL = "";
     public static final String CHECKED = "CHECKED";
-    //public static final String WIDTH = "130px";
     public static final String WIDTH = "100px";
     public static final String SMALLBUTTONWIDTH = "30px";
     private  List<SmearVariableMetadata> vmdata; //used to create Metadata, voitaisiin laskea staattisesti
-    public String contact_email = "Someone";
     public boolean nohuman;
-    private StreamResource csvFileRes;
-    private StreamResource txtFileRes;
-    private StreamResource metaFileRes;
-    private FileResource hdf5FileRes;
     private FileDownloader downloader;
     public static int maxVisualisationTimeWindow = 180;
 	private static Metadata metadata;
@@ -127,7 +101,11 @@ public class SmearViewUI extends UI implements ThreadCompleteListener {
 	private NativeSelect dlSelect;
 	private Button downloadButton;
 	public static int garbageCollectionCount = 0;
-   
+	private ProgressBar pBar;
+	private Download download;
+	private VerticalLayout right;
+
+
     private static Date getModifiedDate(Date currentdate, int modifier) {
     	Calendar calendar = new GregorianCalendar();
     	calendar.setTime(currentdate);
@@ -147,10 +125,6 @@ public class SmearViewUI extends UI implements ThreadCompleteListener {
 	@Override
     protected void init(VaadinRequest request) {
     	this.nohuman = false;
-    	this.csvFileRes = null;
-    	this.txtFileRes = null;
-    	this.hdf5FileRes = null;
-    	this.metaFileRes = null;
     	this.treecontainer = new HierarchicalContainer();
     	this.visibleVarItemIds = new ArrayList<>();
     	this.itemStyle = null;
@@ -158,22 +132,21 @@ public class SmearViewUI extends UI implements ThreadCompleteListener {
     	this.downloader = new FileDownloader(new StreamResource(null, ""));
     	
     	PortletPreferences portletPreferences = ((PortletRequest) request.getAttribute(JavaConstants.JAVAX_PORTLET_REQUEST)).getPreferences();
-    	
-    	//main layout 
-    	GridLayout layout = new GridLayout(20,1);
+
+    	//main layout
+		GridLayout layout = new GridLayout(20,1);
     	layout.setWidth(100, Unit.PERCENTAGE);
     	layout.setMargin(false);
     	layout.setSpacing(false);
     	setContent(layout);
+
+		right = new VerticalLayout();
     	VerticalLayout left = new VerticalLayout();
     	left.setWidth(100, Unit.PERCENTAGE);
-    	
-    	VerticalLayout right = new VerticalLayout();
     	VerticalLayout variableselection = new VerticalLayout();
     	variableselection.setMargin(false);
     	variableselection.setSizeUndefined();
     	variableselection.setImmediate(true);
-    	
     	HorizontalLayout controlsLayout = new HorizontalLayout();
     	
     	PopupDateField startdate = new PopupDateField("From:");
@@ -193,8 +166,8 @@ public class SmearViewUI extends UI implements ThreadCompleteListener {
     	nextbutton.setStyleName("special-button");
     	ComboBox quality = new ComboBox("Quality Level:");
     	ComboBox aheight = new ComboBox("Arrival Height:");
-    	ComboBox avaraging = new ComboBox("Averaging:");
-    	ComboBox typeavaraging = new ComboBox("Averaging Type:");
+    	ComboBox averaging = new ComboBox("Averaging:");
+    	ComboBox averagingType = new ComboBox("Averaging Type:");
     	VariableTree tree = new VariableTree("Variables:", db);
     	
     	dlSelect = new NativeSelect();
@@ -205,6 +178,11 @@ public class SmearViewUI extends UI implements ThreadCompleteListener {
     	dlSelect.addStyleName("download-select-dropdown");
     	dlSelect.setEnabled(false);
     	dlSelect.setResponsive(true);
+		dlSelect.addItem("CSV");
+		dlSelect.addItem("TXT");
+		dlSelect.addItem("Meta");
+		dlSelect.addItem("HDF5");
+
     	downloadButton = new Button("Download");
     	downloadButton.setStyleName("download-button");
     	downloadButton.setEnabled(false);
@@ -313,13 +291,10 @@ public class SmearViewUI extends UI implements ThreadCompleteListener {
     							System.out.println("Exception in "+variable+" available");
     							available = "Not found";
     						}
-    					} else {
-//    						System.out.println("Variable has 0000-00-00 00:00:00 timestamp");
     					}
     					String cat = meta.getCategory();
     					String categoryitem = Station.ASEMAT[i]+cat;
     					
-    					// Availeble 9999-09-09 is not supposed to be in tree
     					if (!available.equals("9999-09-09") && (!cat.equals(""))){
     						Item variable_item = treecontainer.addItem(variable_id);
     						Item category = treecontainer.addItem(categoryitem);
@@ -391,19 +366,6 @@ public class SmearViewUI extends UI implements ThreadCompleteListener {
 
     		}});
     	CheckBox varExistButton = itemStyle.getVariableExistButton();
-    	/*
-    	Button resetVarButton = new Button("Reset variables");
-    	resetVarButton.setIcon(FontAwesome.UNDO);
-    	resetVarButton.setStyleName("reset-variables-button link");
-    	resetVarButton.addClickListener(new Button.ClickListener() {
-    		public void buttonClick(ClickEvent event) {
-    			final Set<String> set3 = (Set<String>)tree.getValue();
-    			for (String rm:set3){
-    				tree.unselect(rm);
-    			}
-    		}
-    	});
-    	*/
     	Button collapseBtn = new Button();
     	collapseBtn.setHtmlContentAllowed(true);
     	collapseBtn.addStyleName("link collapse-button");
@@ -572,33 +534,33 @@ public class SmearViewUI extends UI implements ThreadCompleteListener {
     	timesplit.setHeight("100%");
     	queryFirstRowLayout.addComponent(timesplit);
     	//Averaging
-    	avaraging.addItem("NONE");
-    	avaraging.addItem("30MIN");
-    	avaraging.addItem("1HOUR");
-    	avaraging.setItemCaption("NONE", "None");
-    	avaraging.setItemCaption("30MIN", "30 min");
-    	avaraging.setItemCaption("1HOUR", "1 hour");
-    	avaraging.setNullSelectionAllowed(false);
-    	avaraging.setValue("NONE");
-    	avaraging.setImmediate(true);
-    	avaraging.setWidth(WIDTH);
-    	avaraging.setHeight("100%");
+    	averaging.addItem("NONE");
+    	averaging.addItem("30MIN");
+    	averaging.addItem("1HOUR");
+    	averaging.setItemCaption("NONE", "None");
+    	averaging.setItemCaption("30MIN", "30 min");
+    	averaging.setItemCaption("1HOUR", "1 hour");
+    	averaging.setNullSelectionAllowed(false);
+    	averaging.setValue("NONE");
+    	averaging.setImmediate(true);
+    	averaging.setWidth(WIDTH);
+    	averaging.setHeight("100%");
     	//Type of avaraging
-    	typeavaraging.addItem("NONE");
-    	typeavaraging.addItem("ARITHMETIC");
-    	typeavaraging.addItem(Download.GEOMETRIC);
-    	typeavaraging.addItem(Download.MEDIAN);
-    	typeavaraging.addItem(Download.SUMM);
-    	typeavaraging.setItemCaption("NONE", "None");
-    	typeavaraging.setItemCaption("ARITHMETIC", "Arithmetic");
-    	typeavaraging.setItemCaption(Download.GEOMETRIC, "Geometric");
-    	typeavaraging.setItemCaption(Download.MEDIAN, "Median");
-    	typeavaraging.setItemCaption(Download.SUMM, "Sum");
-    	typeavaraging.setNullSelectionAllowed(false);
-    	typeavaraging.setValue("NONE");
-    	typeavaraging.setImmediate(true);
-    	typeavaraging.setWidth(WIDTH);
-    	typeavaraging.setHeight("100%");
+    	averagingType.addItem("NONE");
+    	averagingType.addItem(Download.ARITHMETIC);
+    	averagingType.addItem(Download.GEOMETRIC);
+    	averagingType.addItem(Download.MEDIAN);
+    	averagingType.addItem(Download.SUM);
+    	averagingType.setItemCaption("NONE", "None");
+    	averagingType.setItemCaption(Download.ARITHMETIC, "Arithmetic");
+    	averagingType.setItemCaption(Download.GEOMETRIC, "Geometric");
+    	averagingType.setItemCaption(Download.MEDIAN, "Median");
+    	averagingType.setItemCaption(Download.SUM, "Sum");
+    	averagingType.setNullSelectionAllowed(false);
+    	averagingType.setValue("NONE");
+    	averagingType.setImmediate(true);
+    	averagingType.setWidth(WIDTH);
+    	averagingType.setHeight("100%");
 
     	// Arrival Height
 
@@ -641,49 +603,35 @@ public class SmearViewUI extends UI implements ThreadCompleteListener {
     	button.addClickListener(new Button.ClickListener() {
     		public void buttonClick(ClickEvent event) {
     			if(isStartDateBeforeEndDate(startdate, enddate)) {
-					if (null != csvFileRes){
-	    				csvFileRes = null;
-	    			}
-					if(null != txtFileRes) {
-						txtFileRes = null;
-					}
-					if(null != hdf5FileRes) {
-						hdf5FileRes = null;
-					}
-
-					dlSelect.removeAllItems();
 					if(dateRangeExceedsMaxPeriod(startdate, enddate, maxVisualisationTimeWindow)) {
 						dlSelect.setEnabled(false);
 						downloadButton.setEnabled(false);
-						displayMailWindow(startdate, enddate, avaraging, typeavaraging, quality, tree);
+						displayMailWindow(startdate, enddate, averaging, averagingType, quality, tree);
 					} else {
+						dlSelect.setEnabled(false);
+						dlSelect.setValue("Choose type");
+						downloadButton.setEnabled(false);
 		    			liferayipc.sendEvent("NewTrajectory", csvsoi(startdate.getValue())+","+aheight.getValue());
 		    			Tree t2 = (Tree)variableselection.getComponent(1);
-		    			final Set<String> set2 = (Set<String>)t2.getValue();
-		    			Download dl = null;
+		    			final ArrayList<String> set2 = new ArrayList<>((Set<String>)t2.getValue());
+		    			download = null;
 		    			if (!set2.isEmpty()) {
-		    			try {
-		    				dl = new Download(startdate.getValue(), enddate.getValue(), db, SmearViewUI.getSelectedVariables(t2), metadata, avaraging, typeavaraging, String.valueOf(quality.getValue()), itemStyle);
-		    			} catch (Exception e) {
-		    				System.out.println("Catched " + e);
-		    				e.printStackTrace();
-		    			}
-		    			if(dl == null || dl.allHaveErrors()) {
-		    				chartsection.removeAllComponents();
-		    			} else {
-		    				if (!set2.isEmpty()) {				
-		    					FileLoaderThread fileThread = new FileLoaderThread(dl);
-		    					UI.getCurrent().setPollInterval(100);
-		    					fileThread.addListener(SmearViewUI.this);
-		    					fileThread.start();
-		    				} else {
-		    					dlSelect.setEnabled(false);
-		    					downloadButton.setEnabled(false);
-		    				}
-		    				updateVizualisation(startdate, enddate, chartsection,variableselection, dl, String.valueOf(quality).equals(SmearViewUI.CHECKED));
-		    				SmearViewUI.doJVMGarbageCollection();
-		    			}
-					} // if set.empty
+							try {
+								download = new Download(startdate.getValue(), enddate.getValue(), db, SmearViewUI.getSelectedVariables(t2), itemStyle.getVariableAvailabilities(SmearViewUI.getSelectedVariables(t2), String.valueOf(quality).equals(SmearViewUI.CHECKED)), metadata, averaging, averagingType, String.valueOf(quality.getValue()));
+							} catch (Exception e) {
+								System.out.println("Catched " + e);
+								e.printStackTrace();
+							}
+							if(download == null || download.allHaveErrors()) {
+								chartsection.removeAllComponents();
+							} else {
+								if (!set2.isEmpty()) {
+									dlSelect.setEnabled(true);
+								}
+								updateVizualisation(startdate, enddate, chartsection,variableselection, String.valueOf(quality).equals(SmearViewUI.CHECKED));
+								SmearViewUI.doJVMGarbageCollection();
+							}
+						} // if set.empty
 					}
 				}
     		
@@ -701,7 +649,7 @@ public class SmearViewUI extends UI implements ThreadCompleteListener {
     	resetBtn.addClickListener(new Button.ClickListener() {
     		public void buttonClick(ClickEvent event) {
     			liferayipc.sendEvent("ResetTrajectory", null);
-    			final Set<String> set3 = (Set<String>)tree.getValue();
+    			final ArrayList<String> set3 = new ArrayList<>((Set<String>)tree.getValue());
     			for (String rm:set3){
     				tree.unselect(rm);
     			}
@@ -711,9 +659,10 @@ public class SmearViewUI extends UI implements ThreadCompleteListener {
     			dlSelect.removeAllItems();
     			downloadButton.setEnabled(false);
     			dlSelect.setEnabled(false);
+				download = null;
     			varExistButton.setValue(false);
     			chartsection.removeAllComponents();
-    			updateVizualisation(startdate,enddate, chartsection, variableselection, null, String.valueOf(quality).equals(SmearViewUI.CHECKED));
+    			updateVizualisation(startdate, enddate, chartsection, variableselection, String.valueOf(quality).equals(SmearViewUI.CHECKED));
     			
     		}
     	});
@@ -721,15 +670,9 @@ public class SmearViewUI extends UI implements ThreadCompleteListener {
     	querySecondRowLayout.setMargin(true);
     	querySecondRowLayout.setSpacing(true);
     	querySecondRowLayout.addComponent(quality);
-    	querySecondRowLayout.addComponent(avaraging);
-    	querySecondRowLayout.addComponent(typeavaraging);
+    	querySecondRowLayout.addComponent(averaging);
+    	querySecondRowLayout.addComponent(averagingType);
     	
-    	//queryButtonRowLayout.setMargin(true);
-    	//queryButtonRowLayout.setSpacing(true);
-    	//queryButtonRowLayout.removeComponent(button);
-    	//queryButtonRowLayout.addComponent(button);
-    	//queryButtonRowLayout.removeComponent(mainview);
-    	//queryButtonRowLayout.addComponent(mainview);
     	downloadLayout.setMargin(true);
     	downloadLayout.setSpacing(true);
     	downloadLayout.setSizeUndefined();
@@ -740,7 +683,6 @@ public class SmearViewUI extends UI implements ThreadCompleteListener {
 		queryInputsLayout.addComponent(queryFirstRowLayout);
 		queryInputsLayout.addComponent(querySecondRowLayout);
 		controlsLayout.addComponent(queryInputsLayout);
-		//controlsLayout.addComponent(queryButtonRowLayout);
 		controlsLayout.addComponent(downloadLayout);
 		
 		right.addComponent(controlsLayout);
@@ -809,7 +751,7 @@ public class SmearViewUI extends UI implements ThreadCompleteListener {
 	    				enddate.setValue(getModifiedDate(enddate.getValue(), 30));
 	    			}
 	    			if(dateRangeExceedsMaxPeriod(startdate, enddate, maxVisualisationTimeWindow)) {
-						displayMailWindow(startdate, enddate, avaraging, typeavaraging, quality, tree);
+						displayMailWindow(startdate, enddate, averaging, averagingType, quality, tree);
 						dlSelect.removeAllItems();
 						downloadButton.setEnabled(false);
 						dlSelect.setEnabled(false);
@@ -838,7 +780,7 @@ public class SmearViewUI extends UI implements ThreadCompleteListener {
 	    				dlSelect.removeAllItems();
 						downloadButton.setEnabled(false);
 						dlSelect.setEnabled(false);
-	    				displayMailWindow(startdate, enddate, avaraging, typeavaraging, quality, tree);
+	    				displayMailWindow(startdate, enddate, averaging, averagingType, quality, tree);
 	    			} else {
 	    				button.click();
 	    			}
@@ -879,7 +821,7 @@ public class SmearViewUI extends UI implements ThreadCompleteListener {
     				}
     			}
     			if(dateRangeExceedsMaxPeriod(startdate, enddate, maxVisualisationTimeWindow)) {
-					displayMailWindow(startdate, enddate, avaraging, typeavaraging, quality, tree);
+					displayMailWindow(startdate, enddate, averaging, averagingType, quality, tree);
 					dlSelect.removeAllItems();
 					downloadButton.setEnabled(false);
 					dlSelect.setEnabled(false);
@@ -888,60 +830,92 @@ public class SmearViewUI extends UI implements ThreadCompleteListener {
     			}
     		}
     	}); 
-    	typeavaraging.addValueChangeListener(new Field.ValueChangeListener() {
+    	averagingType.addValueChangeListener(new Field.ValueChangeListener() {
     		public void valueChange(ValueChangeEvent event) {
-    			if (typeavaraging.getValue() != "NONE" && nohuman == false){
+    			if (averagingType.getValue() != "NONE" && nohuman == false){
     				nohuman = true;
-    				if(avaraging.getValue() == "NONE") {
-    					avaraging.setValue("1HOUR");
+    				if(averaging.getValue() == "NONE") {
+    					averaging.setValue("1HOUR");
     				}
     				nohuman = false;
     			}
-    			if (typeavaraging.getValue() == "NONE" && nohuman == false){
+    			if (averagingType.getValue() == "NONE" && nohuman == false){
     				nohuman = true;
-    				avaraging.setValue("NONE");
+    				averaging.setValue("NONE");
     				nohuman = false;
     			}
     		}
     	});
-    	avaraging.addValueChangeListener(new Field.ValueChangeListener() {
+    	averaging.addValueChangeListener(new Field.ValueChangeListener() {
     		public void valueChange(ValueChangeEvent event) {
-    			if (avaraging.getValue() != "NONE" && nohuman == false){
+    			if (averaging.getValue() != "NONE" && nohuman == false){
     				nohuman = true;
-    				if(typeavaraging.getValue() == "NONE") {
-    					typeavaraging.setValue("ARITHMETIC");
+    				if(averagingType.getValue() == "NONE") {
+    					averagingType.setValue("ARITHMETIC");
     				}
     				nohuman = false;
     			}
-    			if (avaraging.getValue() == "NONE" && nohuman == false){
+    			if (averaging.getValue() == "NONE" && nohuman == false){
     				nohuman = true;
-    				typeavaraging.setValue("NONE");
+    				averagingType.setValue("NONE");
     				nohuman = false;
     			}
     		}
     	});
     	
     	dlSelect.addValueChangeListener(e -> {
-    		if(downloader != null) {
-    			downloader.setFileDownloadResource(null);
+    		if(downloader != null && download != null) {
     			if("CSV".equals(dlSelect.getValue())) {
-    				downloader.setFileDownloadResource(csvFileRes);
+					downloader.setFileDownloadResource(null);
+					FileLoaderThread fileThread = new FileLoaderThread(download, true, false, false, false);
+					UI.getCurrent().setPollInterval(100);
+					pBar = new ProgressBar();
+					pBar.setIndeterminate(true);
+					pBar.setEnabled(false);
+					right.addComponent(pBar);
+					fileThread.addListener(SmearViewUI.this);
+					fileThread.start();
     			} else if("TXT".equals(dlSelect.getValue())) {
-    				downloader.setFileDownloadResource(txtFileRes);
+					downloader.setFileDownloadResource(null);
+					FileLoaderThread fileThread = new FileLoaderThread(download, false, true, false, false);
+					UI.getCurrent().setPollInterval(100);
+					pBar = new ProgressBar();
+					pBar.setIndeterminate(true);
+					pBar.setEnabled(false);
+					right.addComponent(pBar);
+					fileThread.addListener(SmearViewUI.this);
+					fileThread.start();
     			} else if("Meta".equals(dlSelect.getValue())) {
-    				downloader.setFileDownloadResource(metaFileRes);
+					downloader.setFileDownloadResource(null);
+					FileLoaderThread fileThread = new FileLoaderThread(download, false, false, true, false);
+					UI.getCurrent().setPollInterval(100);
+					pBar = new ProgressBar();
+					pBar.setIndeterminate(true);
+					pBar.setEnabled(false);
+					right.addComponent(pBar);
+					fileThread.addListener(SmearViewUI.this);
+					fileThread.start();
     			} else if("HDF5".equals(dlSelect.getValue())) {
-    				downloader.setFileDownloadResource(hdf5FileRes);
-    			}
-    		}
+					downloader.setFileDownloadResource(null);
+					FileLoaderThread fileThread = new FileLoaderThread(download, false, false, false, true);
+					UI.getCurrent().setPollInterval(100);
+					pBar = new ProgressBar();
+					pBar.setIndeterminate(true);
+					pBar.setEnabled(false);
+					right.addComponent(pBar);
+					fileThread.addListener(SmearViewUI.this);
+					fileThread.start();
+    			} else {
+					downloadButton.setEnabled(false);
+				}
+    		} else {
+				downloadButton.setEnabled(false);
+			}
     		SmearViewUI.doJVMGarbageCollection();
     	});
     	downloadButton.addClickListener(e -> {
-    		if("CSV".equals(dlSelect.getValue())) {
-    		
-    		} else if(!"TXT".equals(dlSelect.getValue()) && !"HDF5".equals(dlSelect.getValue()) && !"META".equals(dlSelect.getValue())) {
-    			Notification.show("Please choose file type", Notification.Type.WARNING_MESSAGE);
-    		}
+    		downloadButton.setEnabled(false);
+			dlSelect.setValue("Choose type");
     	});
     	
     	left.addComponent(variableselection);
@@ -975,7 +949,7 @@ public class SmearViewUI extends UI implements ThreadCompleteListener {
     	Map<String, List<String>> selectedVars = getSelectedVariablesGroupedByStation(tree);
 		if(selectedVars.size() > 0) {
 	    	SmearEMailWindow mailWindow = new SmearEMailWindow("Get data via e-mail", "Visualisations are not supported for time periods exceeding " + maxVisualisationTimeWindow + " days.</p><p>Please choose file type and provide an e-mail address where a download link will be sent as soon as the data is available.</p><p>Generation of the data may take several minutes, after which a notification will be displayed on the screen.</p>", true, storedEmailAddress, true, false, SmearViewUI.this, selectedVars, String.valueOf(quality.getValue()), startdate.getValue(), enddate.getValue());
-			SmearGenerateFileAction generateFileAction = new SmearGenerateFileAction(startdate, enddate, db, tree, getMetadata(), avaraging, typeavaraging, quality, mailWindow.getFileTypeField(), itemStyle);
+			SmearGenerateFileAction generateFileAction = new SmearGenerateFileAction(startdate, enddate, db, tree, getMetadata(), avaraging, typeavaraging, quality, mailWindow.getFileTypeField());
 			mailWindow.setEmailAction(generateFileAction::doAction);
 			mailWindow.addCloseListener(e -> {
 				final String emailAddress = mailWindow.getEmailFieldValue();
@@ -990,7 +964,7 @@ public class SmearViewUI extends UI implements ThreadCompleteListener {
 	}
     
 	private Map<String, List<String>> getSelectedVariablesGroupedByStation(Tree tree) {
-		Set<String> selectedVars = getSelectedVariables(tree);
+		ArrayList<String> selectedVars = getSelectedVariables(tree);
 		Map<String, List<String>> selectedVarsGrouped = new HashMap<>();
 		for(String itemId : selectedVars) {
 			String stationName = Station.getStationDisplayName(itemId.split(":")[1]);
@@ -1004,8 +978,8 @@ public class SmearViewUI extends UI implements ThreadCompleteListener {
 	} 
     
     @SuppressWarnings("unchecked")
-	public static Set<String> getSelectedVariables(Tree tree) {
-    	Set<String> results = new TreeSet<>();
+	public static ArrayList<String> getSelectedVariables(Tree tree) {
+    	ArrayList<String> results = new ArrayList<>();
     	for(Object itemId : (Set<String>) tree.getValue()) {
 			if(!tree.hasChildren(itemId)) {
 				results.add(itemId.toString());
@@ -1026,17 +1000,17 @@ public class SmearViewUI extends UI implements ThreadCompleteListener {
 
     @SuppressWarnings("unchecked")
 	
-    public void updateVizualisation(final PopupDateField start, final PopupDateField end, final CssLayout chartsection, final VerticalLayout variableselection, Download dl, boolean checkQuality) { 
+    public void updateVizualisation(final PopupDateField start, final PopupDateField end, final CssLayout chartsection, final VerticalLayout variableselection, boolean checkQuality) {
     	Tree t = (Tree) variableselection.getComponent(1);
-    	Set<String> varsta = (Set<String>)t.getValue() != null ? (Set<String>)t.getValue() : null;
+    	ArrayList<String> varsta = (Set<String>)t.getValue() != null ? new ArrayList<>((Set<String>)t.getValue()) : null;
     	if (varsta != null) {
-    		Vizualisation viz = new Vizualisation(start.getValue(), end.getValue(), db, metadata, 300, 320, checkQuality ,dl.getData().tableset, dl.getData().finalset);
+    		Vizualisation viz = new Vizualisation(start.getValue(), end.getValue(), db, metadata, 300, 320, checkQuality ,download);
     		CssLayout rows = new CssLayout();
     		rows.setSizeFull();
     		Responsive.makeResponsive(rows);
     		int norows = Vizualisation.ROWS; // turha alustus, vastattava todellisuutta tai tule null-osoitin-poikkeus
     		if (varsta != null && varsta.isEmpty() == false){
-    			rows = viz.plotVariables(varsta, t, treecontainer, dl);
+    			rows = viz.plotVariables(varsta, t, treecontainer);
     			//norows = rows.length;
     		} else { //if selection == null
     			rows = viz.emptyrow();
@@ -1093,45 +1067,22 @@ public class SmearViewUI extends UI implements ThreadCompleteListener {
 			setPollInterval(-1);
 		} else if(thread instanceof FileLoaderThread) {
 			FileLoaderThread fileThread = (FileLoaderThread) thread;
-			dlSelect.setEnabled(true);
+
+			if(fileThread.isGetCsv()) {
+				downloader.setFileDownloadResource(fileThread.getCsvStreamRes());
+			}
+			if(fileThread.isGetTxt()) {
+				downloader.setFileDownloadResource(fileThread.getTxtStreamRes());
+			}
+			if(fileThread.isGetMeta()) {
+				downloader.setFileDownloadResource(fileThread.getMetaStreamRes());
+			}
+			if(fileThread.isGetHdf5()) {
+				downloader.setFileDownloadResource(fileThread.getHdf5FileRes());
+			}
+
+			right.removeComponent(pBar);
 			downloadButton.setEnabled(true);
-			
-			csvFileRes = fileThread.getCsvStreamRes();
-			
-			if (null != csvFileRes) {
-				dlSelect.addItem("CSV");
-			} else {
-				new Notification("Could not produce CSV",
-						"<br/>Could not produce CSV", Notification.Type.WARNING_MESSAGE, true)
-				.show(Page.getCurrent());
-			} 
-			
-			txtFileRes = fileThread.getTxtStreamRes();
-			if (null != txtFileRes) {
-				dlSelect.addItem("TXT");
-			} else {
-				new Notification("Could not produce TXT",
-						"<br/>Could not produce TXT", Notification.Type.WARNING_MESSAGE, true)
-				.show(Page.getCurrent());
-			} 
-			
-			metaFileRes = fileThread.getMetaStreamRes();
-			if (null != metaFileRes) {
-				dlSelect.addItem("Meta");
-			} else {
-				new Notification("Could not produce Meta",
-						"<br/>Could not produce Meta", Notification.Type.WARNING_MESSAGE, true)
-				.show(Page.getCurrent());
-			}
-			
-			hdf5FileRes = fileThread.getHdf5FileRes();
-			if (null != hdf5FileRes) {
-				dlSelect.addItem("HDF5");
-			} else {
-				new Notification("Could not produce HDF5",
-						"<br/>Could not produce HDF5", Notification.Type.WARNING_MESSAGE, true)
-				.show(Page.getCurrent());
-			}
 		}
 		SmearViewUI.doJVMGarbageCollection();
 	}
@@ -1146,6 +1097,7 @@ public class SmearViewUI extends UI implements ThreadCompleteListener {
 	
 	@Override
     protected void refresh(VaadinRequest request) {
+		super.refresh(request);
         init(request);
     }
 	
@@ -1200,10 +1152,10 @@ public class SmearViewUI extends UI implements ThreadCompleteListener {
 	}
 	
 	public static void doJVMGarbageCollection() {
-		if(garbageCollectionCount % 30 == 0) {
+		if(garbageCollectionCount % 50 == 0) {
 			System.gc();
 		}
 		garbageCollectionCount++;
 	}
-	
+
 }

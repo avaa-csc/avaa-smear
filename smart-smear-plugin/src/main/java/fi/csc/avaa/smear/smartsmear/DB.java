@@ -3,27 +3,26 @@
  */
 package fi.csc.avaa.smear.smartsmear;
 
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
+import fi.csc.avaa.smear.api.Smearyhteys;
+
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Time;
 import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.DateTimeException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
-
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
+import java.util.stream.Collectors;
 
 /**
  * SQL Queries
@@ -35,12 +34,10 @@ public class DB {
 	private static final long serialVersionUID = 8132668582109303543L;
 	
 	private static Log log = LogFactoryUtil.getLog(DB.class);
-	private static final String SEPARATORFORMAT = "yyyy"+Download.separator+"MM"+Download.separator+"dd"+Download.separator+
-			"HH"+Download.separator+"mm"+Download.separator+"ss";
-	public static final DateFormat SDF = new SimpleDateFormat(SEPARATORFORMAT);
 	public static final GregorianCalendar gcal = new GregorianCalendar(TimeZone.getTimeZone("UTC"));
 	private final static String SELECT = "SELECT ";
 	public final static String SAMPTIME =  "samptime";
+	public final static String COUNT_SAMPTIME = "COUNT(" + SAMPTIME + ") AS total";
 	public final static String GEOMETRIC = "exp(avg(ln(";
 	private final static String CS = ", ";
 	private final static String[] AVG = {CS, CS+GEOMETRIC, CS+"avg(", CS+"sum(", CS};
@@ -51,72 +48,117 @@ public class DB {
 	public final static int SUMM = 3;
 	public static final int MEDIAN = 4;
 	private int typeOfAVG; //some of above
-	private int avg; //0, 30, 60min	
-	long[] epoch;
-	Connection conn = null;
-	Smearyhteys sy  = null;
+	private int avg; //0, 30, 60min
+	private Connection conn = null;
+	private Smearyhteys sy  = null;
 	/**
 	 * Connection
 	 */
 	public DB() {
 		this.sy = new Smearyhteys();
-		//this.conn = sy.getConnection(true);
 	}
-	
-	public ResultSet avg(Data data, String kanta, long dstart, long dend, int min, int type, boolean checkQuality) {
-		open();
-		this.avg = min;
+
+	public int getQueryRowAmount(Timestamp startTs, Timestamp endTs, String kanta) {
 		ResultSet rs = null;
-		List<String> variables = data.getV(kanta);
+		PreparedStatement ps = null;
+
 		StringBuilder sb = new StringBuilder();
-		Date start = new Date(dstart);
-		Date end = new Date(dend);
-		Timestamp startTs = new Timestamp(start.getTime());
-		Timestamp endTs = new Timestamp(end.getTime());
 		sb.append(SELECT);
-		sb.append(SAMPTIME);
-		Iterator<String> i = variables.iterator();
-		while (i.hasNext()) {
-			String variable = i.next();
-			if(checkQuality) {
-				sb.append(AVG[type]);
-				sb.append("CASE WHEN " + variable + "_EMEP = 2 THEN ");
-				sb.append(variable);
-				sb.append(" ELSE NULL END");
-				sb.append(LOPPUSULUT[type]);
-				sb.append(" AS " + variable);
-			} else {
-				sb.append(AVG[type]);
-				sb.append(variable);
-				sb.append(LOPPUSULUT[type]);
-			}
-		}
-		sb.append(" FROM " + kanta + " WHERE "+SAMPTIME+ " <= ? AND "+SAMPTIME+ " >= ?");
-		if (NONE != type) {
-			sb.append(" GROUP BY floor(timestampdiff(minute, '1990-1-1', "+SAMPTIME+") /? )");
-		}
+		sb.append(COUNT_SAMPTIME);
+		sb.append(" FROM " + kanta + " WHERE " + SAMPTIME + " <= ? AND " + SAMPTIME + " >= ?");
+
+		long startTime = System.nanoTime();
 		try {
-			PreparedStatement ps = this.conn.prepareStatement(sb.toString());
+			ps = this.conn.prepareStatement(sb.toString(), ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+			ps.setFetchSize(Integer.MIN_VALUE); // yammer database group 2017-02-20. was only avg-mthod
 			ps.setTimestamp(1, endTs);
 			ps.setTimestamp(2, startTs);
-			if (NONE != type) {
-				if (min < 30) { //danger!! fix if set new averaging time
-					ps.setInt(3, 30); //use 30 as default when user NOT select avraging time
-				} else {
-					ps.setInt(3, min);
-				}
-			}
 			rs = ps.executeQuery();
+			long endTime = System.nanoTime();
+			if(rs.next()) {
+				return rs.getInt("total");
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 			log.error(sb.toString());
+		} finally {
+			try {
+				if (rs != null) rs.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			try {
+				if (ps != null) ps.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return 0;
+	}
+	
+	public void avg(Data data, String table, long dstart, long dend, int min, int type, boolean checkQuality) {
+		open();
+		ResultSet rs = null;
+		PreparedStatement ps = null;
+		try {
+			this.avg = min;
+			Timestamp startTs = new Timestamp(new Date(dstart).getTime());
+			Timestamp endTs = new Timestamp(new Date(dend).getTime());
+			int totalRowAmount = getQueryRowAmount(startTs, endTs, table);
+
+			List<String> variables = data.getV(table);
+			StringBuilder sb = new StringBuilder();
+			sb.append(SELECT);
+			sb.append(SAMPTIME);
+			Iterator<String> i = variables.iterator();
+			while (i.hasNext()) {
+				String variable = i.next();
+				if (checkQuality) {
+					sb.append(AVG[type]);
+					sb.append("CASE WHEN " + variable + "_EMEP = 2 THEN ");
+					sb.append(variable);
+					sb.append(" ELSE NULL END");
+					sb.append(LOPPUSULUT[type]);
+					sb.append(" AS " + variable);
+				} else {
+					sb.append(AVG[type]);
+					sb.append(variable);
+					sb.append(LOPPUSULUT[type]);
+				}
+			}
+			sb.append(" FROM " + table + " WHERE " + SAMPTIME + " < ? AND " + SAMPTIME + " >= ?");
+			if (NONE != type) {
+				sb.append(" GROUP BY floor(timestampdiff(minute, '1990-1-1', " + SAMPTIME + ") /? )");
+			}
+			sb.append(" LIMIT " + totalRowAmount);
+			long startTime = System.nanoTime();
+			try {
+				ps = this.conn.prepareStatement(sb.toString(), ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+				ps.setTimestamp(1, endTs);
+				ps.setTimestamp(2, startTs);
+				if (NONE != type) {
+					if (min < 30) { //danger!! fix if set new averaging time
+						ps.setInt(3, 30); //use 30 as default when user NOT select averaging time
+					} else {
+						ps.setInt(3, min);
+					}
+				}
+				ps.setFetchSize(Integer.MIN_VALUE);
+				rs = ps.executeQuery();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				log.error(sb.toString());
+			}
+			long endTime = System.nanoTime();
+			if (null != data && rs != null) {
+				process(rs, data, table, totalRowAmount);
+			}
+			SmearViewUI.doJVMGarbageCollection();
+		} finally {
+			try { if (rs != null) rs.close(); } catch (Exception e) {e.printStackTrace();};
+			try { if (ps != null) ps.close(); } catch (Exception e) {e.printStackTrace();};
 			close();
 		}
-		if (null != data && rs != null) {
-			process(rs, data, kanta);
-		}
-		SmearViewUI.doJVMGarbageCollection();
-		return rs;
 	}
 	
 	/**
@@ -125,151 +167,94 @@ public class DB {
 	 * @param rs ResultSet
 	 * @param data Data
 	 */
-	 private void process(ResultSet rs, Data data, String kanta) {
-	    	try {    		
-	    		long t1=0, t2 = 0;
-	    		Boolean max = false;
-	    		ResultSetMetaData rsmd = rs.getMetaData();
-	    		if(rsmd == null) {
-	    			log.error("Resultset metadata is null in DB.process");
-	    			close();
-	    			return;
-	    		}
-	    		int cc = rsmd.getColumnCount();
-	    		data.addSarakelkm(cc-1);
-	    		if (rs.next()) {
-	    			ArrayList<String>labels = new ArrayList<String>();
-	    			for (int i = 2; i <= cc; i++) {
-	    				labels.add(rsmd.getColumnName(i));
-	    			}
-	    			data.addLabels(labels, kanta);
-	    			data.setT1(rs.getTimestamp(1).getTime());
-	    			if (rs.next()) {
-	    				data.setT2(rs.getTimestamp(1).getTime());
-	    			}
-	    		}
-	    		rs.last();
-				int rows = rs.getRow();
-				if (rows > data.getRivienlkm()) {
-                    data.setRivit(rows);
-                    max = true;
-                    data.setMaxtaulu(kanta);
-                    data.tablelist.addFirst(kanta);
-                	epoch = new long[rows];
-				} else {
-                    data.tablelist.add(kanta);
+	 private void process(ResultSet rs, Data data, String table, int totalRowAmount) {
+		long startTime = System.nanoTime();
+		ArrayList<String>labels;
+		try {
+			long[] epoch = data.getLastEpoch();
+			ResultSetMetaData rsmd = rs.getMetaData();
+			if(rsmd == null) {
+				log.error("Resultset metadata is null in DB.process");
+				return;
+			}
+			int columnCount = rsmd.getColumnCount();
+			int varColumnCount = columnCount-1;
+			data.addColumnCountBy(varColumnCount);
+			if (totalRowAmount > data.getRowAmount()) {
+				data.setRowAmount(totalRowAmount);
+				data.tablelist.addFirst(table);
+				epoch = new long[totalRowAmount];
+			} else {
+				data.tablelist.add(table);
+			}
+			float[][] fa = new float[varColumnCount][totalRowAmount];  //column, rows
+			String nws[] = new String[totalRowAmount];
+			int j=0; //row
+			int nwsColumnNumber = 0;
+			long t1=0, t2 = 0;
+			while (rs.next()) {
+				if(t1 == 0L) {
+					labels = new ArrayList<>();
+					for (int i = 2; i <= columnCount; i++) {
+						labels.add(rsmd.getColumnName(i));
+					}
+					data.addLabels(labels, table);
+					t1 = rs.getTimestamp(1).getTime();
+				} else if(t2 == 0L) {
+					t2 = rs.getTimestamp(1).getTime();
 				}
-				String samptimes[] = new String[rows];
-				String yyyymmddhhmm[] = new String[rows];
-				LocalDateTime[] timestamps = new LocalDateTime[rows];
-				String nws[] = new String[rows];
-				float[][] fa = new float[cc-1][rows];  //column, rows
-		    	rs.beforeFirst();
-	    		int j=0; //row
-			    int n = 0;
-	    		while (rs.next()) {
-	    			String formattedDate = aikamuotoilu(rs.getDate(1, gcal), rs.getTime(1, gcal), j);
-	    			if (true == max) {
-	    				yyyymmddhhmm[j] = formattedDate;
-	    				samptimes[j] = rs.getString(1);	
-	    			}
-	    			
-	    			if(formattedDate != null) {
-	    				String[] splittedFormattedDate = formattedDate.split(",");
-	    				if(splittedFormattedDate != null && splittedFormattedDate.length == 6) {
-	    					try {
-	    						timestamps[j] = LocalDateTime.of(Integer.parseInt(splittedFormattedDate[0]), Integer.parseInt(splittedFormattedDate[1]), Integer.parseInt(splittedFormattedDate[2]), Integer.parseInt(splittedFormattedDate[3]), Integer.parseInt(splittedFormattedDate[4]), Integer.parseInt(splittedFormattedDate[5]));
-	    					} catch(NumberFormatException e) {
-	    						timestamps[j] = null;
-	    					} catch(DateTimeException ex) {
-	    						log.error("Unable to parse date from database");
-	    						ex.printStackTrace();
-	    						timestamps[j] = null;
-	    					}
-	    				} else {
-	    					timestamps[j] = null;
-	    				}
-	    			} else {
-	    				timestamps[j] = null;
-	    			}
-	    			
-	    			for (int i = 2; i <= cc; i++) {
-	    				try {
-	    					fa[i-2][j] = rs.getFloat(i);
-	    					if (rs.wasNull()) {
-	    						fa[i-2][j] = Float.NaN;
-	    					}
-	    				} catch ( java.sql.SQLException e) {
-	    					nws[j] = rs.getString(i);
-	    					n=i;
-	    					close();
-	    					return;
-	    				} catch (  java.lang.ArrayIndexOutOfBoundsException e) {
-	    					log.error("ArrayIndexOutOfBoundsException in DB.process: " + "i="+i+" j="+j);
-	    					log.error("rows="+rows+" cols="+cc);
-	    					e.printStackTrace();
-	    					close();
-	    					return;
-	    				}
-	    			}
-	    			j++;
-	    		}
-				data.setEka(false);	
-				if(timestamps.length > 0) {
-					data.setTimestamps(timestamps, kanta);
+
+				if(epoch.length > 0 && j >= 0 && j < epoch.length && rs.getDate(1, gcal) != null && rs.getTime(1, gcal) != null) {
+					epoch[j] = (rs.getDate(1, gcal).getTime() + rs.getTime(1, gcal).getTime()) / 1000;
 				}
-	    		data.setUnixtimes(epoch);
-	    		if (yyyymmddhhmm != null && yyyymmddhhmm.length > 0 && null != yyyymmddhhmm[0] && !yyyymmddhhmm[0].isEmpty()) {
-	    			data.setMuotoaika(yyyymmddhhmm);
-	    		}
-	    		if(samptimes != null && samptimes.length > 0 && null != samptimes[0] && !samptimes[0].isEmpty()) {
-	    			data.setSamptimes(samptimes);
-	    		}
-	    		if (n > 0) {
-	    			data.setNWS(nws);
-	    			try {
-	    				data.setNWSname(rsmd.getColumnName(n));
-	    			} catch (java.sql.SQLException e) {
-	    				log.error("NWS set failure: "+n);
-	    				close();
-	    				return;
-	    			}
-	    		}
-	    		float[][] keskirarvoistettufa = keskiarvotus(fa, cc, rows, t2-t1 /(1000*60));
-	    		data.addFtaulu(keskirarvoistettufa,kanta);
-	    		
-	    	} catch ( java.sql.SQLException e) {
-	    		e.printStackTrace();
-	    		close();
-	    		return;
-	    	}
+				for (int i = 2; i <= columnCount; i++) {
+					try {
+						fa[i-2][j] = rs.getFloat(i);
+						if (rs.wasNull()) {
+							fa[i-2][j] = Float.NaN;
+						}
+					} catch ( java.sql.SQLException e) {
+						nws[j] = rs.getString(i);
+						nwsColumnNumber=i;
+						return;
+					} catch (  java.lang.ArrayIndexOutOfBoundsException e) {
+						log.error("ArrayIndexOutOfBoundsException in DB.process: " + "i="+i+" j="+j);
+						log.error("rows="+totalRowAmount+" cols="+varColumnCount);
+						e.printStackTrace();
+						close();
+						return;
+					}
+				}
+				j++;
+			}
+
+			if (nwsColumnNumber > 0) {
+				data.setNWS(nws);
+				try {
+					data.setNWSname(rsmd.getColumnName(nwsColumnNumber));
+				} catch (java.sql.SQLException e) {
+					log.error("NWS set failure: "+ nwsColumnNumber);
+					return;
+				}
+			}
+			data.setEpoch(epoch, table);
+			float[][] keskiarvoistettufa = keskiarvotus(fa, varColumnCount, totalRowAmount, (t2-t1)/(1000*60));
+			data.addFtaulu(keskiarvoistettufa,table);
+			fa = null;
+			keskiarvoistettufa = null;
+		} catch ( java.sql.SQLException e) {
+			e.printStackTrace();
+			return;
+		} finally {
+			long endTime = System.nanoTime();
 		}
-	 
-	 /**
-	  * Päivämäärä muotoon kuusi saraketta: vuosi, kuukausi, päivä, tunti, minuutti, sekunti
-	  * Myöskään käsittely merkkijonona ei onnistu sillä jo rs.getString ottaa kesäajan huomioon. 
-	  * Ei erotinta viimeisen kentän jälkeen.
-	  * AVAA-237 AVAA-553
-	  * 
-	  * @param date Date time TIme
-	  * @return kuusi saraketta: vuosi, kuukausi, päivä, tunti, minuutti, sekunti String
-	  */
-	 private String aikamuotoilu(Date date, Time time, int j) {	
-		 if(epoch.length > 0 && j >= 0 && j < epoch.length && date != null && time != null) {
-			 epoch[j] = (date.getTime() + time.getTime())/1000;				
-	         java.util.Date ud = new java.util.Date(date.getTime() + time.getTime() + 2*3600*1000); 
-	         SDF.setTimeZone(TimeZone.getTimeZone("UTC"));
-	         return SDF.format(ud);
-		 }
-		 return null;
-	}
-	 
+	 }
+
 	private float[][] keskiarvotus(float[][] fa, int count, int size, long interval ) {
-	    //Boolean geom = false; // findbug: täyttyy testata
 		Boolean median = false;
 		int average = 0;
-		if ((avg > 0) && (interval > 0)) {
-			median = MEDIAN == typeOfAVG ? true : false;
+		if (avg > 0 && interval > 0) {
+			median = MEDIAN == typeOfAVG;
 			average = (int) (avg/interval);
 		}
 
@@ -291,8 +276,96 @@ public class DB {
 				}
 				fa[i] = f;
 			}
-		}	
+		}
 		return fa;
+	}
+
+	private int getTotalValue(String query, long startDate, long endDate) {
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			rs = getAvailabilityQueryResults(query, startDate, endDate, ps);
+			if(rs != null) {
+				rs.next();
+				return rs.getInt("total");
+			}
+		} catch (SQLException e) {
+			log.error(e.getMessage());
+		} finally {
+			try { if (rs != null) rs.close(); } catch (Exception e) {e.printStackTrace();};
+			try { if (ps != null) ps.close(); } catch (Exception e) {e.printStackTrace();};
+		}
+		return -1;
+	}
+
+	private Map<String, Double> getVariableAvailabilityValues(String query, long startDate, long endDate, List<String> variableNames, boolean considerQuality) {
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		Map<String, Double> varAvailabilities = new HashMap<>();
+		HashMap<String, Integer> varExistCounts = new HashMap<>();
+		variableNames.stream().forEach(varName -> {
+			varExistCounts.put(varName, 0);
+			varAvailabilities.put(varName, 0.0d);
+		});
+		try {
+			long startTime = System.nanoTime();
+			rs = getAvailabilityQueryResults(query, startDate, endDate, ps);
+			long endTime = System.nanoTime();
+			startTime = System.nanoTime();
+			if(rs != null) {
+				int totCount = 0;
+				if(considerQuality) {
+					ResultSetMetaData rsmd = rs.getMetaData();
+					while (rs.next()) {
+						totCount++;
+						int queryIdx = 1;
+						for (int varIdx=0; varIdx < variableNames.size(); varIdx++) {
+							try {
+								String varName = variableNames.get(varIdx);
+								String emepColName = varName + "_EMEP";
+								while(!emepColName.equals(rsmd.getColumnName(queryIdx))) {
+									queryIdx++;
+								}
+								if(rs.getInt(queryIdx) == 2) {
+									varExistCounts.put(varName, (varExistCounts.get(varName) + 1));
+								}
+								queryIdx++;
+							} catch (Exception e) {
+								continue;
+							}
+						}
+					}
+				} else {
+					while (rs.next()) {
+						totCount++;
+						for (int i = 0; i < variableNames.size(); i++) {
+							try {
+								String varName = variableNames.get(i);
+								rs.getFloat(varName);
+								if (!rs.wasNull()) {
+									varExistCounts.put(varName, (varExistCounts.get(varName) + 1));
+								}
+							} catch (Exception e) {
+								continue;
+							}
+						}
+					}
+				}
+
+				final int temp = totCount;
+				varExistCounts.forEach((k,v) -> {
+					varAvailabilities.put(k, temp == 0 ? 0.0d : (double) varExistCounts.get(k)/temp);
+				});
+				endTime = System.nanoTime();
+			}
+			return varAvailabilities;
+		} catch (Exception e) {
+			log.error(e.getMessage());
+		} finally {
+			try { if (rs != null) rs.close(); } catch (Exception e) {e.printStackTrace();}
+			try { if (ps != null) ps.close(); } catch (Exception e) {e.printStackTrace();}
+		}
+		return varAvailabilities;
 	}
 	
 	/**
@@ -301,24 +374,13 @@ public class DB {
 	 * @author jmlehtin
 	 * 
 	 * @param tableName
-	 * @param startCol name of the colum for the start date
 	 * @param startDate
-	 * @param endCol name of the colum for the end date
 	 * @param endDate
 	 * @return total number of rows
 	 */
-	public int getTotalRowsInPeriod(String tableName, String startCol, long startDate, String endCol, long endDate) {
-		String query = "SELECT COUNT(*) AS total FROM " + tableName + " WHERE " + startCol + " >= ? AND " + endCol + " <= ?";  
-		ResultSet rs = getQueryResults(query, startDate, endDate);
-		if(rs != null) {
-			try {
-				rs.next();
-				return rs.getInt("total");
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		return -1;
+	public int getTotalRowsInPeriod(String tableName, long startDate, long endDate) {
+		String query = "SELECT COUNT(samptime) AS total FROM " + tableName + " WHERE samptime >= ? AND samptime <= ?";
+		return getTotalValue(query, startDate, endDate);
 	}
 	
 	/**
@@ -328,56 +390,123 @@ public class DB {
 	 * 
 	 * @param tableName
 	 * @param variableName
-	 * @param startCol name of the colum for the start date
 	 * @param startDate
-	 * @param endCol name of the colum for the end date
 	 * @param endDate
 	 * @return total number of non null variable rows
 	 */
-	public int getNonNullVariableRowAmountInPeriod(String tableName, String variableName, String startCol, long startDate, String endCol, long endDate) {
-		String query = "SELECT COUNT(*) AS total FROM " + tableName + " WHERE " + variableName + " IS NOT NULL AND " + startCol + " >= ? AND " + endCol + " <= ?";  
-		ResultSet rs = getQueryResults(query, startDate, endDate);
-		if(rs != null) {
-			try {
-				rs.next();
-				return rs.getInt("total");
-			} catch (SQLException e) {
-				e.printStackTrace();
+	public int getNonNullVariableRowAmountInPeriod(String tableName, String variableName, long startDate, long endDate) {
+		String query = "SELECT COUNT(samptime) AS total FROM " + tableName + " WHERE " + variableName + " IS NOT NULL AND samptime >= ? AND samptime <= ?";
+		return getTotalValue(query, startDate, endDate);
+	}
+
+	public int getNonNullAndQualityVariableRowAmountInPeriod(String tableName, String variableName, long startDate, long endDate) {
+		String query = "SELECT COUNT(samptime) AS total FROM " + tableName + " WHERE " + variableName + " IS NOT NULL AND " + variableName + "_EMEP = 2 AND samptime >= ? AND samptime <= ?";
+		return getTotalValue(query, startDate, endDate);
+	}
+
+	/**
+	 * Get Map of
+	 *
+	 * @param tableGroupedVariables
+	 * @param startDate
+	 * @param endDate
+	 * @param considerQuality
+	 * @return
+	 */
+	public Map<String, Double> getVariableAvailabilitiesInPeriod(Map<String, List<String>> tableGroupedVariables, long startDate, long endDate, boolean considerQuality) {
+		Map<String, Double> varExistCounts = new HashMap<>();
+		for(Map.Entry<String, List<String>> tableAndVariables : tableGroupedVariables.entrySet()) {
+			String table = tableAndVariables.getKey();
+			List<String> varNames = tableAndVariables.getValue();
+
+			String query;
+			if(considerQuality) {
+				query = "SELECT ".concat(varNames.stream().map(varName -> varName + "_EMEP").collect(Collectors.joining(", "))).concat(" FROM " + table + " WHERE samptime >= ? AND samptime <= ?");
+			} else {
+				query = "SELECT ".concat(varNames.stream().collect(Collectors.joining(", "))).concat(" FROM " + table + " WHERE samptime >= ? AND samptime <= ?");
 			}
+			long startTime = System.nanoTime();
+			varExistCounts.putAll(getVariableAvailabilityValues(query, startDate, endDate, varNames, considerQuality));
+			long endTime = System.nanoTime();
 		}
-		return -1;
+		return varExistCounts;
 	}
 	
-	public int getNonNullAndQualityVariableRowAmountInPeriod(String tableName, String variableName, String startCol, long startDate, String endCol, long endDate) {
-		String query = "SELECT COUNT(*) AS total FROM " + tableName + " WHERE " + variableName + " IS NOT NULL AND " + variableName + "_EMEP = 2 AND " + startCol + " >= ? AND " + endCol + " <= ?";  
-		ResultSet rs = getQueryResults(query, startDate, endDate);
-		if(rs != null) {
-			try {
-				rs.next();
-				return rs.getInt("total");
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		return -1;
-	}
-	
-	private ResultSet getQueryResults(String query, long startDate, long endDate) {
+	private ResultSet getAvailabilityQueryResults(String query, long startDate, long endDate, PreparedStatement ps) {
+		ResultSet rs;
+		open();
+		String validQuery = getValidAvailabilityQuery(query, startDate, endDate);
 		try {
-			PreparedStatement ps = this.conn.prepareStatement(query);
+			ps = this.conn.prepareStatement(validQuery, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
 			ps.setTimestamp(1, new Timestamp(startDate));
 			ps.setTimestamp(2, new Timestamp(endDate));
-			return ps.executeQuery();
-		} catch (SQLException e) {
-			
+			ps.setFetchSize(Integer.MIN_VALUE);
+			rs = ps.executeQuery();
+		} catch(SQLException ex) {
+			return null;
 		}
-		return null;
+		return rs;
+	}
+
+	/**
+	 * Since
+	 *
+	 * @param query
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	private String getValidAvailabilityQuery(String query, long startDate, long endDate) {
+		boolean success = false;
+		ResultSet rs = null;
+		PreparedStatement ps = null;
+		String retVal = query;
+		int counter = 0;
+		while(!success && counter < 100) {
+			counter++;
+			try {
+				ps = this.conn.prepareStatement(retVal + " LIMIT 1", ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+				ps.setTimestamp(1, new Timestamp(startDate));
+				ps.setTimestamp(2, new Timestamp(endDate));
+				ps.setFetchSize(10);
+				rs = ps.executeQuery();
+				success = true;
+			} catch(SQLException ex) {
+				retVal = improveQuery(ex, retVal);
+				if(retVal == null) {
+					return null;
+				}
+			} finally {
+				try { if (rs != null) rs.close(); } catch (Exception e) {e.printStackTrace();}
+				try { if (ps != null) ps.close(); } catch (Exception e) {e.printStackTrace();}
+			}
+		}
+		return retVal;
+	}
+
+	private String improveQuery(SQLException ex, String query) {
+		String retVal = query;
+		int beg = ex.getMessage().indexOf('\'')+1;
+		int end = ex.getMessage().indexOf('\'', ex.getMessage().indexOf('\'')+1);
+		String missingCol = ex.getMessage().substring(beg, end);
+		if(!retVal.contains(missingCol)) {
+			return null;
+		}
+		if(retVal.contains(", " + missingCol)) {
+			retVal = retVal.replace(String.valueOf(", " + missingCol), "");
+		} else if (query.contains(missingCol + ", ")) {
+			retVal = retVal.replace(String.valueOf(missingCol + ", "), "");
+		} else {
+			return null;
+		}
+		return retVal;
 	}
 
 	public void open() {
 		try {
 			if(isClosed()) {
 				this.conn = sy.getConnection(true);
+				this.conn.setAutoCommit(false);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

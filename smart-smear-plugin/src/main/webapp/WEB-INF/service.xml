@@ -624,7 +624,7 @@
 	</entity>
 	
 	<entity name="Varrio_tree" table="VAR_TREE" local-service="true" remote-service="true" data-source="smear" session-factory="smearSessionFactory">
-                <column name="SAMPTIME" type="Date" primary="true"></column>
+                <column name="samptime" type="Date" primary="true"></column>
 		<column name="F_CO2_tree0" type="float"></column>
 		<column name="F_H2O_tree0" type="float"></column>
 		<column name="Tcuv_tree0" type="float"></column>
@@ -1797,5 +1797,381 @@
 <column name="fpr_x_80" type="float" /> 
 <column name="fpr_x_80_EMEP" type="int" />
 </entity>
+
+	<entity name="kvjMeta" table="KVJ_META" local-service="true" remote-service="true" data-source="smear" session-factory="smearSessionFactory">
+		<column name="samptime" type="Date" primary="true" />
+		<column name="Tw2" type="float" />
+		<column name="Tw5" type="float" />
+		<column name="Tw10" type="float" />
+		<column name="Tw15" type="float" />
+		<column name="Tw20" type="float" />
+		<column name="Tw25" type="float" />
+		<column name="Tw30" type="float" />
+		<column name="Tw35" type="float" />
+		<column name="Tw40" type="float" />
+		<column name="Tw45" type="float" />
+		<column name="Tw50" type="float" />
+		<column name="Tw60" type="float" />
+		<column name="Tw70" type="float" />
+		<column name="Tw80" type="float" />
+		<column name="Tw100" type="float" />
+		<column name="Tw120" type="float" />
+		<column name="CO2w02" type="float" />
+		<column name="CO2w15" type="float" />
+		<column name="CO2w25" type="float" />
+		<column name="CO2w70" type="float" />
+		<column name="Glob" type="float" />
+		<column name="RGlob" type="float" />
+		<column name="LWin" type="float" />
+		<column name="LWout" type="float" />
+		<column name="PARw02" type="float" />
+		<column name="PARw07" type="float" />
+		<column name="PARw10" type="float" />
+		<column name="Ta" type="float" />
+		<column name="RH" type="float" />
+		<column name="Tw2_EMEP" type="int" />
+		<column name="Tw5_EMEP" type="int" />
+		<column name="Tw10_EMEP" type="int" />
+		<column name="Tw15_EMEP" type="int" />
+		<column name="Tw20_EMEP" type="int" />
+		<column name="Tw25_EMEP" type="int" />
+		<column name="Tw30_EMEP" type="int" />
+		<column name="Tw35_EMEP" type="int" />
+		<column name="Tw40_EMEP" type="int" />
+		<column name="Tw45_EMEP" type="int" />
+		<column name="Tw50_EMEP" type="int" />
+		<column name="Tw60_EMEP" type="int" />
+		<column name="Tw70_EMEP" type="int" />
+		<column name="Tw80_EMEP" type="int" />
+		<column name="Tw100_EMEP" type="int" />
+		<column name="Tw120_EMEP" type="int" />
+		<column name="CO2w02_EMEP" type="int" />
+		<column name="CO2w15_EMEP" type="int" />
+		<column name="CO2w25_EMEP" type="int" />
+		<column name="CO2w70_EMEP" type="int" />
+		<column name="Glob_EMEP" type="int" />
+		<column name="RGlob_EMEP" type="int" />
+		<column name="LWin_EMEP" type="int" />
+		<column name="LWout_EMEP" type="int" />
+		<column name="PARw02_EMEP" type="int" />
+		<column name="PARw07_EMEP" type="int" />
+		<column name="PARw10_EMEP" type="int" />
+		<column name="Ta_EMEP" type="int" />
+		<column name="RH_EMEP" type="int" />
+	</entity>
+
+    <entity name="PUI_dmps_int" table="PUI_dmps_int" local-service="true" remote-service="true" data-source="smear" session-factory="smearSessionFactory">
+        <column name="samptime" type="Date" primary="true" />
+        <column name="mtime" type="double" />
+        <column name="quality" type="int" />
+        <column name="sizerange_id" type="int" />
+        <column name="ntot" type="float" />
+        <column name="ch01" type="float" />
+        <column name="ch02" type="float" />
+        <column name="ch03" type="float" />
+        <column name="ch04" type="float" />
+        <column name="ch05" type="float" />
+        <column name="ch06" type="float" />
+        <column name="ch07" type="float" />
+        <column name="ch08" type="float" />
+        <column name="ch09" type="float" />
+        <column name="ch10" type="float" />
+        <column name="ch11" type="float" />
+        <column name="ch12" type="float" />
+        <column name="ch13" type="float" />
+        <column name="ch14" type="float" />
+        <column name="ch15" type="float" />
+        <column name="ch16" type="float" />
+        <column name="ch17" type="float" />
+        <column name="ch18" type="float" />
+        <column name="ch19" type="float" />
+        <column name="ch20" type="float" />
+        <column name="ch21" type="float" />
+        <column name="ch22" type="float" />
+        <column name="ch23" type="float" />
+        <column name="ch24" type="float" />
+        <column name="ch25" type="float" />
+        <column name="ch26" type="float" />
+        <column name="ch27" type="float" />
+        <column name="ch28" type="float" />
+        <column name="ch29" type="float" />
+        <column name="ch30" type="float" />
+        <column name="ch31" type="float" />
+        <column name="ch32" type="float" />
+        <column name="ch33" type="float" />
+        <column name="ch34" type="float" />
+        <column name="ch35" type="float" />
+        <column name="ch36" type="float" />
+        <column name="ch37" type="float" />
+        <column name="ch38" type="float" />
+        <column name="ch39" type="float" />
+        <column name="ch40" type="float" />
+    </entity>
+    <entity name="PUI_dmps_tot" table="PUI_dmps_tot" local-service="true" remote-service="true" data-source="smear" session-factory="smearSessionFactory">
+        <column name="samptime" type="Date" primary="true" />
+        <column name="mtime" type="double" />
+        <column name="quality" type="int" />
+        <column name="sizerange_id" type="int" />
+        <column name="ntot" type="float" />
+        <column name="ch01" type="float" />
+        <column name="ch02" type="float" />
+        <column name="ch03" type="float" />
+        <column name="ch04" type="float" />
+        <column name="ch05" type="float" />
+        <column name="ch06" type="float" />
+        <column name="ch07" type="float" />
+        <column name="ch08" type="float" />
+        <column name="ch09" type="float" />
+        <column name="ch10" type="float" />
+        <column name="ch11" type="float" />
+        <column name="ch12" type="float" />
+        <column name="ch13" type="float" />
+        <column name="ch14" type="float" />
+        <column name="ch15" type="float" />
+        <column name="ch16" type="float" />
+        <column name="ch17" type="float" />
+        <column name="ch18" type="float" />
+        <column name="ch19" type="float" />
+        <column name="ch20" type="float" />
+        <column name="ch21" type="float" />
+        <column name="ch22" type="float" />
+        <column name="ch23" type="float" />
+        <column name="ch24" type="float" />
+        <column name="ch25" type="float" />
+        <column name="ch26" type="float" />
+        <column name="ch27" type="float" />
+        <column name="ch28" type="float" />
+        <column name="ch29" type="float" />
+        <column name="ch30" type="float" />
+        <column name="ch31" type="float" />
+        <column name="ch32" type="float" />
+        <column name="ch33" type="float" />
+        <column name="ch34" type="float" />
+        <column name="ch35" type="float" />
+        <column name="ch36" type="float" />
+        <column name="ch37" type="float" />
+        <column name="ch38" type="float" />
+        <column name="ch39" type="float" />
+        <column name="ch40" type="float" />
+    </entity>
+
+    <entity name="PUI_weather" table="PUI_weather" local-service="true" remote-service="true" data-source="smear" session-factory="smearSessionFactory">
+        <column name="samptime" type="Date" primary="true" />
+        <column name="mtime" type="double" />
+        <column name="quality" type="int" />
+        <column name="TT_old" type="float" />
+        <column name="TTin" type="float" />
+        <column name="RH_old" type="float" />
+        <column name="RHin" type="float" />
+        <column name="TTthies" type="float" />
+        <column name="WSave" type="float" />
+        <column name="WSmin" type="float" />
+        <column name="WSmax" type="float" />
+        <column name="WSdev" type="float" />
+        <column name="WSgustmax" type="float" />
+        <column name="WSgustmin" type="float" />
+        <column name="WDave" type="float" />
+        <column name="WDdev" type="float" />
+        <column name="VisibilityAlarm" type="float" />
+        <column name="Visibility1minAve" type="float" />
+        <column name="Visibility10minAve" type="float" />
+        <column name="InstantPresentWeather" type="float" />
+        <column name="PresentWeather15min" type="float" />
+        <column name="PresentWeather1hour" type="float" />
+        <column name="PrecipitationIntensity" type="float" />
+        <column name="CumulativeWaterSum" type="float" />
+        <column name="CumulativeSnowSum" type="float" />
+        <column name="Pressure" type="float" />
+        <column name="TT2" type="float" />
+        <column name="ErrorCode" type="float" />
+        <column name="M1" type="float" />
+        <column name="M2" type="float" />
+        <column name="M3" type="float" />
+        <column name="RH" type="float" />
+        <column name="T" type="float" />
+        <column name="Tdf" type="float" />
+        <column name="Td" type="float" />
+        <column name="a" type="float" />
+        <column name="x" type="float" />
+        <column name="Tw" type="float" />
+        <column name="H2O" type="float" />
+        <column name="pw" type="float" />
+        <column name="pws" type="float" />
+        <column name="h" type="float" />
+        <column name="diff_T_Td" type="float" />
+        <column name="Ice0871Events" type="float" />
+        <column name="Ice3210Amp" type="float" />
+    </entity>
+
+    <entity name="PUI_maap_int" table="PUI_maap_int" local-service="true" remote-service="true" data-source="smear" session-factory="smearSessionFactory">
+        <column name="samptime" type="Date" primary="true" />
+        <column name="mtime" type="double" />
+        <column name="quality" type="int" />
+        <column name="sigma_ap" type="float" />
+        <column name="conc_bc" type="float" />
+        <column name="load_filter" type="float" />
+        <column name="flowrate" type="float" />
+    </entity>
+
+    <entity name="PUI_maap_tot" table="PUI_maap_tot" local-service="true" remote-service="true" data-source="smear" session-factory="smearSessionFactory">
+        <column name="samptime" type="Date" primary="true" />
+        <column name="mtime" type="double" />
+        <column name="quality" type="int" />
+        <column name="sigma_ap" type="float" />
+        <column name="conc_bc" type="float" />
+        <column name="load_filter" type="float" />
+        <column name="flowrate" type="float" />
+    </entity>
+
+    <entity name="PUI_neph_tot" table="PUI_neph_tot" local-service="true" remote-service="true" data-source="smear" session-factory="smearSessionFactory">
+        <column name="samptime" type="Date" primary="true" />
+        <column name="mtime" type="double" />
+        <column name="quality" type="int" />
+        <column name="coeff_scat_blue" type="float" />
+        <column name="coeff_scat_green" type="float" />
+        <column name="coeff_scat_red" type="float" />
+        <column name="coeff_scat_blue_backscat" type="float" />
+        <column name="coeff_scat_green_backscat" type="float" />
+        <column name="coeff_scat_red_backscat" type="float" />
+        <column name="scattering_from_last_zero_blue" type="float" />
+        <column name="scattering_from_last_zero_green" type="float" />
+        <column name="scattering_from_last_zero_red" type="float" />
+        <column name="scattering_from_last_zero_blue_backs" type="float" />
+        <column name="scattering_from_last_zero_green_backs" type="float" />
+        <column name="scattering_from_last_zero_red_backs" type="float" />
+        <column name="rayleigh_scattering_from_last_zero_blue" type="float" />
+        <column name="rayleigh_scattering_from_last_zero_green" type="float" />
+        <column name="rayleigh_scattering_from_last_zero_red" type="float" />
+        <column name="pressure_baro" type="float" />
+        <column name="temperature_sample" type="float" />
+        <column name="temperature_inlet" type="float" />
+        <column name="RH" type="float" />
+        <column name="pressure_blue" type="float" />
+        <column name="temperature_blue" type="float" />
+        <column name="pressure_green" type="float" />
+        <column name="temperature_green" type="float" />
+        <column name="pressure_red" type="float" />
+        <column name="temperature_red" type="float" />
+    </entity>
+
+    <entity name="PUI_neph_int" table="PUI_neph_int" local-service="true" remote-service="true" data-source="smear" session-factory="smearSessionFactory">
+        <column name="samptime" type="Date" primary="true" />
+        <column name="mtime" type="double" />
+        <column name="quality" type="int" />
+        <column name="coeff_scat_blue" type="float" />
+        <column name="coeff_scat_green" type="float" />
+        <column name="coeff_scat_red" type="float" />
+        <column name="coeff_scat_blue_backscat" type="float" />
+        <column name="coeff_scat_green_backscat" type="float" />
+        <column name="coeff_scat_red_backscat" type="float" />
+        <column name="scattering_from_last_zero_blue" type="float" />
+        <column name="scattering_from_last_zero_green" type="float" />
+        <column name="scattering_from_last_zero_red" type="float" />
+        <column name="scattering_from_last_zero_blue_backs" type="float" />
+        <column name="scattering_from_last_zero_green_backs" type="float" />
+        <column name="scattering_from_last_zero_red_backs" type="float" />
+        <column name="rayleigh_scattering_from_last_zero_blue" type="float" />
+        <column name="rayleigh_scattering_from_last_zero_green" type="float" />
+        <column name="rayleigh_scattering_from_last_zero_red" type="float" />
+        <column name="pressure_baro" type="float" />
+        <column name="temperature_sample" type="float" />
+        <column name="temperature_inlet" type="float" />
+        <column name="RH" type="float" />
+        <column name="pressure_blue" type="float" />
+        <column name="temperature_blue" type="float" />
+        <column name="pressure_green" type="float" />
+        <column name="temperature_green" type="float" />
+        <column name="pressure_red" type="float" />
+        <column name="temperature_red" type="float" />
+    </entity>
+
+    <entity name="PUI_cdp" table="PUI_cdp" local-service="true" remote-service="true" data-source="smear" session-factory="smearSessionFactory">
+        <column name="samptime" type="Date" primary="true" />
+        <column name="mtime" type="double" />
+        <column name="quality" type="int" />
+        <column name="Nd" type="float" />
+        <column name="ch01" type="float" />
+        <column name="ch02" type="float" />
+        <column name="ch03" type="float" />
+        <column name="ch04" type="float" />
+        <column name="ch05" type="float" />
+        <column name="ch06" type="float" />
+        <column name="ch07" type="float" />
+        <column name="ch08" type="float" />
+        <column name="ch09" type="float" />
+        <column name="ch10" type="float" />
+        <column name="ch11" type="float" />
+        <column name="ch12" type="float" />
+        <column name="ch13" type="float" />
+        <column name="ch14" type="float" />
+        <column name="ch15" type="float" />
+        <column name="ch16" type="float" />
+        <column name="ch17" type="float" />
+        <column name="ch18" type="float" />
+        <column name="ch19" type="float" />
+        <column name="ch20" type="float" />
+        <column name="ch21" type="float" />
+        <column name="ch22" type="float" />
+        <column name="ch23" type="float" />
+        <column name="ch24" type="float" />
+        <column name="ch25" type="float" />
+        <column name="ch26" type="float" />
+        <column name="ch27" type="float" />
+        <column name="ch28" type="float" />
+        <column name="ch29" type="float" />
+        <column name="ch30" type="float" />
+    </entity>
+
+    <entity name="PUI_dmps_sizeranges" table="PUI_dmps_sizeranges" local-service="true" remote-service="true" data-source="smear" session-factory="smearSessionFactory">
+        <column name="sizerange_id" type="int"  primary="true" />
+        <column name="dp_min_nm" type="float" />
+        <column name="dp_max_nm" type="float" />
+        <column name="bins" type="int" />
+        <column name="start_time" type="Date"  />
+        <column name="stop_time" type="Date"  />
+        <column name="dmps_tables" type="String" />
+        <column name="comments" type="String" />
+        <column name="ch01" type="float" />
+        <column name="ch02" type="float" />
+        <column name="ch03" type="float" />
+        <column name="ch04" type="float" />
+        <column name="ch05" type="float" />
+        <column name="ch06" type="float" />
+        <column name="ch07" type="float" />
+        <column name="ch08" type="float" />
+        <column name="ch09" type="float" />
+        <column name="ch10" type="float" />
+        <column name="ch11" type="float" />
+        <column name="ch12" type="float" />
+        <column name="ch13" type="float" />
+        <column name="ch14" type="float" />
+        <column name="ch15" type="float" />
+        <column name="ch16" type="float" />
+        <column name="ch17" type="float" />
+        <column name="ch18" type="float" />
+        <column name="ch19" type="float" />
+        <column name="ch20" type="float" />
+        <column name="ch21" type="float" />
+        <column name="ch22" type="float" />
+        <column name="ch23" type="float" />
+        <column name="ch24" type="float" />
+        <column name="ch25" type="float" />
+        <column name="ch26" type="float" />
+        <column name="ch27" type="float" />
+        <column name="ch28" type="float" />
+        <column name="ch29" type="float" />
+        <column name="ch30" type="float" />
+        <column name="ch31" type="float" />
+        <column name="ch32" type="float" />
+        <column name="ch33" type="float" />
+        <column name="ch34" type="float" />
+        <column name="ch35" type="float" />
+        <column name="ch36" type="float" />
+        <column name="ch37" type="float" />
+        <column name="ch38" type="float" />
+        <column name="ch39" type="float" />
+        <column name="ch40" type="float" />
+    </entity>
+
 
 </service-builder>
